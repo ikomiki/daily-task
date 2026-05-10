@@ -20,6 +20,7 @@
     "@org/config-tailwind": "workspace:*",
     "@org/config-tsconfig": "workspace:*",
     "@org/config-vitest": "workspace:*",
+    "@playwright/test": "catalog:",
     "@testing-library/react": "catalog:",
     "@testing-library/user-event": "catalog:",
     "@tailwindcss/vite": "catalog:",
