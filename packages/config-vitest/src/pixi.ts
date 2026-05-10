@@ -1,15 +1,13 @@
-import { defineConfig, mergeConfig } from 'vitest/config';
-import react from './react.ts';
+import { defineConfig } from 'vitest/config';
 
-// Pixi利用テスト向け: jsdomにcanvasモックを足したい場合の拡張ポイント。
-// 実際のレンダリングは別途e2eで担保し、ここは型/ロジック層のテストに留める。
-export default mergeConfig(
-  react,
-  defineConfig({
-    test: {
-      include: ['src/**/*.test.{ts,tsx}'],
-      // canvas を使うテストは server.deps.inline で .mjs 解決問題を避ける
-      server: { deps: { inline: ['pixi.js'] } },
-    },
-  }),
-);
+// Pixi利用テスト向け: jsdom + testing-library + pixi.js inline 化。
+// 実際のレンダリングはe2eで担保し、ここは型/ロジック層のテストに留める。
+export default defineConfig({
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    include: ['src/**/*.test.{ts,tsx}'],
+    setupFiles: ['@org/config-vitest/setup'],
+    server: { deps: { inline: ['pixi.js'] } },
+  },
+});
