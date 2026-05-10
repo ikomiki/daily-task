@@ -1,0 +1,1 @@
+export { useGameSound } from './useSound';
