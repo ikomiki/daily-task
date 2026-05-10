@@ -71,6 +71,8 @@ importers:
 
   packages/config-biome: {}
 
+  packages/config-tailwind: {}
+
   packages/config-tsconfig: {}
 
   packages/config-vitest:
