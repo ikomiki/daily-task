@@ -1,5 +1,5 @@
 import { defineConfig, mergeConfig } from 'vitest/config';
-import react from './react';
+import react from './react.ts';
 
 // Pixi利用テスト向け: jsdomにcanvasモックを足したい場合の拡張ポイント。
 // 実際のレンダリングは別途e2eで担保し、ここは型/ロジック層のテストに留める。
