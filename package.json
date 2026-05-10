@@ -11,6 +11,7 @@
     "@nx/react": "22.7.0",
     "@nx/vite": "22.7.0",
     "@org/config-biome": "workspace:*",
+    "@org/config-tsconfig": "workspace:*",
     "@swc-node/register": "1.11.1",
     "@swc/core": "1.15.8",
     "@swc/helpers": "0.5.18",
