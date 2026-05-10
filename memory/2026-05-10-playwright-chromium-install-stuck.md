@@ -1,12 +1,12 @@
 ---
-name: ローカルでの playwright install chromium が繰り返しスタックする
-description: Mac環境で `pnpm exec playwright install chromium` のダウンロードが448K前後で停止し、フレームワークが配置されないままインストール完了扱いとなる
+name: playwright install chromium が Node v26 環境で繰り返しスタックする
+description: Mac + Node v26.1.0 で `pnpm exec playwright install chromium` のダウンロードが 448K 前後で停止する。Node v24 にダウングレードすると正常完了する
 type: project
 ---
 
 ## What
 
-ローカル開発環境で `pnpm exec playwright install chromium` を実行すると、
+Node v26.1.0 の環境で `pnpm exec playwright install chromium` を実行すると、
 ダウンロードが 448K 程度で実質停止する。プロセスは生きているが進捗ゼロ、
 最終的に `chromium-1217/chrome-mac-arm64/` 直下に App と一部ファイルだけ
 作成され、`Frameworks/` が欠落した状態でインストール完了扱いになる。
@@ -15,27 +15,25 @@ type: project
 `Error: browserType.launch: Target page, context or browser has been closed`
 （実体は dlopen で `Google Chrome for Testing Framework` がない）で失敗。
 
-## Why（推測）
+## Why
 
-- 大容量バイナリ（150MB以上）のCDN取得で接続が切れている可能性
-- pnpm 11 + Node v26 + macOS の組み合わせ依存
-- ダウンロード途中でプロセスを kill すると pnpm 側は exit 0 を返し、
-  chromium 自体は incomplete のまま残る
+Node v26.1.0 と playwright の registry oopDownloadBrowserMain.js の組み合わせで
+ストリーミングダウンロードが途中停止する模様。Node v24.15.0 では同症状なし。
 
-## Fix（未確定）
+## Fix（確定）
 
-CI 環境では `pnpm exec playwright install --with-deps chromium` が正常に動作する
-（`.github/workflows/ci.yml` で確認済みの想定）ため、ローカルE2Eは別途検証する。
+`.nvmrc` を `v24.15.0` 以下に下げてから `pnpm exec playwright install` を実行する。
+完全にダウンロードが終われば（chromium-1217 が ~336M、chromium_headless_shell-1217 が ~189M）
+`pnpm nx e2e sample-game` が成功する（5秒前後で 1 test pass）。
 
-ローカルで再現したら次を試す:
-1. `rm -rf ~/Library/Caches/ms-playwright/chromium-*` で完全削除
-2. `pnpm exec playwright install chromium --force` で再取得
-3. それでもダメなら `npx playwright@latest install chromium` で playwright バイナリを直接実行
-4. または手動で chromium for testing のzipを公式から取得して配置
+playwright config はデフォルトの `devices['Desktop Chrome']` のままでよい
+（headless shell が正しく入っていればそのまま動く）。
+`channel: 'chromium'` の override は不要。
 
 ## Prevention
 
-- E2Eのローカル動作は CI とは別問題として扱う
-- CI ではアクションが --with-deps で都度新規取得するため影響なし
-- ローカル環境で playwright を初めて使うとき、ダウンロード進捗（du -sh）を
-  確認してから完了を判断する
+- 新規セットアップ時は `.nvmrc` に従って Node を切り替えてから playwright install する
+  （`source ~/.nvm/nvm.sh && nvm use` を `.envrc` で自動化済み）
+- ダウンロード完了確認は `du -sh ~/Library/Caches/ms-playwright/chromium-*` で
+  目安サイズ（chromium ~330M / headless-shell ~190M）を確認する
+- 進捗が 1MB 未満で止まっているなら Node バージョンを疑う

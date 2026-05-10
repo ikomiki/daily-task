@@ -116,11 +116,13 @@ apps/* → packages/{ui, game-core, audio} → packages/config-*
 
 詳細: `memory/README.md`, `rules/README.md`
 
-## E2E（Playwright）の既知問題
+## E2E（Playwright）
 
-ローカル環境では `playwright install chromium` のダウンロードが途中で停止する事例あり。
-詳細と対処は `memory/2026-05-10-playwright-chromium-install-stuck.md` を参照。
-CI（`.github/workflows/ci.yml` の `--with-deps`）では問題なく動作する想定。
+ローカル E2E は `.nvmrc` の Node v24.15.0 で動作確認済み。
+**Node v26 系を使うと `playwright install chromium` のダウンロードが停止する**ため、
+`source ~/.nvm/nvm.sh && nvm use` を必ず通してから `pnpm nx e2e <app>` する。
+詳細: `memory/2026-05-10-playwright-chromium-install-stuck.md`。
+CI（`.github/workflows/ci.yml` の `--with-deps`）では Node 24 系で問題なく動作する。
 
 ## Superpowers 運用
 

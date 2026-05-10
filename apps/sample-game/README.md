@@ -37,4 +37,4 @@ pnpm nx e2e sample-game          # Playwright（CI環境推奨、ローカルは
 
 - jsdom 環境では Pixi の Canvas がモックされるため、`@pixi/react` は描画しない
 - 効果音は実ファイルが空でも `howler` はエラーにならない
-- E2E のローカル実行は chromium ダウンロードが繰り返し失敗するため CI 環境を推奨
+- E2E のローカル実行は **Node v24** で動作確認済み（v26 系では `playwright install chromium` のダウンロードが停止する。詳細: `memory/2026-05-10-playwright-chromium-install-stuck.md`）
