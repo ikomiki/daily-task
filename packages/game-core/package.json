@@ -1,0 +1,25 @@
+{
+  "name": "@org/game-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "pixi.js": "catalog:",
+    "@pixi/react": "catalog:",
+    "react": "catalog:",
+    "zod": "catalog:",
+    "zustand": "catalog:"
+  },
+  "devDependencies": {
+    "@org/config-biome": "workspace:*",
+    "@org/config-tsconfig": "workspace:*",
+    "@org/config-vitest": "workspace:*",
+    "@types/react": "catalog:",
+    "vitest": "catalog:"
+  }
+}
