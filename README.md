@@ -1,105 +1,88 @@
-# New Nx Repository
+# game-workspace
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+複数ゲームと共有ライブラリを並行開発する Nx モノレポ。
+Vite + React 19 + Pixi.js 8 + Zustand + Zod + howler/use-sound + Tailwind CSS v4
+を共通基盤として、`apps/*` にゲーム本体、`packages/*` に共有エンジン/UI/オーディオと共有設定を集める。
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## クイックスタート
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
-## Try the full Nx platform
-🚀 If you haven't connected to Nx Cloud yet, [complete your setup here](https://cloud.nx.app/setup/connect-workspace/guide). Get faster builds with remote caching, distributed task execution, and self-healing CI. [See how your workspace can benefit](#nx-cloud).
-## Generate a library
-
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
+```bash
+pnpm install
+pnpm nx serve sample-game     # http://localhost:5173 で起動
 ```
 
-## Run tasks
+`apps/sample-game` は TAP ボタンでスコアが +1 される最小ゲーム。
+共有ライブラリ（`packages/{game-core,ui,audio}`）すべての導線を初期から検証する目的のサンプル。
 
-To build the library use:
-
-```sh
-npx nx build pkg1
-```
-
-To run any task with Nx use:
-
-```sh
-npx nx <target> <project-name>
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
+## ディレクトリ
 
 ```
-npx nx release
+apps/
+  sample-game/        Vite + React + Pixi のサンプルゲーム
+packages/
+  game-core/          Pixi/Zustand/Zod のゲーム基盤（Score/Save/GameCanvas）
+  ui/                 React + Tailwind の共有UI（ScoreHud 等）
+  audio/              howler.js + use-sound の useGameSound フック
+  config-biome/       共有 biome.json
+  config-tsconfig/    base / lib / app の3層 tsconfig
+  config-tailwind/    Tailwind v4 の @theme プリセット
+  config-vitest/      vitest の node/react/pixi 3プリセット
+.claude/              Claude Code の hooks / commands / settings
+.github/workflows/    GitHub Actions CI
+docs/superpowers/     設計書（specs/）と実装プラン（plans/）
+memory/, rules/       失敗事例ログとルール
 ```
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
+依存方向は `apps/* → packages/{ui,game-core,audio} → packages/config-*` の一方向のみ。
 
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 主なコマンド
 
-## Keep TypeScript project references up to date
+```bash
+# 開発
+pnpm nx serve sample-game                 # Vite dev (5173)
+pnpm nx test <project>                    # 単一プロジェクトの vitest
+pnpm nx test <project> -- -t "テスト名"    # 単一テスト
+pnpm nx graph                             # 依存グラフを可視化
 
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
+# 検証（ローカルで run-many する場合は CI=true を付ける）
+CI=true pnpm nx run-many -t typecheck test
+CI=true pnpm nx affected -t typecheck test
+pnpm nx build sample-game
+pnpm nx e2e sample-game                   # Playwright（CI環境推奨）
+pnpm exec biome ci .                      # format + lint チェック
+pnpm exec biome check --write .           # 自動修正
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
+## 採用している技術スタック
 
-```sh
-npx nx sync:check
-```
+| 領域 | ツール |
+|------|--------|
+| パッケージ管理 | pnpm 11 + Catalogs（バージョン単一ソース化） |
+| モノレポ | Nx 22 + `@nx/js`/`@nx/vite`/`@nx/playwright` プラグイン |
+| 言語 | TypeScript 5.9（strict + customConditions で source 直接解決）|
+| Linter/Formatter | Biome 2.x（ESLint/Prettier 不採用）|
+| ビルド/テスト | Vite 7 + vitest 3 + @testing-library + jsdom |
+| E2E | Playwright |
+| UI | React 19 + Tailwind CSS v4 (CSS-first) |
+| 状態/バリデーション | Zustand 5 + Zod 4 |
+| ゲーム/オーディオ | Pixi.js 8 + @pixi/react + howler.js + use-sound |
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
+## 開発方針
 
-## Nx Cloud
+- **TDD**: 実装前に失敗するテストを書く（`superpowers:test-driven-development`）
+- **共有設定の単一ソース**: Biome / tsconfig / Tailwind / vitest はすべて `packages/config-*` 経由
+- **Catalogs**: 全依存のバージョンは `pnpm-workspace.yaml` の `catalog:` 1ヶ所のみ
+- **Claude Hooks**: `Edit/Write` 直後に Biome format、`git commit` 前に `nx affected -t lint test`
+- **Superpowers**: `docs/superpowers/specs/` で設計合意 → `docs/superpowers/plans/` で実装プラン → サブエージェント駆動実装
 
-Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+## コード規約
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- `any` は使用しない（Biome `noExplicitAny: error`）
+- if 文の制御ブロックは1行でも `{}` で囲う（Biome `useBlockStatements: error`）
+- コードコメントは日本語
+- 詳細は `CLAUDE.md`、失敗事例の運用は `memory/README.md` / `rules/README.md`
 
-### Set up CI (non-Github Actions CI)
+## CI
 
-**Note:** This is only required if your CI provider is not GitHub Actions.
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+`.github/workflows/ci.yml` で `pnpm install` → `biome ci` → `nx affected -t typecheck test build` → Playwright E2E。
+PR では `nrwl/nx-set-shas@v4` で base/head を解決し affected のみ実行する。
