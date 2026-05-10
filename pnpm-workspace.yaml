@@ -5,6 +5,14 @@ packages:
 # pnpm 11+ は postinstall スクリプトをデフォルトでブロックする。
 # 許可するパッケージは下部の allowBuilds セクションで明示する（pnpm 11+の新書式）。
 
+# サプライチェーン攻撃対策: 公開直後のパッケージはインストールしない（cooldown）。
+# pnpm 11.0+ の既定は 1440（1日）。直近の npm 攻撃事例の多くは 24〜48 時間以内に
+# 検知・引き下げされるため、3日（4320分）に強化して検出猶予を確保する。
+# 緊急ホットフィックスを使う必要が出たら minimumReleaseAgeExclude に
+# `name@version`（例: `nx@21.6.5`）を追加して個別解除する。
+minimumReleaseAge: 4320
+minimumReleaseAgeExclude: []
+
 catalog:
   # React
   react: ^19.0.0

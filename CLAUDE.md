@@ -90,6 +90,7 @@ apps/* → packages/{ui, game-core, audio} → packages/config-*
 - 全依存バージョンは `pnpm-workspace.yaml` の `catalog:` で単一ソース化。各 `package.json` は `"react": "catalog:"` のように参照する
 - pnpm 11+ は postinstall を既定でブロックするため、`allowBuilds: { name: true }` で明示許可（`esbuild`, `@swc/core`, `nx`）
 - ネイティブビルド系の依存を新たに増やしたら `allowBuilds` を更新
+- 公開直後のパッケージは `minimumReleaseAge: 4320`（3日）で cooldown する。緊急ホットフィックスが必要な場合のみ `minimumReleaseAgeExclude` に `name@version` を追加して個別解除する
 
 ## Claude 統合
 
