@@ -16,6 +16,7 @@
     "@swc/core": "1.15.8",
     "@swc/helpers": "0.5.18",
     "nx": "22.7.0",
+    "playwright": "^1.59.1",
     "tslib": "^2.3.0",
     "typescript": "catalog:"
   }
