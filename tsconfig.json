@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "@org/config-tsconfig/base.json",
   "compileOnSave": false,
   "files": [],
   "references": []

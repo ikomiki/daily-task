@@ -4,6 +4,12 @@
 dist
 tmp
 out-tsc
+*.tsbuildinfo
+
+# Playwright
+test-results/
+playwright-report/
+.claude/scheduled_tasks.lock
 
 # dependencies
 node_modules

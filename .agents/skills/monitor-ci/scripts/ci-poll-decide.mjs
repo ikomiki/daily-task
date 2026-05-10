@@ -61,7 +61,7 @@ try {
       message: 'Failed to parse ci_information JSON',
       noProgressCount: inputNoProgressCount + 1,
       envRerunCount,
-    })
+    }),
   );
   process.exit(0);
 }
@@ -90,13 +90,17 @@ const failureClassification = rawFailureClassification?.toLowerCase() ?? null;
 function categorizeTasks() {
   const verifiedSet = new Set(verifiedTaskIds);
   const unverified = failedTaskIds.filter((t) => !verifiedSet.has(t));
-  if (unverified.length === 0) return { category: 'all_verified' };
+  if (unverified.length === 0) {
+    return { category: 'all_verified' };
+  }
 
   const e2e = unverified.filter((t) => {
     const parts = t.split(':');
     return parts.length >= 2 && parts[1].includes('e2e');
   });
-  if (e2e.length === unverified.length) return { category: 'e2e_only' };
+  if (e2e.length === unverified.length) {
+    return { category: 'e2e_only' };
+  }
 
   const verifiable = unverified.filter((t) => {
     const parts = t.split(':');
@@ -111,26 +115,33 @@ function backoff(count) {
 }
 
 function hasStateChanged() {
-  if (prevCipeStatus && cipeStatus !== prevCipeStatus) return true;
-  if (prevShStatus && selfHealingStatus !== prevShStatus) return true;
-  if (prevVerificationStatus && verificationStatus !== prevVerificationStatus)
+  if (prevCipeStatus && cipeStatus !== prevCipeStatus) {
     return true;
-  if (
-    prevFailureClassification &&
-    failureClassification !== prevFailureClassification
-  )
+  }
+  if (prevShStatus && selfHealingStatus !== prevShStatus) {
     return true;
+  }
+  if (prevVerificationStatus && verificationStatus !== prevVerificationStatus) {
+    return true;
+  }
+  if (prevFailureClassification && failureClassification !== prevFailureClassification) {
+    return true;
+  }
   return false;
 }
 
 function isTimedOut() {
-  if (timeoutSeconds <= 0) return false;
+  if (timeoutSeconds <= 0) {
+    return false;
+  }
   const avgDelay = pollCount === 0 ? 0 : backoff(Math.floor(pollCount / 2));
   return pollCount * avgDelay >= timeoutSeconds;
 }
 
 function isWaitTimedOut() {
-  if (newCipeTimeoutSeconds <= 0) return false;
+  if (newCipeTimeoutSeconds <= 0) {
+    return false;
+  }
   return pollCount * 30 >= newCipeTimeoutSeconds;
 }
 
@@ -178,76 +189,90 @@ function isNewCipe() {
 function classify() {
   // --- Wait mode ---
   if (waitMode) {
-    if (isNewCipe()) return { action: 'poll', code: 'new_cipe_detected' };
-    if (isWaitTimedOut()) return { action: 'done', code: 'no_new_cipe' };
+    if (isNewCipe()) {
+      return { action: 'poll', code: 'new_cipe_detected' };
+    }
+    if (isWaitTimedOut()) {
+      return { action: 'done', code: 'no_new_cipe' };
+    }
     return { action: 'wait', code: 'waiting_for_cipe' };
   }
 
   // --- Guards ---
-  if (isTimedOut()) return { action: 'done', code: 'polling_timeout' };
-  if (noProgressCount >= 13) return { action: 'done', code: 'circuit_breaker' };
+  if (isTimedOut()) {
+    return { action: 'done', code: 'polling_timeout' };
+  }
+  if (noProgressCount >= 13) {
+    return { action: 'done', code: 'circuit_breaker' };
+  }
 
   // --- Terminal CI states ---
-  if (cipeStatus === 'SUCCEEDED') return { action: 'done', code: 'ci_success' };
-  if (cipeStatus === 'CANCELED')
+  if (cipeStatus === 'SUCCEEDED') {
+    return { action: 'done', code: 'ci_success' };
+  }
+  if (cipeStatus === 'CANCELED') {
     return { action: 'done', code: 'cipe_canceled' };
-  if (cipeStatus === 'TIMED_OUT')
+  }
+  if (cipeStatus === 'TIMED_OUT') {
     return { action: 'done', code: 'cipe_timed_out' };
+  }
 
   // --- CI failed, no tasks ---
-  if (
-    cipeStatus === 'FAILED' &&
-    failedTaskIds.length === 0 &&
-    selfHealingStatus == null
-  )
+  if (cipeStatus === 'FAILED' && failedTaskIds.length === 0 && selfHealingStatus == null) {
     return { action: 'done', code: 'cipe_no_tasks' };
+  }
 
   // --- Environment failure ---
   if (failureClassification === 'environment_state') {
-    if (envRerunCount >= 2)
+    if (envRerunCount >= 2) {
       return { action: 'done', code: 'environment_rerun_cap' };
+    }
     return { action: 'done', code: 'environment_issue' };
   }
 
   // --- Throttled ---
-  if (selfHealingSkippedReason === 'THROTTLED')
+  if (selfHealingSkippedReason === 'THROTTLED') {
     return { action: 'done', code: 'self_healing_throttled' };
+  }
 
   // --- Still running: CI ---
-  if (cipeStatus === 'IN_PROGRESS' || cipeStatus === 'NOT_STARTED')
+  if (cipeStatus === 'IN_PROGRESS' || cipeStatus === 'NOT_STARTED') {
     return { action: 'poll', code: 'ci_running' };
+  }
 
   // --- Still running: self-healing ---
   if (
-    (selfHealingStatus === 'IN_PROGRESS' ||
-      selfHealingStatus === 'NOT_STARTED') &&
+    (selfHealingStatus === 'IN_PROGRESS' || selfHealingStatus === 'NOT_STARTED') &&
     !selfHealingSkippedReason
-  )
+  ) {
     return { action: 'poll', code: 'sh_running' };
+  }
 
   // --- Still running: flaky rerun ---
-  if (failureClassification === 'flaky_task')
+  if (failureClassification === 'flaky_task') {
     return { action: 'poll', code: 'flaky_rerun' };
+  }
 
   // --- Fix auto-applied, waiting for new CI Attempt ---
-  if (userAction === 'APPLIED_AUTOMATICALLY')
+  if (userAction === 'APPLIED_AUTOMATICALLY') {
     return { action: 'poll', code: 'fix_auto_applied' };
+  }
 
   // --- Auto-apply path (couldAutoApplyTasks) ---
   if (couldAutoApplyTasks === true) {
-    if (autoApplySkipped === true)
+    if (autoApplySkipped === true) {
       return {
         action: 'done',
         code: 'fix_auto_apply_skipped',
         extra: { autoApplySkipReason },
       };
-    if (
-      verificationStatus === 'NOT_STARTED' ||
-      verificationStatus === 'IN_PROGRESS'
-    )
+    }
+    if (verificationStatus === 'NOT_STARTED' || verificationStatus === 'IN_PROGRESS') {
       return { action: 'poll', code: 'verification_pending' };
-    if (verificationStatus === 'COMPLETED')
+    }
+    if (verificationStatus === 'COMPLETED') {
       return { action: 'done', code: 'fix_auto_applying' };
+    }
     // verification FAILED or NOT_EXECUTABLE → falls through to fix_needs_review
   }
 
@@ -257,12 +282,14 @@ function classify() {
       verificationStatus === 'FAILED' ||
       verificationStatus === 'NOT_EXECUTABLE' ||
       (couldAutoApplyTasks !== true && !verificationStatus)
-    )
+    ) {
       return { action: 'done', code: 'fix_needs_review' };
+    }
 
     const tasks = categorizeTasks();
-    if (tasks.category === 'all_verified' || tasks.category === 'e2e_only')
+    if (tasks.category === 'all_verified' || tasks.category === 'e2e_only') {
       return { action: 'done', code: 'fix_apply_ready' };
+    }
     return {
       action: 'done',
       code: 'fix_needs_local_verify',
@@ -271,15 +298,17 @@ function classify() {
   }
 
   // --- Fix failed ---
-  if (selfHealingStatus === 'FAILED')
+  if (selfHealingStatus === 'FAILED') {
     return { action: 'done', code: 'fix_failed' };
+  }
 
   // --- No fix available ---
   if (
     cipeStatus === 'FAILED' &&
     (selfHealingEnabled === false || selfHealingStatus === 'NOT_EXECUTABLE')
-  )
+  ) {
     return { action: 'done', code: 'no_fix' };
+  }
 
   // --- Fallback ---
   return { action: 'poll', code: 'fallback' };
@@ -292,10 +321,8 @@ function classify() {
 // Message templates keyed by status or key
 const messages = {
   // wait mode
-  new_cipe_detected: () =>
-    `New CI Attempt detected! CI: ${cipeStatus || 'N/A'}`,
-  no_new_cipe: () =>
-    'New CI Attempt timeout exceeded. No new CI Attempt detected.',
+  new_cipe_detected: () => `New CI Attempt detected! CI: ${cipeStatus || 'N/A'}`,
+  no_new_cipe: () => 'New CI Attempt timeout exceeded. No new CI Attempt detected.',
   waiting_for_cipe: () => 'Waiting for new CI Attempt...',
 
   // guards
@@ -313,16 +340,13 @@ const messages = {
   environment_issue: () => 'CI: FAILED | Classification: ENVIRONMENT_STATE',
 
   // throttled
-  self_healing_throttled: () =>
-    'Self-healing throttled \u2014 too many unapplied fixes.',
+  self_healing_throttled: () => 'Self-healing throttled \u2014 too many unapplied fixes.',
 
   // polling
   ci_running: () => `CI: ${cipeStatus}`,
   sh_running: () => `CI: ${cipeStatus} | Self-healing: ${selfHealingStatus}`,
-  flaky_rerun: () =>
-    'CI: FAILED | Classification: FLAKY_TASK (auto-rerun in progress)',
-  fix_auto_applied: () =>
-    'CI: FAILED | Fix auto-applied, new CI Attempt spawning',
+  flaky_rerun: () => 'CI: FAILED | Classification: FLAKY_TASK (auto-rerun in progress)',
+  fix_auto_applied: () => 'CI: FAILED | Fix auto-applied, new CI Attempt spawning',
   verification_pending: () =>
     `CI: FAILED | Self-healing: COMPLETED | Verification: ${verificationStatus}`,
 
@@ -335,9 +359,7 @@ const messages = {
         : 'Offer to apply manually.'
     }`,
   fix_needs_review: () =>
-    `Fix available but needs review. Verification: ${
-      verificationStatus || 'N/A'
-    }`,
+    `Fix available but needs review. Verification: ${verificationStatus || 'N/A'}`,
   fix_apply_ready: () => 'Fix available and verified. Ready to apply.',
   fix_needs_local_verify: (extra) =>
     `Fix available. ${extra.verifiableTaskIds.length} task(s) need local verification.`,
@@ -364,7 +386,9 @@ const resetProgressCodes = new Set([
 function formatMessage(msg) {
   if (verbosity === 'minimal') {
     const currentStatus = `${cipeStatus}|${selfHealingStatus}|${verificationStatus}`;
-    if (currentStatus === (prevStatus || '')) return null;
+    if (currentStatus === (prevStatus || '')) {
+      return null;
+    }
     return msg;
   }
   if (verbosity === 'verbose') {
@@ -405,11 +429,15 @@ function buildOutput(decision) {
   }
 
   // Add extras
-  if (code === 'new_cipe_detected') result.newCipeDetected = true;
-  if (extra?.verifiableTaskIds)
+  if (code === 'new_cipe_detected') {
+    result.newCipeDetected = true;
+  }
+  if (extra?.verifiableTaskIds) {
     result.verifiableTaskIds = extra.verifiableTaskIds;
-  if (extra?.autoApplySkipReason)
+  }
+  if (extra?.autoApplySkipReason) {
     result.autoApplySkipReason = extra.autoApplySkipReason;
+  }
 
   console.log(JSON.stringify(result));
 }
@@ -420,8 +448,12 @@ function buildOutput(decision) {
 // Wait mode: reset on new cipe, otherwise unchanged (wait doesn't count as no-progress).
 // Normal mode: reset on any state change, otherwise increment.
 const noProgressCount = (() => {
-  if (waitMode) return isNewCipe() ? 0 : inputNoProgressCount;
-  if (isNewCipe() || hasStateChanged()) return 0;
+  if (waitMode) {
+    return isNewCipe() ? 0 : inputNoProgressCount;
+  }
+  if (isNewCipe() || hasStateChanged()) {
+    return 0;
+  }
   return inputNoProgressCount + 1;
 })();
 

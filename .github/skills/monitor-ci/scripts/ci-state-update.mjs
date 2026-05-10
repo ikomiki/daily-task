@@ -124,10 +124,14 @@ function cycleCheck() {
   let envRerunCount = parseInt(getArg('--env-rerun-count') || '0', 10);
 
   // Cycle classification: if previous cycle was agent-triggered, count it
-  if (wasAgentTriggered) cycleCount++;
+  if (wasAgentTriggered) {
+    cycleCount++;
+  }
 
   // Reset env_rerun_count on non-environment status
-  if (status !== 'environment_issue') envRerunCount = 0;
+  if (status !== 'environment_issue') {
+    envRerunCount = 0;
+  }
 
   // Approaching limit gate
   const approachingLimit = cycleCount >= maxCycles - 2;
@@ -137,9 +141,7 @@ function cycleCheck() {
     agentTriggered: false,
     envRerunCount,
     approachingLimit,
-    message: approachingLimit
-      ? `Approaching cycle limit (${cycleCount}/${maxCycles})`
-      : null,
+    message: approachingLimit ? `Approaching cycle limit (${cycleCount}/${maxCycles})` : null,
   });
 }
 
