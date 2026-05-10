@@ -10,5 +10,18 @@
         "repo": "nrwl/nx-ai-agents-config"
       }
     }
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/biome-format.mjs"
+          }
+        ]
+      }
+    ]
   }
 }
