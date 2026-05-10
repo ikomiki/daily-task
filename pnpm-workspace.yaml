@@ -2,6 +2,8 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
+# pnpm 11+ は postinstall スクリプトをデフォルトでブロックする。
+# nx はネイティブバインディングのセットアップに postinstall が必要なため許可する。
 onlyBuiltDependencies:
   - nx
 
