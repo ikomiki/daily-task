@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+@import '@org/config-tailwind/theme.css';
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--color-game-bg);
+  color: var(--color-game-fg);
+}
