@@ -3,9 +3,7 @@ packages:
   - 'packages/*'
 
 # pnpm 11+ は postinstall スクリプトをデフォルトでブロックする。
-# nx はネイティブバインディングのセットアップに postinstall が必要なため許可する。
-onlyBuiltDependencies:
-  - nx
+# 許可するパッケージは下部の allowBuilds セクションで明示する（pnpm 11+の新書式）。
 
 catalog:
   # React
@@ -47,3 +45,9 @@ catalog:
 
   # TypeScript
   typescript: ~5.9.2
+
+# ネイティブバイナリ配置/コンパイルのため build script を許可するパッケージ
+allowBuilds:
+  '@swc/core': true
+  esbuild: true
+  nx: true
