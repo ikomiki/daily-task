@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { useGameSound } from './useSound';
 
 vi.mock('use-sound', () => ({

@@ -1,5 +1,5 @@
-import { useSyncExternalStore, useRef } from 'react';
 import { createScoreStore } from '@org/game-core';
+import { useRef, useSyncExternalStore } from 'react';
 
 // アプリ内で1つの ScoreStore インスタンスをぶら下げる薄いフック
 export const useSampleGame = () => {

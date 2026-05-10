@@ -15,6 +15,7 @@
     "noImplicitAny": true,
     "exactOptionalPropertyTypes": true,
     "target": "es2022",
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "customConditions": ["@org/source"]
   }
 }

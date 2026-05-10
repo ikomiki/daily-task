@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { parseSaveData, type SaveData } from './save';
 
 describe('parseSaveData', () => {

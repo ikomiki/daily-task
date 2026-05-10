@@ -1,6 +1,6 @@
+import { useGameSound } from '@org/audio';
 import { GameCanvas } from '@org/game-core';
 import { ScoreHud } from '@org/ui';
-import { useGameSound } from '@org/audio';
 import { useSampleGame } from './useSampleGame';
 
 // sample-game のメイン画面: HUD + Pixiキャンバス + タップボタン

@@ -9,13 +9,14 @@
     {
       "plugin": "@nx/js/typescript",
       "options": {
-        "typecheck": { "targetName": "typecheck" },
+        "typecheck": { "targetName": "typecheck", "configName": "tsconfig.json" },
         "build": {
           "targetName": "build",
           "configName": "tsconfig.lib.json",
           "buildDepsName": "build-deps",
           "watchDepsName": "watch-deps"
-        }
+        },
+        "verifyDependencies": false
       }
     },
     {
@@ -33,5 +34,9 @@
       "options": { "targetName": "e2e" }
     }
   ],
-  "analytics": true
+  "analytics": true,
+  "sync": {
+    "globalGenerators": [],
+    "applyChanges": false
+  }
 }
