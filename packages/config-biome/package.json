@@ -1,0 +1,9 @@
+{
+  "name": "@org/config-biome",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./biome.json": "./biome.json"
+  }
+}
