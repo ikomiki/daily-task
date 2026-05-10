@@ -4,10 +4,12 @@
   "license": "MIT",
   "scripts": {},
   "private": true,
-  "dependencies": {},
   "devDependencies": {
     "@biomejs/biome": "catalog:",
     "@nx/js": "22.7.0",
+    "@nx/playwright": "22.7.0",
+    "@nx/react": "22.7.0",
+    "@nx/vite": "22.7.0",
     "@org/config-biome": "workspace:*",
     "@swc-node/register": "1.11.1",
     "@swc/core": "1.15.8",
