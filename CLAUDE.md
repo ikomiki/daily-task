@@ -203,6 +203,18 @@ packages/ui → packages/habit-core （型のみ参照）
 - `WebNotificationProvider` は `{ now: () => Date }` で時計を DI 可能（fake timers テスト用）
 - スコープ外: 日跨ぎ自動再スケジュール（v1 は当日中のみ）、Service Worker / Web Push、タスク単位通知
 
+### PWA 化 / Service Worker（M11 以降）
+
+- `vite-plugin-pwa` (catalog: ^1.0.0) を `apps/habits/vite.config.ts` で有効化、Workbox ベースで SW + manifest を自動生成
+- `registerType: 'autoUpdate'` — 新バージョン検知で自動更新（リフレッシュ不要）
+- マニフェスト: `name: Habits`, `display: standalone`, `theme_color: #0f172a`, `lang: ja`
+- アイコン: `apps/habits/public/{icon-192,icon-512,icon-maskable,favicon}.svg`（SVG 統一、iOS は apple-touch-icon を `icon-192.svg` で参照）
+- `apps/habits/src/lib/pwa-register.ts` が `virtual:pwa-register` を動的 import するラッパー（vitest 環境では catch で握り潰される）
+- ビルド成果物: `dist/manifest.webmanifest` / `dist/sw.js`（`autoUpdate` モードでは `registerSW.js` は生成されず、`dist/assets/virtual_pwa-register-*.js` にバンドルされる）
+- `workbox.globPatterns` で JS/CSS/HTML/SVG/woff2 をプリキャッシュ、`navigateFallbackDenylist` で `/api` と `/auth` を除外
+- `devOptions.enabled = false` — 開発ビルドでは SW を出さない（HMR 阻害回避）
+- スコープ外: Web Push（v1.5）、カスタム SW (injectManifest)、インストールプロンプト UI、スプラッシュ画像、PNG 版 apple-touch-icon（iOS Safari の SVG 互換性向上時に再検討）
+
 ## E2E（Playwright）
 
 ローカル E2E は `.nvmrc` の Node v24.15.0 で動作確認済み。
