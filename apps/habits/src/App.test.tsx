@@ -78,4 +78,31 @@ describe('App ルーティング', () => {
       expect(router.state.location.pathname).toBe('/auth/login');
     });
   });
+
+  it('認証済みで /tasks にアクセスすると「タスク管理」ページが表示される', async () => {
+    getCurrentSessionMock.mockResolvedValue({ user: { id: 'u1' }, access_token: 'x' });
+    await navigate('/tasks');
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'タスク管理' })).toBeInTheDocument();
+    });
+  });
+
+  it('未認証で /tasks にアクセスすると /auth/login へリダイレクトされる', async () => {
+    getCurrentSessionMock.mockResolvedValue(null);
+    await navigate('/tasks');
+    render(<App />);
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe('/auth/login');
+    });
+  });
+
+  it('認証済みで /settings/time-slots にアクセスすると「時間帯の設定」が表示される', async () => {
+    getCurrentSessionMock.mockResolvedValue({ user: { id: 'u1' }, access_token: 'x' });
+    await navigate('/settings/time-slots');
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: '時間帯の設定' })).toBeInTheDocument();
+    });
+  });
 });

@@ -11,6 +11,9 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@tanstack/react-router')>();
   return {
     ...actual,
+    Link: (props: { to: string; children: React.ReactNode }) => (
+      <a href={props.to}>{props.children}</a>
+    ),
     useNavigate: (): typeof navigateMock => navigateMock,
   };
 });
@@ -56,5 +59,15 @@ describe('Today', () => {
       expect(signOutMock).toHaveBeenCalled();
       expect(navigateMock).toHaveBeenCalledWith({ to: '/auth/login' });
     });
+  });
+
+  it('タスク管理リンクが表示される', () => {
+    render(<Today />);
+    expect(screen.getByRole('link', { name: 'タスク管理' })).toBeInTheDocument();
+  });
+
+  it('設定リンクが表示される', () => {
+    render(<Today />);
+    expect(screen.getByRole('link', { name: '設定' })).toBeInTheDocument();
   });
 });

@@ -10,6 +10,10 @@ import { Signup } from './features/auth/Signup.js';
 import { Today } from './features/today/Today.js';
 import { getCurrentSession } from './lib/auth.js';
 import { getAppSupabase } from './lib/supabase.js';
+import { SettingsTimeSlotsPage } from './routes/settings/SettingsTimeSlotsPage.js';
+import { TaskEditPage } from './routes/tasks/TaskEditPage.js';
+import { TaskNewPage } from './routes/tasks/TaskNewPage.js';
+import { TasksPage } from './routes/tasks/TasksPage.js';
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -18,6 +22,14 @@ const rootRoute = createRootRoute({
     </main>
   ),
 });
+
+// 認証必須ルート用の共通 beforeLoad
+async function requireAuth(): Promise<void> {
+  const session = await getCurrentSession(getAppSupabase());
+  if (session === null) {
+    throw redirect({ to: '/auth/login' });
+  }
+}
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -30,13 +42,36 @@ const indexRoute = createRoute({
 const todayRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/today',
-  beforeLoad: async () => {
-    const session = await getCurrentSession(getAppSupabase());
-    if (session === null) {
-      throw redirect({ to: '/auth/login' });
-    }
-  },
+  beforeLoad: requireAuth,
   component: Today,
+});
+
+const tasksRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/tasks',
+  beforeLoad: requireAuth,
+  component: TasksPage,
+});
+
+const taskNewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/tasks/new',
+  beforeLoad: requireAuth,
+  component: TaskNewPage,
+});
+
+const taskEditRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/tasks/$id',
+  beforeLoad: requireAuth,
+  component: TaskEditPage,
+});
+
+const settingsTimeSlotsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/settings/time-slots',
+  beforeLoad: requireAuth,
+  component: SettingsTimeSlotsPage,
 });
 
 const authLoginRoute = createRoute({
@@ -51,7 +86,16 @@ const authSignupRoute = createRoute({
   component: Signup,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, todayRoute, authLoginRoute, authSignupRoute]);
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  todayRoute,
+  tasksRoute,
+  taskNewRoute,
+  taskEditRoute,
+  settingsTimeSlotsRoute,
+  authLoginRoute,
+  authSignupRoute,
+]);
 
 export const router = createRouter({ routeTree });
 
