@@ -11,6 +11,8 @@ export type {
 } from './notify/NotificationProvider.js';
 export type { SyncState } from './observables.js';
 export { state$ } from './observables.js';
+export type { SetupSyncOptions } from './sync.js';
+export { getTaskLogsCutoffDate, setupSync } from './sync.js';
 export { online$, startOnlineWatcher } from './online.js';
 export type { SyncPersistenceConfig } from './persist.js';
 export { configureSyncPersistence } from './persist.js';
