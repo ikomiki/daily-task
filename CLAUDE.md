@@ -193,6 +193,16 @@ packages/ui → packages/habit-core （型のみ参照）
 - 取得結果がページサイズ未満なら hasMore=false に切り替わり「これ以上履歴はありません」表示
 - Today 画面のヘッダー nav から `/history` へ遷移可能（アーカイブ済タスクも選択肢に出る）
 
+### 通知 v1 / フォアグラウンドスケジューラ（M10 以降）
+
+- `/settings/notifications`: 権限の現在値表示 + 「通知を許可する」ボタン
+- `packages/habit-sync/src/notify/WebNotificationProvider.ts` がブラウザ Notification API + setTimeout の v1 実装
+- `apps/habits/src/features/notify/NotificationManager.tsx` が `state$.time_slots` を購読し、各 slot の `notify_at` 時刻に `setTimeout` を予約
+- スロット時刻に発火すると `getSlotPendingNotificationTasks` で当日の未操作（status='empty'）タスクを抽出し、件数 > 0 のとき `provider.show(slot.name, "X 件未完了")` 通知
+- `useNotificationPermission()` で `Notification.permission` を React state 化（'default' は 'prompt' に正規化、API 無しは 'unsupported'）
+- `WebNotificationProvider` は `{ now: () => Date }` で時計を DI 可能（fake timers テスト用）
+- スコープ外: 日跨ぎ自動再スケジュール（v1 は当日中のみ）、Service Worker / Web Push、タスク単位通知
+
 ## E2E（Playwright）
 
 ローカル E2E は `.nvmrc` の Node v24.15.0 で動作確認済み。
