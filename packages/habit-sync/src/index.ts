@@ -20,6 +20,8 @@ export { getSupabaseClient, resetSupabaseClient } from './supabase.js';
 export type { SetupSyncOptions } from './sync.js';
 export { getTaskLogsCutoffDate, setupSync } from './sync.js';
 export { clearTaskLogStatus, setTaskLogStatus, taskLogKey } from './task-log-write.js';
+export type { CreateTaskInput, UpdateTaskInput } from './task-write.js';
+export { archiveTask, createTask, unarchiveTask, updateTask } from './task-write.js';
 export type {
   Task,
   TaskInsert,
