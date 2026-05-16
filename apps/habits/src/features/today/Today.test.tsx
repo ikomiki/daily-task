@@ -20,15 +20,32 @@ vi.mock('../../lib/auth.js', () => ({
   signOut: (...args: unknown[]): unknown => signOutMock(...args),
 }));
 
+// TodayView は別途テスト済み。Today のテストでは「呼ばれる」ことのみ確認
+const todayViewMock = vi.fn();
+vi.mock('./TodayView.js', () => ({
+  TodayView: (props: { today: string }) => {
+    todayViewMock(props);
+    return <div data-testid="today-view">today={props.today}</div>;
+  },
+}));
+
 describe('Today', () => {
   beforeEach(() => {
     navigateMock.mockReset();
     signOutMock.mockReset();
+    todayViewMock.mockReset();
   });
 
   it('「今日のタスク」見出しを表示する', () => {
     render(<Today />);
     expect(screen.getByRole('heading', { name: '今日のタスク' })).toBeInTheDocument();
+  });
+
+  it('TodayView に today (YYYY-MM-DD) を渡す', () => {
+    render(<Today />);
+    expect(todayViewMock).toHaveBeenCalledTimes(1);
+    const props = todayViewMock.mock.calls[0][0];
+    expect(props.today).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
   it('ログアウトボタンクリックで signOut → /auth/login へ navigate', async () => {

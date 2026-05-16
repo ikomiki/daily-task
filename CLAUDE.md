@@ -155,6 +155,14 @@ packages/ui → packages/habit-core （型のみ参照）
 - `useTodayTasks(today)` で今日のタスクビューを購読、`getPendingSyncCount(state$)` で pending 件数を取得
 - `online$` で `navigator.onLine` を observable 化
 
+### Today 画面（M6 以降）
+
+- `apps/habits/src/features/today/` 配下に `Today` / `TodayView` / `TimeSlotGroup` / `TodayTaskItem` / `StatusButtons` を実装
+- 3 ボタン（完了 / スキップ / 失敗）で `state$.task_logs['${task_id}-${today}']` を楽観更新
+- 同じ button を再度押すと empty（行削除）に戻る、別 button で切り替え
+- 書き込みヘルパー: `@org/habit-sync` の `setTaskLogStatus(taskId, date, status)` / `clearTaskLogStatus(taskId, date)`
+- `today` 文字列は `apps/habits/src/lib/today-date.ts` の `getTodayDateString()` で生成
+
 ## E2E（Playwright）
 
 ローカル E2E は `.nvmrc` の Node v24.15.0 で動作確認済み。
