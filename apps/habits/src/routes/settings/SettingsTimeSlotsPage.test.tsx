@@ -34,4 +34,10 @@ describe('SettingsTimeSlotsPage', () => {
     render(<SettingsTimeSlotsPage />);
     expect(screen.getByRole('button', { name: /時間帯を追加/ })).toBeInTheDocument();
   });
+
+  it('通知設定リンクが表示される', () => {
+    render(<SettingsTimeSlotsPage />);
+    const link = screen.getByRole('link', { name: '通知設定' });
+    expect(link).toHaveAttribute('href', '/settings/notifications');
+  });
 });
