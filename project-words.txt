@@ -9,6 +9,9 @@ frontmatter
 Hiragino
 ikomiki
 jsdom
+legendapp
+supabase
+tanstack
 vite
 vitejs
 vitest
