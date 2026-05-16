@@ -25,6 +25,15 @@ export function isDueOn(rule: Frequency, date: string, taskCreatedAt: string): b
     return true;
   }
 
+  if (rule.type === 'every_n_days') {
+    const t = toUtcDays(date);
+    const a = toUtcDays(rule.anchor);
+    if (t < a) {
+      return false;
+    }
+    return (t - a) % rule.n === 0;
+  }
+
   // 他の type は後続タスクで実装する
   return false;
 }
