@@ -68,3 +68,40 @@ describe('isDueOn type=every_n_days', () => {
     expect(isDueOn(r, '2026-05-15', '2026-05-01')).toBe(true);
   });
 });
+
+describe('isDueOn type=weekday', () => {
+  const platdays: Frequency = { type: 'weekday', days: [1, 2, 3, 4, 5] }; // 平日
+  const created = '2026-05-01';
+
+  it('月曜は true', () => {
+    expect(isDueOn(platdays, '2026-05-11', created)).toBe(true);
+  });
+
+  it('火曜は true', () => {
+    expect(isDueOn(platdays, '2026-05-12', created)).toBe(true);
+  });
+
+  it('金曜は true', () => {
+    expect(isDueOn(platdays, '2026-05-15', created)).toBe(true);
+  });
+
+  it('土曜は false', () => {
+    expect(isDueOn(platdays, '2026-05-16', created)).toBe(false);
+  });
+
+  it('日曜は false', () => {
+    expect(isDueOn(platdays, '2026-05-17', created)).toBe(false);
+  });
+
+  it('週末のみ days=[6,7] は土日が true、平日が false', () => {
+    const weekend: Frequency = { type: 'weekday', days: [6, 7] };
+    expect(isDueOn(weekend, '2026-05-16', created)).toBe(true);
+    expect(isDueOn(weekend, '2026-05-17', created)).toBe(true);
+    expect(isDueOn(weekend, '2026-05-15', created)).toBe(false);
+  });
+
+  it('days=[] は常に false', () => {
+    const empty: Frequency = { type: 'weekday', days: [] };
+    expect(isDueOn(empty, '2026-05-16', created)).toBe(false);
+  });
+});

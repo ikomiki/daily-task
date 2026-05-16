@@ -1,4 +1,4 @@
-import { toUtcDays } from './dates.js';
+import { isoDayOfWeek, toUtcDays } from './dates.js';
 
 // 頻度ルールの判別共用体。
 // 詳細仕様は docs/superpowers/specs/2026-05-16-habits-app-design.md §5.2
@@ -32,6 +32,11 @@ export function isDueOn(rule: Frequency, date: string, taskCreatedAt: string): b
       return false;
     }
     return (t - a) % rule.n === 0;
+  }
+
+  if (rule.type === 'weekday') {
+    const dow = isoDayOfWeek(date);
+    return rule.days.includes(dow);
   }
 
   // 他の type は後続タスクで実装する
