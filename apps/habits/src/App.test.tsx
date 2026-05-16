@@ -105,4 +105,13 @@ describe('App ルーティング', () => {
       expect(screen.getByRole('heading', { name: '時間帯の設定' })).toBeInTheDocument();
     });
   });
+
+  it('認証済みで /stash にアクセスすると「スタッシュ」ページが表示される', async () => {
+    getCurrentSessionMock.mockResolvedValue({ user: { id: 'u1' }, access_token: 'x' });
+    await navigate('/stash');
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'スタッシュ' })).toBeInTheDocument();
+    });
+  });
 });
