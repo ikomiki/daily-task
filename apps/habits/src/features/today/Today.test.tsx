@@ -66,6 +66,11 @@ describe('Today', () => {
     expect(screen.getByRole('link', { name: 'タスク管理' })).toBeInTheDocument();
   });
 
+  it('スタッシュリンクが表示される', () => {
+    render(<Today />);
+    expect(screen.getByRole('link', { name: 'スタッシュ' })).toBeInTheDocument();
+  });
+
   it('設定リンクが表示される', () => {
     render(<Today />);
     expect(screen.getByRole('link', { name: '設定' })).toBeInTheDocument();

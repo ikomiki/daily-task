@@ -21,6 +21,9 @@ export function Today(): React.ReactElement {
           <Link to="/tasks" className="rounded border border-gray-500 px-3 py-1 text-sm">
             タスク管理
           </Link>
+          <Link to="/stash" className="rounded border border-gray-500 px-3 py-1 text-sm">
+            スタッシュ
+          </Link>
           <Link
             to="/settings/time-slots"
             className="rounded border border-gray-500 px-3 py-1 text-sm"
