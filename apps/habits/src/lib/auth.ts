@@ -1,4 +1,4 @@
-import type { Session, SupabaseClient, User } from '@supabase/supabase-js';
+import type { AuthChangeEvent, Session, SupabaseClient, User } from '@supabase/supabase-js';
 
 // auth 操作の戻り値: 成功/失敗の判別共用体。
 // 呼び出し側は `if (result.ok)` で網羅性チェック可能。
@@ -51,21 +51,19 @@ export async function signOut(client: SupabaseClient): Promise<AuthResult<object
 
 // 起動時にセッションを取得し、変化を観測するヘルパー。
 // onAuthStateChange は { data: { subscription } } を返すため、unsubscribe 関数を返す。
-export type AuthEvent =
-  | 'INITIAL_SESSION'
-  | 'SIGNED_IN'
-  | 'SIGNED_OUT'
-  | 'TOKEN_REFRESHED'
-  | 'USER_UPDATED';
 
-export type AuthStateListener = (event: AuthEvent, session: Session | null) => void;
+// Supabase の AuthChangeEvent を再エクスポート。自前定義は PASSWORD_RECOVERY / MFA_CHALLENGE_VERIFIED を
+// 欠落させてしまうため、公式型をそのまま利用する。
+export type { AuthChangeEvent as AuthEvent };
+
+export type AuthStateListener = (event: AuthChangeEvent, session: Session | null) => void;
 
 export function subscribeAuthState(
   client: SupabaseClient,
   listener: AuthStateListener,
 ): () => void {
   const { data } = client.auth.onAuthStateChange((event, session) => {
-    listener(event as AuthEvent, session);
+    listener(event, session);
   });
   return () => data.subscription.unsubscribe();
 }

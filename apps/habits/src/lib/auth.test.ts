@@ -1,6 +1,6 @@
 import type { Session, SupabaseClient, User } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
-import { signIn, signOut, signUp } from './auth.js';
+import { getCurrentSession, signIn, signOut, signUp, subscribeAuthState } from './auth.js';
 
 // SupabaseClient を最小限モック
 function makeMockClient(handlers: {
@@ -91,6 +91,57 @@ describe('lib/auth', () => {
       if (!result.ok) {
         expect(result.error).toMatch(/net/);
       }
+    });
+  });
+
+  describe('getCurrentSession', () => {
+    it('Supabase の getSession から session を返す', async () => {
+      const getSession = vi.fn().mockResolvedValue({ data: { session: dummySession } });
+      const client = {
+        auth: { getSession },
+      } as unknown as SupabaseClient;
+      const session = await getCurrentSession(client);
+      expect(session).toEqual(dummySession);
+    });
+
+    it('session が null のときは null を返す', async () => {
+      const getSession = vi.fn().mockResolvedValue({ data: { session: null } });
+      const client = {
+        auth: { getSession },
+      } as unknown as SupabaseClient;
+      const session = await getCurrentSession(client);
+      expect(session).toBeNull();
+    });
+  });
+
+  describe('subscribeAuthState', () => {
+    it('listener が onAuthStateChange のコールバックで呼ばれる', async () => {
+      let cb: ((event: string, session: Session | null) => void) | null = null;
+      const onAuthStateChange = vi.fn().mockImplementation((handler) => {
+        cb = handler;
+        return { data: { subscription: { unsubscribe: vi.fn() } } };
+      });
+      const client = {
+        auth: { onAuthStateChange },
+      } as unknown as SupabaseClient;
+      const listener = vi.fn();
+      subscribeAuthState(client, listener);
+      expect(cb).not.toBeNull();
+      cb?.('SIGNED_IN', dummySession);
+      expect(listener).toHaveBeenCalledWith('SIGNED_IN', dummySession);
+    });
+
+    it('戻り値の関数が subscription.unsubscribe を呼ぶ', async () => {
+      const unsubscribe = vi.fn();
+      const onAuthStateChange = vi.fn().mockReturnValue({
+        data: { subscription: { unsubscribe } },
+      });
+      const client = {
+        auth: { onAuthStateChange },
+      } as unknown as SupabaseClient;
+      const unsub = subscribeAuthState(client, vi.fn());
+      unsub();
+      expect(unsubscribe).toHaveBeenCalled();
     });
   });
 });
