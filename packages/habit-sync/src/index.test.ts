@@ -46,4 +46,11 @@ describe('@org/habit-sync 公開 API スモーク', () => {
     };
     expect(typeof stub.requestPermission).toBe('function');
   });
+
+  it('state$ の各テーブルが Record 形式で初期化される', () => {
+    expect(state$.time_slots.get()).toEqual({});
+    expect(state$.tasks.get()).toEqual({});
+    expect(state$.task_logs.get()).toEqual({});
+    expect(state$.task_stash_view.get()).toEqual({});
+  });
 });
