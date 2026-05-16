@@ -1,5 +1,5 @@
 {
-  "name": "@org/ui",
+  "name": "@org/habit-core",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,20 +9,12 @@
     ".": {
       "@org/source": "./src/index.ts",
       "default": "./src/index.ts"
-    },
-    "./styles.css": "./src/styles.css"
-  },
-  "dependencies": {
-    "react": "catalog:"
+    }
   },
   "devDependencies": {
     "@org/config-biome": "workspace:*",
-    "@org/config-tailwind": "workspace:*",
     "@org/config-tsconfig": "workspace:*",
     "@org/config-vitest": "workspace:*",
-    "@testing-library/react": "catalog:",
-    "@testing-library/jest-dom": "catalog:",
-    "@types/react": "catalog:",
     "vitest": "catalog:"
   }
 }

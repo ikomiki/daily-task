@@ -1,6 +1,6 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - "apps/*"
+  - "packages/*"
 
 # pnpm 11+ は postinstall スクリプトをデフォルトでブロックする。
 # 許可するパッケージは下部の allowBuilds セクションで明示する（pnpm 11+の新書式）。
@@ -11,51 +11,55 @@ packages:
 # 緊急ホットフィックスを使う必要が出たら minimumReleaseAgeExclude に
 # `name@version`（例: `nx@21.6.5`）を追加して個別解除する。
 minimumReleaseAge: 4320
-minimumReleaseAgeExclude: []
+minimumReleaseAgeExclude:
+  - "@types/node@25.6.2"
 
 catalog:
   # React
   react: ^19.0.0
   react-dom: ^19.0.0
-  '@types/react': ^19.0.0
-  '@types/react-dom': ^19.0.0
+  "@types/react": ^19.0.0
+  "@types/react-dom": ^19.0.0
 
   # ビルド/バンドル
   vite: ^7.0.0
-  '@vitejs/plugin-react': ^5.0.0
+  "@vitejs/plugin-react": ^5.0.0
 
   # スタイリング
   tailwindcss: ^4.0.0
-  '@tailwindcss/vite': ^4.0.0
+  "@tailwindcss/vite": ^4.0.0
 
   # 状態管理 / バリデーション
-  zustand: ^5.0.0
   zod: ^4.0.0
+  "@legendapp/state": 3.0.0-beta.47
 
-  # ゲーム
-  pixi.js: ^8.0.0
-  '@pixi/react': ^8.0.0
-  howler: ^2.2.4
-  '@types/howler': ^2.2.12
-  use-sound: ^5.0.0
+  # ルーティング（M1 は code-based のみ。file-based 移行時に @tanstack/router-plugin を追加）
+  "@tanstack/react-router": ^1.0.0
+
+  # Supabase
+  "@supabase/supabase-js": ^2.0.0
+
+  # PWA / Service Worker
+  "vite-plugin-pwa": ^1.0.0
+  "workbox-window": ^7.0.0
 
   # テスト
   vitest: ^3.0.0
-  '@vitest/ui': ^3.0.0
-  '@testing-library/react': ^16.0.0
-  '@testing-library/jest-dom': ^6.0.0
-  '@testing-library/user-event': ^14.0.0
+  "@vitest/ui": ^3.0.0
+  "@testing-library/react": ^16.0.0
+  "@testing-library/jest-dom": ^6.0.0
+  "@testing-library/user-event": ^14.0.0
   jsdom: ^26.0.0
-  '@playwright/test': ^1.50.0
+  "@playwright/test": ^1.50.0
 
   # Linter/Formatter
-  '@biomejs/biome': ^2.0.0
+  "@biomejs/biome": ^2.0.0
 
   # TypeScript
   typescript: ~5.9.2
 
 # ネイティブバイナリ配置/コンパイルのため build script を許可するパッケージ
 allowBuilds:
-  '@swc/core': true
+  "@swc/core": true
   esbuild: true
   nx: true

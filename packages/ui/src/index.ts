@@ -1,1 +1,1 @@
-export { ScoreHud } from './ScoreHud';
+export const PACKAGE_NAME = 'ui';
