@@ -11,6 +11,8 @@ export type {
 } from './notify/NotificationProvider.js';
 export type { SyncState } from './observables.js';
 export { state$ } from './observables.js';
+export type { SyncPersistenceConfig } from './persist.js';
+export { configureSyncPersistence } from './persist.js';
 export type { SupabaseConfig } from './supabase.js';
 export { getSupabaseClient, resetSupabaseClient } from './supabase.js';
 export type {
