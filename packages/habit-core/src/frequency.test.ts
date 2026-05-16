@@ -105,3 +105,85 @@ describe('isDueOn type=weekday', () => {
     expect(isDueOn(empty, '2026-05-16', created)).toBe(false);
   });
 });
+
+describe('isDueOn type=day_of_week', () => {
+  const created = '2026-05-01';
+
+  describe('weeks_of_month 未指定（毎週マッチ）', () => {
+    const rule: Frequency = { type: 'day_of_week', days: [4] }; // 木曜
+
+    it('5/7 木曜（第 1 週）は true', () => {
+      expect(isDueOn(rule, '2026-05-07', created)).toBe(true);
+    });
+    it('5/14 木曜（第 2 週）は true', () => {
+      expect(isDueOn(rule, '2026-05-14', created)).toBe(true);
+    });
+    it('5/21 木曜（第 3 週）は true', () => {
+      expect(isDueOn(rule, '2026-05-21', created)).toBe(true);
+    });
+    it('5/28 木曜（第 4 週）は true', () => {
+      expect(isDueOn(rule, '2026-05-28', created)).toBe(true);
+    });
+    it('木曜以外は false', () => {
+      expect(isDueOn(rule, '2026-05-15', created)).toBe(false);
+    });
+  });
+
+  describe('weeks_of_month = [2, 4]（第 2/4 木曜のみ）', () => {
+    const rule: Frequency = { type: 'day_of_week', days: [4], weeks_of_month: [2, 4] };
+
+    it('5/7 木曜（第 1 週）は false', () => {
+      expect(isDueOn(rule, '2026-05-07', created)).toBe(false);
+    });
+    it('5/14 木曜（第 2 週）は true', () => {
+      expect(isDueOn(rule, '2026-05-14', created)).toBe(true);
+    });
+    it('5/21 木曜（第 3 週）は false', () => {
+      expect(isDueOn(rule, '2026-05-21', created)).toBe(false);
+    });
+    it('5/28 木曜（第 4 週）は true', () => {
+      expect(isDueOn(rule, '2026-05-28', created)).toBe(true);
+    });
+    it('火曜（曜日不一致）は週問わず false', () => {
+      expect(isDueOn(rule, '2026-05-12', created)).toBe(false);
+    });
+  });
+
+  describe('weeks_of_month = [5]（第 5 週のみ）', () => {
+    const rule: Frequency = { type: 'day_of_week', days: [5], weeks_of_month: [5] };
+
+    it('2026-05-29 金曜（第 5 週）は true', () => {
+      expect(isDueOn(rule, '2026-05-29', created)).toBe(true);
+    });
+    it('2026-05-22 金曜（第 4 週）は false', () => {
+      expect(isDueOn(rule, '2026-05-22', created)).toBe(false);
+    });
+    it('2026-06-26 金曜（第 4 週、6 月最終）は false', () => {
+      expect(isDueOn(rule, '2026-06-26', created)).toBe(false);
+    });
+  });
+
+  describe('weeks_of_month = []（マッチ週なし → 常に false）', () => {
+    const rule: Frequency = { type: 'day_of_week', days: [4], weeks_of_month: [] };
+    it('全週で false', () => {
+      expect(isDueOn(rule, '2026-05-07', created)).toBe(false);
+      expect(isDueOn(rule, '2026-05-14', created)).toBe(false);
+    });
+  });
+
+  describe('複数曜日 days = [1, 3, 5]（月水金）', () => {
+    const rule: Frequency = { type: 'day_of_week', days: [1, 3, 5] };
+    it('月曜は true', () => {
+      expect(isDueOn(rule, '2026-05-11', created)).toBe(true);
+    });
+    it('水曜は true', () => {
+      expect(isDueOn(rule, '2026-05-13', created)).toBe(true);
+    });
+    it('金曜は true', () => {
+      expect(isDueOn(rule, '2026-05-15', created)).toBe(true);
+    });
+    it('火曜は false', () => {
+      expect(isDueOn(rule, '2026-05-12', created)).toBe(false);
+    });
+  });
+});

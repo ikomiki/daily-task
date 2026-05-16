@@ -1,4 +1,4 @@
-import { isoDayOfWeek, toUtcDays } from './dates.js';
+import { isoDayOfWeek, toUtcDays, weekOfMonth } from './dates.js';
 
 // 頻度ルールの判別共用体。
 // 詳細仕様は docs/superpowers/specs/2026-05-16-habits-app-design.md §5.2
@@ -37,6 +37,20 @@ export function isDueOn(rule: Frequency, date: string, taskCreatedAt: string): b
   if (rule.type === 'weekday') {
     const dow = isoDayOfWeek(date);
     return rule.days.includes(dow);
+  }
+
+  if (rule.type === 'day_of_week') {
+    const dow = isoDayOfWeek(date);
+    if (!rule.days.includes(dow)) {
+      return false;
+    }
+    // weeks_of_month 未指定（undefined）は全週マッチ。
+    // 空配列 [] は「該当週なし」として常に false。
+    if (rule.weeks_of_month === undefined) {
+      return true;
+    }
+    const wom = weekOfMonth(date);
+    return rule.weeks_of_month.includes(wom);
   }
 
   // 他の type は後続タスクで実装する
