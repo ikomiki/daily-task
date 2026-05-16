@@ -31,6 +31,17 @@ catalog:
 
   # 状態管理 / バリデーション
   zod: ^4.0.0
+  "@legendapp/state": ^3.0.0
+
+  # ルーティング（M1 は code-based のみ。file-based 移行時に @tanstack/router-plugin を追加）
+  "@tanstack/react-router": ^1.0.0
+
+  # Supabase
+  "@supabase/supabase-js": ^2.0.0
+
+  # PWA / Service Worker
+  "vite-plugin-pwa": ^1.0.0
+  "workbox-window": ^7.0.0
 
   # テスト
   vitest: ^3.0.0
