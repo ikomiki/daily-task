@@ -163,6 +163,15 @@ packages/ui → packages/habit-core （型のみ参照）
 - 書き込みヘルパー: `@org/habit-sync` の `setTaskLogStatus(taskId, date, status)` / `clearTaskLogStatus(taskId, date)`
 - `today` 文字列は `apps/habits/src/lib/today-date.ts` の `getTodayDateString()` で生成
 
+### タスク管理 / 時間帯設定（M7 以降）
+
+- `/tasks`: TaskList で全タスクを一覧表示、新規追加 / 編集 / アーカイブ / 復元
+- `/tasks/new` / `/tasks/$id`: TaskForm で新規・編集（FrequencyPicker 内包）
+- `/settings/time-slots`: 時間帯の CRUD。最低 1 個と参照タスクなしのガードあり
+- 書き込みヘルパー: `@org/habit-sync` の `createTask` / `updateTask` / `archiveTask` / `unarchiveTask` / `createTimeSlot` / `updateTimeSlot` / `deleteTimeSlot`
+- 頻度サマリ表示: `apps/habits/src/lib/frequency-format.ts` の `formatFrequency`
+- 全認証ルートは `router.tsx` 内の `requireAuth()` 共通 beforeLoad で AuthGate を共有
+
 ## E2E（Playwright）
 
 ローカル E2E は `.nvmrc` の Node v24.15.0 で動作確認済み。
