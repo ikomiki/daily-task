@@ -44,6 +44,7 @@ catalog:
   "workbox-window": ^7.0.0
 
   # テスト
+  fake-indexeddb: 6.0.0
   vitest: ^3.0.0
   "@vitest/ui": ^3.0.0
   "@testing-library/react": ^16.0.0
