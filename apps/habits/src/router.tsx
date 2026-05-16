@@ -5,6 +5,11 @@ import {
   Outlet,
   redirect,
 } from '@tanstack/react-router';
+import { Login } from './features/auth/Login.js';
+import { Signup } from './features/auth/Signup.js';
+import { Today } from './features/today/Today.js';
+import { getCurrentSession } from './lib/auth.js';
+import { getAppSupabase } from './lib/supabase.js';
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -25,16 +30,28 @@ const indexRoute = createRoute({
 const todayRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/today',
-  component: TodayPage,
+  beforeLoad: async () => {
+    const session = await getCurrentSession(getAppSupabase());
+    if (session === null) {
+      throw redirect({ to: '/auth/login' });
+    }
+  },
+  component: Today,
 });
 
 const authLoginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/auth/login',
-  component: LoginPage,
+  component: Login,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, todayRoute, authLoginRoute]);
+const authSignupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/auth/signup',
+  component: Signup,
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, todayRoute, authLoginRoute, authSignupRoute]);
 
 export const router = createRouter({ routeTree });
 
@@ -42,26 +59,4 @@ declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
   }
-}
-
-// M6 マイルストーンで実コンポーネントに置き換える。
-function TodayPage(): React.ReactElement {
-  return (
-    <section className="p-6 space-y-3">
-      <h1 className="text-2xl font-bold text-game-accent">今日のタスク</h1>
-      <p className="text-sm">M6 マイルストーンで時間帯別タスクリストに置き換える。</p>
-    </section>
-  );
-}
-
-// M3 マイルストーンで実コンポーネントに置き換える。
-function LoginPage(): React.ReactElement {
-  return (
-    <section className="p-6 space-y-3 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold text-game-accent">ログイン</h1>
-      <p className="text-sm">
-        M3 マイルストーンで Supabase Email/Password 認証フォームを実装する。
-      </p>
-    </section>
-  );
 }

@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { signIn } from '../../lib/auth.js';
 import { getAppSupabase } from '../../lib/supabase.js';
@@ -37,10 +37,9 @@ export function Login(): React.ReactElement {
         isSubmitting={isSubmitting}
       />
       <p className="text-sm">
-        {/* /auth/signup は M3 後続タスクで router に追加される。それまで a タグで仮置き */}
-        <a href="/auth/signup" className="text-game-accent underline">
+        <Link to="/auth/signup" className="text-game-accent underline">
           アカウントをお持ちでない方はこちら（新規登録）
-        </a>
+        </Link>
       </p>
     </section>
   );
