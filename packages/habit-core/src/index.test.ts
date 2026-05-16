@@ -19,11 +19,6 @@ describe('@org/habit-core 公開 API スモーク', () => {
     expect(logs).toHaveLength(1);
   });
 
-  it('isDueOn は M4 まで未実装のため throw する', () => {
-    expect(() => isDueOn({ type: 'daily' }, '2026-05-16', '2026-05-16')).toThrow(/NOT_IMPLEMENTED/);
-  });
-
-  it('calculateStreak は M4 まで未実装のため throw する', () => {
-    expect(() => calculateStreak([])).toThrow(/NOT_IMPLEMENTED/);
-  });
+  it.skip('isDueOn は M4 完了で実装済（Task 9 で本来のスモークテストに置換予定）', () => {});
+  it.skip('calculateStreak は M4 完了で実装済（Task 9 で本来のスモークテストに置換予定）', () => {});
 });

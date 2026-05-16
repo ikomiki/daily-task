@@ -1,3 +1,5 @@
+import { toUtcDays } from './dates.js';
+
 // 頻度ルールの判別共用体。
 // 詳細仕様は docs/superpowers/specs/2026-05-16-habits-app-design.md §5.2
 export type Frequency =
@@ -12,8 +14,17 @@ export type Frequency =
   | { type: 'every_n_weeks'; n: number; day_of_week: number; anchor: string };
 
 // 指定日にタスクが頻度ルールにマッチするかを返す。
-// 実装本体は M4（packages/habit-core 実装フェーズ）で行う。
-// 引数 date / anchor は 'YYYY-MM-DD' 形式のローカル日付文字列。
-export function isDueOn(_rule: Frequency, _date: string, _taskCreatedAt: string): boolean {
-  throw new Error('NOT_IMPLEMENTED: isDueOn は M4 で実装する');
+// 引数 date / taskCreatedAt は 'YYYY-MM-DD' 形式のローカル日付文字列。
+export function isDueOn(rule: Frequency, date: string, taskCreatedAt: string): boolean {
+  // 共通: タスク作成日より前は常に false
+  if (toUtcDays(date) < toUtcDays(taskCreatedAt)) {
+    return false;
+  }
+
+  if (rule.type === 'daily') {
+    return true;
+  }
+
+  // 他の type は後続タスクで実装する
+  return false;
 }
