@@ -6,7 +6,6 @@ import type { TaskStatus } from './status.js';
 //   - skip:     streak 維持（増えない）
 //   - fail:     streak を 0 にリセット
 //   - 頻度外:   呼び出し側で除外して渡す
-// 実装本体は M4 で行う。
 export interface LogEntry {
   date: string; // 'YYYY-MM-DD'
   status: TaskStatus;
