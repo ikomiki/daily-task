@@ -1,0 +1,7 @@
+# 環境変数
+.env.local
+.env.*.local
+
+# ビルド成果物
+dist/
+.vite/

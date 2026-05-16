@@ -53,3 +53,7 @@ Thumbs.db
 .claude/settings.local.json
 .nx/polygraph
 .nx/self-healing
+
+# Supabase ローカル成果物
+supabase/.branches/
+supabase/.temp/
