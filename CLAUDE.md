@@ -172,6 +172,16 @@ packages/ui → packages/habit-core （型のみ参照）
 - 頻度サマリ表示: `apps/habits/src/lib/frequency-format.ts` の `formatFrequency`
 - 全認証ルートは `router.tsx` 内の `requireAuth()` 共通 beforeLoad で AuthGate を共有
 
+### スタッシュ（集計表示）/ オフライン可視化（M8 以降）
+
+- `/stash`: 全アクティブタスクの集計（完了数 / スキップ / 失敗 / 連続 / 対象日数 / 完了率 / 最終完了日）を一覧
+- `apps/habits/src/features/stash/` 配下に `PendingSyncBadge` / `StashRow` / `StashPanel` を実装
+- `state$.task_stash_view`（VIEW、read-only）を購読、`state$.tasks` と join して時間帯 / sort_order 順
+- `PendingSyncBadge`: `online$ === false` または `getPendingSyncCount(state$) >= 1` のとき表示。両方を同時に併記
+- React フック: `useOnlineStatus` / `usePendingSyncCount` / `useTaskStashList` を `apps/habits/src/hooks/` に追加
+- フォーマッタ: `apps/habits/src/lib/stash-format.ts` の `formatStashCount` / `formatCompletionRate` / `formatLastCompletedDate`（null セーフ）
+- Today 画面のヘッダー nav から `/stash` へ遷移可能
+
 ## E2E（Playwright）
 
 ローカル E2E は `.nvmrc` の Node v24.15.0 で動作確認済み。
