@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { signOut } from '../../lib/auth.js';
 import { getAppSupabase } from '../../lib/supabase.js';
 import { getTodayDateString } from '../../lib/today-date.js';
@@ -15,17 +15,28 @@ export function Today(): React.ReactElement {
 
   return (
     <section className="mx-auto max-w-2xl p-6 space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold text-game-accent">今日のタスク</h1>
-        <button
-          type="button"
-          onClick={() => {
-            void handleSignOut();
-          }}
-          className="rounded border border-gray-500 px-3 py-1 text-sm"
-        >
-          ログアウト
-        </button>
+        <nav className="flex items-center gap-2">
+          <Link to="/tasks" className="rounded border border-gray-500 px-3 py-1 text-sm">
+            タスク管理
+          </Link>
+          <Link
+            to="/settings/time-slots"
+            className="rounded border border-gray-500 px-3 py-1 text-sm"
+          >
+            設定
+          </Link>
+          <button
+            type="button"
+            onClick={() => {
+              void handleSignOut();
+            }}
+            className="rounded border border-gray-500 px-3 py-1 text-sm"
+          >
+            ログアウト
+          </button>
+        </nav>
       </header>
       <TodayView today={today} />
     </section>
