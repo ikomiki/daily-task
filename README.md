@@ -1,6 +1,6 @@
-# game-workspace
+# daily-task
 
-複数ゲームと共有ライブラリを並行開発する Nx モノレポ。
+毎日のタスク瞬間を実装する Nx モノレポ。
 Vite + React 19 + Pixi.js 8 + Zustand + Zod + howler/use-sound + Tailwind CSS v4
 を共通基盤として、`apps/*` にゲーム本体、`packages/*` に共有エンジン/UI/オーディオと共有設定を集める。
 
@@ -55,17 +55,17 @@ pnpm exec biome check --write .           # 自動修正
 
 ## 採用している技術スタック
 
-| 領域 | ツール |
-|------|--------|
-| パッケージ管理 | pnpm 11 + Catalogs（バージョン単一ソース化） |
-| モノレポ | Nx 22 + `@nx/js`/`@nx/vite`/`@nx/playwright` プラグイン |
-| 言語 | TypeScript 5.9（strict + customConditions で source 直接解決）|
-| Linter/Formatter | Biome 2.x（ESLint/Prettier 不採用）|
-| ビルド/テスト | Vite 7 + vitest 3 + @testing-library + jsdom |
-| E2E | Playwright |
-| UI | React 19 + Tailwind CSS v4 (CSS-first) |
-| 状態/バリデーション | Zustand 5 + Zod 4 |
-| ゲーム/オーディオ | Pixi.js 8 + @pixi/react + howler.js + use-sound |
+| 領域                | ツール                                                         |
+| ------------------- | -------------------------------------------------------------- |
+| パッケージ管理      | pnpm 11 + Catalogs（バージョン単一ソース化）                   |
+| モノレポ            | Nx 22 + `@nx/js`/`@nx/vite`/`@nx/playwright` プラグイン        |
+| 言語                | TypeScript 5.9（strict + customConditions で source 直接解決） |
+| Linter/Formatter    | Biome 2.x（ESLint/Prettier 不採用）                            |
+| ビルド/テスト       | Vite 7 + vitest 3 + @testing-library + jsdom                   |
+| E2E                 | Playwright                                                     |
+| UI                  | React 19 + Tailwind CSS v4 (CSS-first)                         |
+| 状態/バリデーション | Zustand 5 + Zod 4                                              |
+| ゲーム/オーディオ   | Pixi.js 8 + @pixi/react + howler.js + use-sound                |
 
 ## 開発方針
 
