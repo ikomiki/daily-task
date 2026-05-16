@@ -49,12 +49,11 @@ export function AuthForm({
   const displayError = validationError ?? errorMessage ?? null;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       <label className="block space-y-1">
         <span className="text-sm font-medium">メールアドレス</span>
         <input
-          type="text"
-          inputMode="email"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
