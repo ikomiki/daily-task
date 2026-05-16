@@ -1,3 +1,5 @@
+// Supabase の TS 型（supabase gen types typescript --local で再生成可能）
+export type { Database, Json } from './db-types.js';
 export type {
   NotificationProvider,
   PermissionState,
