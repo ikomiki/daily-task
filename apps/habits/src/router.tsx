@@ -1,3 +1,4 @@
+import { WebNotificationProvider } from '@org/habit-sync';
 import {
   createRootRoute,
   createRoute,
@@ -7,19 +8,26 @@ import {
 } from '@tanstack/react-router';
 import { Login } from './features/auth/Login.js';
 import { Signup } from './features/auth/Signup.js';
+import { NotificationManager } from './features/notify/NotificationManager.js';
 import { Today } from './features/today/Today.js';
 import { getCurrentSession } from './lib/auth.js';
 import { getAppSupabase } from './lib/supabase.js';
+import { getTodayDateString } from './lib/today-date.js';
 import { HistoryPage } from './routes/history/HistoryPage.js';
+import { SettingsNotificationsPage } from './routes/settings/SettingsNotificationsPage.js';
 import { SettingsTimeSlotsPage } from './routes/settings/SettingsTimeSlotsPage.js';
 import { StashPage } from './routes/stash/StashPage.js';
 import { TaskEditPage } from './routes/tasks/TaskEditPage.js';
 import { TaskNewPage } from './routes/tasks/TaskNewPage.js';
 import { TasksPage } from './routes/tasks/TasksPage.js';
 
+// モジュールレベルで provider を生成（アプリ全体で 1 インスタンス共有）
+const notificationProvider = new WebNotificationProvider();
+
 const rootRoute = createRootRoute({
   component: () => (
     <main className="min-h-screen">
+      <NotificationManager provider={notificationProvider} today={getTodayDateString()} />
       <Outlet />
     </main>
   ),
@@ -76,6 +84,13 @@ const settingsTimeSlotsRoute = createRoute({
   component: SettingsTimeSlotsPage,
 });
 
+const settingsNotificationsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/settings/notifications',
+  beforeLoad: requireAuth,
+  component: SettingsNotificationsPage,
+});
+
 const stashRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/stash',
@@ -109,6 +124,7 @@ const routeTree = rootRoute.addChildren([
   taskNewRoute,
   taskEditRoute,
   settingsTimeSlotsRoute,
+  settingsNotificationsRoute,
   stashRoute,
   historyRoute,
   authLoginRoute,
