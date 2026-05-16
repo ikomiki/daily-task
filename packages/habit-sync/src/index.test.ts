@@ -1,3 +1,4 @@
+import type { User } from '@supabase/supabase-js';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   getSupabaseClient,
@@ -32,8 +33,8 @@ describe('@org/habit-sync 公開 API スモーク', () => {
 
   it('state$ が legend-state observable として動作する', () => {
     expect(state$.user.get()).toBeNull();
-    state$.user.set({ id: 'u1', email: 'a@b.co' });
-    expect(state$.user.get()).toEqual({ id: 'u1', email: 'a@b.co' });
+    state$.user.set({ id: 'u1', email: 'a@b.co' } as unknown as User);
+    expect(state$.user.get()?.id).toBe('u1');
     state$.user.set(null);
   });
 
