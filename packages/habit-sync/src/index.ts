@@ -11,6 +11,8 @@ export type {
   PermissionState,
   SlotSchedule,
 } from './notify/NotificationProvider.js';
+export type { WebNotificationProviderOptions } from './notify/WebNotificationProvider.js';
+export { WebNotificationProvider } from './notify/WebNotificationProvider.js';
 export type { SyncState } from './observables.js';
 export { state$ } from './observables.js';
 export { online$, startOnlineWatcher } from './online.js';
