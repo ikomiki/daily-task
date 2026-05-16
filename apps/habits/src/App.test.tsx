@@ -114,4 +114,13 @@ describe('App ルーティング', () => {
       expect(screen.getByRole('heading', { name: 'スタッシュ' })).toBeInTheDocument();
     });
   });
+
+  it('認証済みで /history にアクセスすると「履歴」ページが表示される', async () => {
+    getCurrentSessionMock.mockResolvedValue({ user: { id: 'u1' }, access_token: 'x' });
+    await navigate('/history');
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: '履歴' })).toBeInTheDocument();
+    });
+  });
 });

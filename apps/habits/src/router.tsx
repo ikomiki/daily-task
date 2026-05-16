@@ -10,6 +10,7 @@ import { Signup } from './features/auth/Signup.js';
 import { Today } from './features/today/Today.js';
 import { getCurrentSession } from './lib/auth.js';
 import { getAppSupabase } from './lib/supabase.js';
+import { HistoryPage } from './routes/history/HistoryPage.js';
 import { SettingsTimeSlotsPage } from './routes/settings/SettingsTimeSlotsPage.js';
 import { StashPage } from './routes/stash/StashPage.js';
 import { TaskEditPage } from './routes/tasks/TaskEditPage.js';
@@ -82,6 +83,13 @@ const stashRoute = createRoute({
   component: StashPage,
 });
 
+const historyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/history',
+  beforeLoad: requireAuth,
+  component: HistoryPage,
+});
+
 const authLoginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/auth/login',
@@ -102,6 +110,7 @@ const routeTree = rootRoute.addChildren([
   taskEditRoute,
   settingsTimeSlotsRoute,
   stashRoute,
+  historyRoute,
   authLoginRoute,
   authSignupRoute,
 ]);
