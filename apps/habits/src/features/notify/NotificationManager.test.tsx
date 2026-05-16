@@ -1,4 +1,10 @@
-import { type NotificationProvider, state$, type Task, type TimeSlot } from '@org/habit-sync';
+import {
+  type NotificationProvider,
+  type SlotSchedule,
+  state$,
+  type Task,
+  type TimeSlot,
+} from '@org/habit-sync';
 import { act, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { NotificationManager } from './NotificationManager.js';
@@ -113,7 +119,7 @@ describe('NotificationManager', () => {
     const provider = makeProvider();
     render(<NotificationManager provider={provider} today={TODAY} />);
     const onFire = provider.scheduleCalls[0].onFire;
-    onFire({ slotId: 's1', slotName: '朝', notifyAt: '09:00:00' } as unknown as never);
+    onFire({ slotId: 's1', slotName: '朝', notifyAt: '09:00:00' } satisfies SlotSchedule);
     expect(provider.shownCalls).toHaveLength(1);
     expect(provider.shownCalls[0].title).toBe('朝');
     expect(provider.shownCalls[0].body).toMatch(/2 件/);
@@ -136,7 +142,7 @@ describe('NotificationManager', () => {
     const provider = makeProvider();
     render(<NotificationManager provider={provider} today={TODAY} />);
     const onFire = provider.scheduleCalls[0].onFire;
-    onFire({ slotId: 's1', slotName: 'slot', notifyAt: '09:00:00' } as unknown as never);
+    onFire({ slotId: 's1', slotName: 'slot', notifyAt: '09:00:00' } satisfies SlotSchedule);
     expect(provider.shownCalls).toHaveLength(0);
   });
 });

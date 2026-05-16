@@ -22,8 +22,9 @@ export interface NotificationManagerProps {
 export function NotificationManager(props: NotificationManagerProps): null {
   const { provider, today } = props;
 
-  // time_slots の id/notify_at/name/sort_order が変わったら effect を再走させたいので、
-  // 比較可能な signature を作って依存配列に渡す。
+  // time_slots の id/notify_at/name が変わったら effect を再走させて reschedule する。
+  // name は scheduleDaily 時点で SlotSchedule に焼き込まれて onFire の slot に渡るので、
+  // 変更を通知 title に反映するには再 schedule が必要（state$ を都度引き直しても良いが現状は焼き込み）。
   const slotsSignature = use$<string>(() => {
     const slots = (Object.values(state$.time_slots.get()) as TimeSlot[])
       .slice()

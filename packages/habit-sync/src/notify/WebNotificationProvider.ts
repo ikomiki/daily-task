@@ -30,8 +30,10 @@ function parseNotifyAt(notifyAt: string): { hour: number; minute: number } | nul
 //   - 過去時刻のスロットはスキップ（v1 は当日中のみ）
 // - cancelAll: 全タイマー解除
 // - show: permission=granted の場合のみ new Notification(...)
+type TimerHandle = ReturnType<typeof setTimeout>;
+
 export class WebNotificationProvider implements NotificationProvider {
-  private timerIds: number[] = [];
+  private timerIds: TimerHandle[] = [];
   private readonly now: () => Date;
 
   constructor(options: WebNotificationProviderOptions = {}) {
@@ -74,11 +76,11 @@ export class WebNotificationProvider implements NotificationProvider {
         // 過去時刻はスキップ（v1 は当日中のみ）
         continue;
       }
-      // setTimeout の戻り値は Node では NodeJS.Timeout、ブラウザでは number。
-      // unknown 経由でキャストして number として保持する。
+      // setTimeout の戻り値は Node では Timeout、ブラウザでは number だが
+      // ReturnType<typeof setTimeout> で吸収して clearTimeout に渡せる
       const id = setTimeout(() => {
         onFire(slot);
-      }, diff) as unknown as number;
+      }, diff);
       this.timerIds.push(id);
     }
   }
