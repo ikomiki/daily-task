@@ -187,3 +187,60 @@ describe('isDueOn type=day_of_week', () => {
     });
   });
 });
+
+describe('isDueOn type=every_n_weeks', () => {
+  // 2 週に 1 回、土曜（day_of_week=6）、anchor=2026-05-01（金曜）
+  // first_match_date は anchor 以降の最初の土曜 → 2026-05-02（土）
+  // 以降 2 週ごと: 2026-05-02, 2026-05-16, 2026-05-30, 2026-06-13, ...
+  const rule: Frequency = {
+    type: 'every_n_weeks',
+    n: 2,
+    day_of_week: 6,
+    anchor: '2026-05-01',
+  };
+  const created = '2026-05-01';
+
+  it('first_match_date 2026-05-02 はマッチ', () => {
+    expect(isDueOn(rule, '2026-05-02', created)).toBe(true);
+  });
+
+  it('次の土曜 2026-05-09（1 週後）は false', () => {
+    expect(isDueOn(rule, '2026-05-09', created)).toBe(false);
+  });
+
+  it('2 週後 2026-05-16 はマッチ', () => {
+    expect(isDueOn(rule, '2026-05-16', created)).toBe(true);
+  });
+
+  it('4 週後 2026-05-30 はマッチ', () => {
+    expect(isDueOn(rule, '2026-05-30', created)).toBe(true);
+  });
+
+  it('月跨ぎ 2026-06-13 はマッチ', () => {
+    expect(isDueOn(rule, '2026-06-13', created)).toBe(true);
+  });
+
+  it('土曜以外は false', () => {
+    expect(isDueOn(rule, '2026-05-15', created)).toBe(false); // 金
+    expect(isDueOn(rule, '2026-05-17', created)).toBe(false); // 日
+  });
+
+  it('anchor 当日が指定曜日の場合は anchor 当日が first_match', () => {
+    // anchor=2026-05-02（土曜）, day_of_week=6
+    const r: Frequency = { type: 'every_n_weeks', n: 2, day_of_week: 6, anchor: '2026-05-02' };
+    expect(isDueOn(r, '2026-05-02', '2026-05-02')).toBe(true);
+    expect(isDueOn(r, '2026-05-16', '2026-05-02')).toBe(true);
+    expect(isDueOn(r, '2026-05-09', '2026-05-02')).toBe(false);
+  });
+
+  it('anchor より前の日付は false', () => {
+    expect(isDueOn(rule, '2026-04-25', created)).toBe(false);
+  });
+
+  it('n=1 (= 毎週) で土曜は毎週マッチ', () => {
+    const r: Frequency = { type: 'every_n_weeks', n: 1, day_of_week: 6, anchor: '2026-05-01' };
+    expect(isDueOn(r, '2026-05-02', created)).toBe(true);
+    expect(isDueOn(r, '2026-05-09', created)).toBe(true);
+    expect(isDueOn(r, '2026-05-16', created)).toBe(true);
+  });
+});

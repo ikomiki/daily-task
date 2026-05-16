@@ -53,6 +53,22 @@ export function isDueOn(rule: Frequency, date: string, taskCreatedAt: string): b
     return rule.weeks_of_month.includes(wom);
   }
 
-  // 他の type は後続タスクで実装する
+  if (rule.type === 'every_n_weeks') {
+    const dow = isoDayOfWeek(date);
+    if (dow !== rule.day_of_week) {
+      return false;
+    }
+    const anchorDays = toUtcDays(rule.anchor);
+    const anchorDow = isoDayOfWeek(rule.anchor);
+    // anchor 以降で初めて day_of_week にマッチする日数（オフセット 0..6）
+    const offset = (rule.day_of_week - anchorDow + 7) % 7;
+    const firstMatchDays = anchorDays + offset;
+    const t = toUtcDays(date);
+    if (t < firstMatchDays) {
+      return false;
+    }
+    return (t - firstMatchDays) % (rule.n * 7) === 0;
+  }
+
   return false;
 }
