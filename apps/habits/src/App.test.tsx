@@ -1,15 +1,34 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import App from './App.js';
+import { router } from './router.js';
 
-describe('App プレースホルダ', () => {
-  it('Habits タイトルを表示する', () => {
+async function navigate(path: string): Promise<void> {
+  await router.navigate({ to: path });
+}
+
+describe('App ルーティング', () => {
+  it('/today で「今日のタスク」ページが表示される', async () => {
+    await navigate('/today');
     render(<App />);
-    expect(screen.getByRole('heading', { name: 'Habits' })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: '今日のタスク' })).toBeInTheDocument();
+    });
   });
 
-  it('M1 スキャフォールドの説明文を表示する', () => {
+  it('/auth/login で「ログイン」ページが表示される', async () => {
+    await navigate('/auth/login');
     render(<App />);
-    expect(screen.getByText(/M1 スキャフォールド完了/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'ログイン' })).toBeInTheDocument();
+    });
+  });
+
+  it('/ から /today へリダイレクトされる', async () => {
+    await navigate('/');
+    render(<App />);
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe('/today');
+    });
   });
 });
