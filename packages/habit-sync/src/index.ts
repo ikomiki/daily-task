@@ -18,6 +18,7 @@ export type { SyncPersistenceConfig } from './persist.js';
 export { configureSyncPersistence } from './persist.js';
 export type { SupabaseConfig } from './supabase.js';
 export { getSupabaseClient, resetSupabaseClient } from './supabase.js';
+export { getPendingSyncCount } from './pending-sync.js';
 export type {
   Task,
   TaskInsert,
