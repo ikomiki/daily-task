@@ -7,6 +7,7 @@ esbuild
 extname
 frontmatter
 Hiragino
+indexeddb
 ikomiki
 jsdom
 legendapp
