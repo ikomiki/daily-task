@@ -19,11 +19,18 @@ describe('@org/habit-core 公開 API スモーク', () => {
     expect(logs).toHaveLength(1);
   });
 
-  it('isDueOn は M4 まで未実装のため throw する', () => {
-    expect(() => isDueOn({ type: 'daily' }, '2026-05-16', '2026-05-16')).toThrow(/NOT_IMPLEMENTED/);
+  it('isDueOn が頻度判定を返すこと（公開 API スモーク）', () => {
+    expect(isDueOn({ type: 'daily' }, '2026-05-16', '2026-05-16')).toBe(true);
+    expect(isDueOn({ type: 'weekday', days: [6] }, '2026-05-16', '2026-01-01')).toBe(true);
   });
 
-  it('calculateStreak は M4 まで未実装のため throw する', () => {
-    expect(() => calculateStreak([])).toThrow(/NOT_IMPLEMENTED/);
+  it('calculateStreak が連続完了数を返すこと（公開 API スモーク）', () => {
+    expect(calculateStreak([])).toBe(0);
+    expect(
+      calculateStreak([
+        { date: '2026-05-15', status: 'complete' },
+        { date: '2026-05-16', status: 'complete' },
+      ]),
+    ).toBe(2);
   });
 });
