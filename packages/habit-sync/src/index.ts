@@ -1,6 +1,8 @@
 // Supabase の TS 型（supabase gen types typescript --local で再生成可能）
 
 export type { Session, User } from '@supabase/supabase-js';
+export type { DisplayTaskStatus, TodayTaskGroup, TodayTaskItem } from './computed.js';
+export { getTodayTasksView } from './computed.js';
 export type { Database, Json } from './db-types.js';
 export type {
   NotificationProvider,
