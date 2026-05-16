@@ -11,3 +11,16 @@ export type { SyncState } from './observables.js';
 export { state$ } from './observables.js';
 export type { SupabaseConfig } from './supabase.js';
 export { getSupabaseClient, resetSupabaseClient } from './supabase.js';
+export type {
+  Task,
+  TaskInsert,
+  TaskLog,
+  TaskLogInsert,
+  TaskLogUpdate,
+  TaskStashView,
+  TaskStatus,
+  TaskUpdate,
+  TimeSlot,
+  TimeSlotInsert,
+  TimeSlotUpdate,
+} from './types.js';
