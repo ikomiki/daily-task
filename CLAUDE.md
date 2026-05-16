@@ -28,8 +28,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## このリポジトリの目的
 
-複数ゲーム + 共有ライブラリを並行開発するための Nx モノレポ基盤。
-`apps/*` がゲームアプリ、`packages/*` が共有エンジン/UI/オーディオと共有設定。
+毎日の習慣タスクを管理する Web アプリ（habits）を開発する Nx モノレポ基盤。
+`apps/habits` が Web アプリ本体、`packages/*` がドメインロジック・同期層・共有設定。
+長期的には Tauri v2 で PC / モバイルネイティブアプリへ拡張する。
+
+設計仕様: `docs/superpowers/specs/2026-05-16-habits-app-design.md`
 
 ## 主要コマンド
 
@@ -43,9 +46,9 @@ CI=true pnpm nx run-many -t test                  # 全パッケージの vitest
 CI=true pnpm nx affected -t typecheck test        # PR 影響範囲のみ
 pnpm nx test <project-name>                       # 単一プロジェクトの vitest
 pnpm nx test <project> -- -t "テスト名"            # 単一テスト実行（vitest の -t 引数）
-pnpm nx serve sample-game                         # Vite dev server (5173)
-pnpm nx build sample-game                         # Vite production build
-pnpm nx e2e sample-game                           # Playwright E2E (CI環境推奨、ローカルは memory/ 参照)
+pnpm nx serve habits                              # Vite dev server (5173)
+pnpm nx build habits                              # Vite production build
+pnpm nx e2e habits                                # Playwright E2E (M12 で本格利用)
 pnpm exec biome ci .                              # format + lint チェック (CI と同じ)
 pnpm exec biome check --write .                   # format + lint 自動修正
 pnpm nx graph                                     # 依存グラフを HTML で開く
@@ -56,11 +59,13 @@ pnpm nx graph                                     # 依存グラフを HTML で�
 ### 依存方向（一方向のみ）
 
 ```
-apps/* → packages/{ui, game-core, audio} → packages/config-*
+apps/habits → packages/{habit-sync, habit-core, ui} → packages/config-*
+packages/habit-sync → packages/habit-core
+packages/ui → packages/habit-core （型のみ参照）
 ```
 
-- `packages/game-core` は他の packages に依存しない（純粋なゲーム基盤）
-- `packages/ui` は `packages/audio` のみ参照可
+- `packages/habit-core` は他の packages に依存しない（純粋ドメイン: 頻度評価 / streak / status）
+- `packages/habit-sync` は legend-state + Supabase の同期層。`habit-core` の型のみ参照
 - 双方向依存・循環依存は Nx グラフで検出して落とす
 
 ### workspace package の解決方式
@@ -76,7 +81,7 @@ apps/* → packages/{ui, game-core, audio} → packages/config-*
 - `tsconfig.json` — LSP/IDE 用。`noEmit: true`、テスト/configファイルも `include`、composite なし
 - `tsconfig.lib.json`（lib）または `tsconfig.app.json`（app） — ビルド用。テストを `exclude`、composite + declaration（lib のみ）
 
-詳細は `packages/game-core/` を参照実装として見ること。
+詳細は `packages/habit-core/` を参照実装として見ること。
 
 ### 共有設定（packages/config-*）
 
