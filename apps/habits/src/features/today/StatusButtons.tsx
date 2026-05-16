@@ -20,7 +20,7 @@ const INACTIVE_CLASS = 'bg-transparent text-game-fg border-gray-500';
 // - 別の status をクリックすると切り替え
 export function StatusButtons({ current, onChange }: StatusButtonsProps): React.ReactElement {
   return (
-    <div role="group" className="flex gap-2">
+    <div className="flex gap-2">
       {STATUS_OPTIONS.map((opt) => {
         const isActive = current === opt.value;
         return (
