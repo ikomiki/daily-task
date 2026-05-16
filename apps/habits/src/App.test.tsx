@@ -15,6 +15,15 @@ vi.mock('./lib/auth.js', () => ({
 vi.mock('./lib/supabase.js', () => ({
   getAppSupabase: (): unknown => ({}),
 }));
+vi.mock('@org/habit-sync', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@org/habit-sync')>();
+  return {
+    ...actual,
+    configureSyncPersistence: vi.fn(),
+    setupSync: vi.fn(),
+    startOnlineWatcher: vi.fn().mockReturnValue(() => {}),
+  };
+});
 
 async function navigate(path: string): Promise<void> {
   await router.navigate({ to: path });
