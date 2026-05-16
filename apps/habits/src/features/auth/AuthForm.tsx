@@ -5,6 +5,7 @@ export interface AuthFormProps {
   onSubmit: (values: { email: string; password: string }) => void;
   errorMessage?: string;
   isSubmitting?: boolean;
+  passwordAutoComplete?: 'current-password' | 'new-password';
 }
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -29,6 +30,7 @@ export function AuthForm({
   onSubmit,
   errorMessage,
   isSubmitting = false,
+  passwordAutoComplete = 'current-password',
 }: AuthFormProps): React.ReactElement {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -66,7 +68,7 @@ export function AuthForm({
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
+          autoComplete={passwordAutoComplete}
           className="block w-full rounded border border-gray-500 bg-transparent px-3 py-2"
         />
       </label>

@@ -57,4 +57,13 @@ describe('AuthForm', () => {
     render(<AuthForm submitLabel="登録" onSubmit={vi.fn()} isSubmitting={true} />);
     expect(screen.getByRole('button', { name: '登録' })).toBeDisabled();
   });
+
+  it('passwordAutoComplete prop で autoComplete を切り替えられる', () => {
+    const { rerender } = render(<AuthForm submitLabel="ログイン" onSubmit={vi.fn()} />);
+    expect(screen.getByLabelText('パスワード')).toHaveAttribute('autocomplete', 'current-password');
+    rerender(
+      <AuthForm submitLabel="新規登録" onSubmit={vi.fn()} passwordAutoComplete="new-password" />,
+    );
+    expect(screen.getByLabelText('パスワード')).toHaveAttribute('autocomplete', 'new-password');
+  });
 });
