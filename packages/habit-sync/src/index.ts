@@ -4,6 +4,8 @@ export type { Session, User } from '@supabase/supabase-js';
 export type { DisplayTaskStatus, TodayTaskGroup, TodayTaskItem } from './computed.js';
 export { getTodayTasksView } from './computed.js';
 export type { Database, Json } from './db-types.js';
+export type { LoadTaskHistoryOptions } from './history.js';
+export { loadTaskHistory } from './history.js';
 export type {
   NotificationProvider,
   PermissionState,

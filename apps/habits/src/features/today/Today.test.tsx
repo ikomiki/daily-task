@@ -75,4 +75,9 @@ describe('Today', () => {
     render(<Today />);
     expect(screen.getByRole('link', { name: '設定' })).toBeInTheDocument();
   });
+
+  it('履歴リンクが表示される', () => {
+    render(<Today />);
+    expect(screen.getByRole('link', { name: '履歴' })).toBeInTheDocument();
+  });
 });
