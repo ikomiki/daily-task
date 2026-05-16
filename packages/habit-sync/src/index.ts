@@ -23,6 +23,12 @@ export { clearTaskLogStatus, setTaskLogStatus, taskLogKey } from './task-log-wri
 export type { CreateTaskInput, UpdateTaskInput } from './task-write.js';
 export { archiveTask, createTask, unarchiveTask, updateTask } from './task-write.js';
 export type {
+  CreateTimeSlotInput,
+  DeleteResult,
+  UpdateTimeSlotInput,
+} from './time-slot-write.js';
+export { createTimeSlot, deleteTimeSlot, updateTimeSlot } from './time-slot-write.js';
+export type {
   Task,
   TaskInsert,
   TaskLog,
