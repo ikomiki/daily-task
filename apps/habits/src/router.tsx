@@ -10,6 +10,7 @@ import { Signup } from './features/auth/Signup.js';
 import { Today } from './features/today/Today.js';
 import { getCurrentSession } from './lib/auth.js';
 import { getAppSupabase } from './lib/supabase.js';
+import { SettingsTimeSlotsPage } from './routes/settings/SettingsTimeSlotsPage.js';
 import { TaskEditPage } from './routes/tasks/TaskEditPage.js';
 import { TaskNewPage } from './routes/tasks/TaskNewPage.js';
 import { TasksPage } from './routes/tasks/TasksPage.js';
@@ -66,6 +67,13 @@ const taskEditRoute = createRoute({
   component: TaskEditPage,
 });
 
+const settingsTimeSlotsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/settings/time-slots',
+  beforeLoad: requireAuth,
+  component: SettingsTimeSlotsPage,
+});
+
 const authLoginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/auth/login',
@@ -84,6 +92,7 @@ const routeTree = rootRoute.addChildren([
   tasksRoute,
   taskNewRoute,
   taskEditRoute,
+  settingsTimeSlotsRoute,
   authLoginRoute,
   authSignupRoute,
 ]);
