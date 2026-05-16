@@ -182,6 +182,17 @@ packages/ui → packages/habit-core （型のみ参照）
 - フォーマッタ: `apps/habits/src/lib/stash-format.ts` の `formatStashCount` / `formatCompletionRate` / `formatLastCompletedDate`（null セーフ）
 - Today 画面のヘッダー nav から `/stash` へ遷移可能
 
+### 履歴画面 / 過去ログ遅延取得（M9 以降）
+
+- `/history`: 選択中タスクの履歴ログ（date 降順）を遅延ロード式に表示
+- `apps/habits/src/features/history/HistoryView.tsx` がタスク選択 + ログ一覧 + 「もっと読み込む」を統合
+- 直近 31 日: `state$.task_logs` から該当 task の log を抽出
+- 32 日以前: `loadTaskHistory(client, { taskId, beforeDate, limit })` で Supabase からオンデマンド取得（既定 31 件/回）
+- 過去ログは `state$` には保存せず、`useTaskHistory(taskId)` フックがローカル state で保持
+- ステータスラベル: `apps/habits/src/lib/history-status.ts` の `formatHistoryStatus('complete' | 'skip' | 'fail')`
+- 取得結果がページサイズ未満なら hasMore=false に切り替わり「これ以上履歴はありません」表示
+- Today 画面のヘッダー nav から `/history` へ遷移可能（アーカイブ済タスクも選択肢に出る）
+
 ## E2E（Playwright）
 
 ローカル E2E は `.nvmrc` の Node v24.15.0 で動作確認済み。
