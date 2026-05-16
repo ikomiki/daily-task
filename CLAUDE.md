@@ -138,6 +138,14 @@ packages/ui → packages/habit-core （型のみ参照）
 - 集計（task_stash）はトリガー駆動。task_stash_view が task_days / completion_rate を補完
 - 詳細は `docs/superpowers/specs/2026-05-16-habits-app-design.md` §5 / §8
 
+### 認証フロー（M3 以降）
+
+- ローカル `.env.local` の `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` を `supabase start` 出力から転記
+- `/auth/signup` で新規登録 → Email 確認は dev で OFF のため即セッション → `/today` 着地
+- 初期データ（6 タスク + 2 時間帯）は `auth.users` INSERT トリガーで自動生成
+- セッションは localStorage に保存され、`useAuthSession` の `onAuthStateChange` 経由で `state$.user` に反映される
+- 未認証で `/today` にアクセスすると `beforeLoad` AuthGate により `/auth/login` にリダイレクト
+
 ## E2E（Playwright）
 
 ローカル E2E は `.nvmrc` の Node v24.15.0 で動作確認済み。
