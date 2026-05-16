@@ -213,7 +213,7 @@ packages/ui → packages/habit-core （型のみ参照）
 - ビルド成果物: `dist/manifest.webmanifest` / `dist/sw.js`（`autoUpdate` モードでは `registerSW.js` は生成されず、`dist/assets/virtual_pwa-register-*.js` にバンドルされる）
 - `workbox.globPatterns` で JS/CSS/HTML/SVG/woff2 をプリキャッシュ、`navigateFallbackDenylist` で `/api` と `/auth` を除外
 - `devOptions.enabled = false` — 開発ビルドでは SW を出さない（HMR 阻害回避）
-- スコープ外: Web Push（v1.5）、カスタム SW (injectManifest)、インストールプロンプト UI、スプラッシュ画像
+- スコープ外: Web Push（v1.5）、カスタム SW (injectManifest)、インストールプロンプト UI、スプラッシュ画像、PNG 版 apple-touch-icon（iOS Safari の SVG 互換性向上時に再検討）
 
 ## E2E（Playwright）
 
