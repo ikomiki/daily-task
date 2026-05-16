@@ -52,6 +52,12 @@ pnpm nx e2e habits                                # Playwright E2E (M12 で本�
 pnpm exec biome ci .                              # format + lint チェック (CI と同じ)
 pnpm exec biome check --write .                   # format + lint 自動修正
 pnpm nx graph                                     # 依存グラフを HTML で開く
+# Supabase（ローカル開発）
+supabase start                                    # Docker でローカル環境起動（API:54321, DB:54322, Studio:54323）
+supabase stop                                     # 停止
+supabase db reset                                 # DB 完全リセットして全マイグレーション再適用
+supabase migration new <name>                     # 新規マイグレーションファイル作成（タイムスタンプ自動付与）
+supabase gen types typescript --local --schema public > packages/habit-sync/src/db-types.ts  # 型生成
 ```
 
 ## アーキテクチャ要点
@@ -121,6 +127,16 @@ packages/ui → packages/habit-core （型のみ参照）
 3. 同じ失敗が `memory/` に2回以上記録されている場合は、`rules/` に昇格させる
 
 詳細: `memory/README.md`, `rules/README.md`
+
+## Supabase ローカル開発
+
+- 起動には Docker Desktop が必要（macOS）
+- `supabase start` の出力に表示される `anon key` を `apps/habits/.env.local` に転記する（`.env.local.example` 参照）
+- マイグレーションは `supabase/migrations/YYYYMMDDHHMMSS_<name>.sql` の順序で適用される
+- スキーマ変更後は `supabase db reset` で完全再適用し、`supabase gen types ...` で TS 型を更新
+- RLS は全テーブルで有効。本人 (`auth.uid() = user_id`) のみ操作可
+- 集計（task_stash）はトリガー駆動。task_stash_view が task_days / completion_rate を補完
+- 詳細は `docs/superpowers/specs/2026-05-16-habits-app-design.md` §5 / §8
 
 ## E2E（Playwright）
 
