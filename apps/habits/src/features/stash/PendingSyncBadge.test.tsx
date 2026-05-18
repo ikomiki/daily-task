@@ -16,11 +16,11 @@ describe('PendingSyncBadge', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('オフラインのとき「オフライン」と「古い可能性」を表示する', () => {
+  it('オフラインのとき「オフラインです」と「同期されます」を表示する', () => {
     online$.set(false);
     render(<PendingSyncBadge />);
-    expect(screen.getByText(/オフライン/)).toBeInTheDocument();
-    expect(screen.getByText(/古い可能性/)).toBeInTheDocument();
+    expect(screen.getByText(/オフラインです/)).toBeInTheDocument();
+    expect(screen.getByText(/同期されます/)).toBeInTheDocument();
   });
 
   it('role=status を持つ（スクリーンリーダー対応）', () => {
