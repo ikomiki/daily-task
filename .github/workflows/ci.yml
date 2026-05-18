@@ -38,8 +38,22 @@ jobs:
       - name: Build
         run: pnpm nx affected -t build --parallel=3
 
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        run: supabase start
+
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps chromium
 
       - name: E2E
         run: pnpm nx affected -t e2e
+        env:
+          # supabase start のデモインスタンスは URL・anon key が固定値
+          VITE_SUPABASE_URL: http://localhost:54321
+          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+          E2E_TEST_EMAIL: e2e@habits.test
+          E2E_TEST_PASSWORD: habits-e2e-pw
