@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@fontsource/inter": "catalog:",
+    "@fontsource/jetbrains-mono": "catalog:",
     "@org/habit-core": "workspace:*",
     "@org/habit-sync": "workspace:*",
     "@org/ui": "workspace:*",
