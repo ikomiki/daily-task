@@ -17,11 +17,11 @@ const variantSizeClass: Record<
     sm: 'rounded bg-game-accent px-3 py-1 text-sm font-medium text-game-bg disabled:opacity-50',
   },
   secondary: {
-    md: 'rounded border border-gray-500 px-4 py-2 text-sm',
+    md: 'rounded border border-gray-500 px-3 py-1 text-sm',
     sm: 'rounded border border-gray-500 px-3 py-1 text-sm',
   },
   destructive: {
-    md: 'rounded border border-red-500 px-4 py-2 text-sm text-red-400',
+    md: 'rounded border border-red-500 px-3 py-1 text-sm text-red-400',
     sm: 'rounded border border-red-500 px-3 py-1 text-sm text-red-400',
   },
 };

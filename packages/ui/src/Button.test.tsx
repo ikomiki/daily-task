@@ -14,6 +14,36 @@ describe('Button', () => {
     expect(btn.className).toContain('border-gray-500');
   });
 
+  it('secondary は size に関わらず px-3 py-1 クラスが適用される', () => {
+    const { rerender } = render(<Button variant="secondary">ボタン</Button>);
+    const btn = screen.getByRole('button');
+    expect(btn.className).toContain('px-3');
+    expect(btn.className).toContain('py-1');
+
+    rerender(
+      <Button variant="secondary" size="sm">
+        ボタン
+      </Button>,
+    );
+    expect(btn.className).toContain('px-3');
+    expect(btn.className).toContain('py-1');
+  });
+
+  it('destructive は size に関わらず px-3 py-1 クラスが適用される', () => {
+    const { rerender } = render(<Button variant="destructive">ボタン</Button>);
+    const btn = screen.getByRole('button');
+    expect(btn.className).toContain('px-3');
+    expect(btn.className).toContain('py-1');
+
+    rerender(
+      <Button variant="destructive" size="sm">
+        ボタン
+      </Button>,
+    );
+    expect(btn.className).toContain('px-3');
+    expect(btn.className).toContain('py-1');
+  });
+
   it('variant="primary" は bg-game-accent クラスが適用される', () => {
     render(<Button variant="primary">主要</Button>);
     const btn = screen.getByRole('button');
