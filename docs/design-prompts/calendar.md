@@ -5,7 +5,7 @@
 - アクティブタスクをタスク選択 `<select>` で選択し、月別 7×6 グリッド（日曜始まり）でタスクログを可視化する
 - `CalendarHeader` で月遷移（前月 / 次月）を提供し、`CalendarGrid` + `CalendarCell` でカレンダーを描画する
 - 過去日のセルをクリックすることで empty → complete → fail → skip → empty の状態循環で編集できる
-- 未来日と `isDueOn = false` の日は disabled にして誤操作を防ぐ
+- 未来日と `isDue = false` の日は disabled にして誤操作を防ぐ
 
 ## 表示要素
 
@@ -29,7 +29,7 @@
     - `empty`: `text-game-fg`（日付数値表示）
     - 非当月・非 isDue の dim: `text-cal-dim`
   - 今日: `ring-2 ring-cal-today` を追加
-  - disabled: `cursor-not-allowed`（未来日 or `isDueOn = false`）
+  - disabled: `cursor-not-allowed`（未来日 or `isDue = false`）
 
 ## インタラクション
 

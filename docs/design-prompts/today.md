@@ -33,7 +33,7 @@
 
 - **初期 / 空**: タスク 0 件のとき「今日のタスクはありません」メッセージ
 - **通常**: 時間帯グループ × タスク行 × StatusButtons が表示
-- **pending-sync / offline**: `PendingSyncBadge` が `online$ === false` または `getPendingSyncCount() >= 1` のとき表示（amber 系バナー）
+- **pending-sync / offline**: `PendingSyncBadge` が `useOnlineStatus() === false` のとき（オフライン時）表示（amber 系バナー）
 - **楽観更新中**: 操作は即座に UI 反映、バックグラウンドで Supabase に同期
 
 ## レスポンシブ
