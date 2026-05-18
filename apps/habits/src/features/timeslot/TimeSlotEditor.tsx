@@ -1,3 +1,4 @@
+import { AlertText, Button, TextInput } from '@org/ui';
 import { type FormEvent, useState } from 'react';
 
 export interface TimeSlotEditorValues {
@@ -48,45 +49,28 @@ export function TimeSlotEditor({
       noValidate
       className="space-y-3 rounded border border-gray-600 p-3"
     >
-      <label className="block space-y-1">
-        <span className="text-sm">時間帯名</span>
-        <input
-          type="text"
-          aria-label="時間帯名"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="block w-full rounded border border-gray-500 bg-transparent px-2 py-1"
-        />
-      </label>
-      <label className="block space-y-1">
-        <span className="text-sm">通知時刻</span>
-        <input
-          type="time"
-          aria-label="通知時刻"
-          value={notifyAt}
-          onChange={(e) => setNotifyAt(e.target.value)}
-          className="block rounded border border-gray-500 bg-transparent px-2 py-1"
-        />
-      </label>
-      {validationError !== null && (
-        <p role="alert" className="text-sm text-red-400">
-          {validationError}
-        </p>
-      )}
+      <TextInput
+        type="text"
+        label="時間帯名"
+        aria-label="時間帯名"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextInput
+        type="time"
+        label="通知時刻"
+        aria-label="通知時刻"
+        value={notifyAt}
+        onChange={(e) => setNotifyAt(e.target.value)}
+      />
+      {validationError !== null && <AlertText>{validationError}</AlertText>}
       <div className="flex gap-2">
-        <button
-          type="submit"
-          className="rounded bg-game-accent px-3 py-1 text-sm font-medium text-game-bg"
-        >
+        <Button type="submit" variant="primary" size="sm">
           {submitLabel}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="rounded border border-gray-500 px-3 py-1 text-sm"
-        >
+        </Button>
+        <Button type="button" onClick={onCancel}>
           キャンセル
-        </button>
+        </Button>
       </div>
     </form>
   );

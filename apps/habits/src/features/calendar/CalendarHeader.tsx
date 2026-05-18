@@ -1,4 +1,5 @@
 import type { Task } from '@org/habit-sync';
+import { Button, SelectInput } from '@org/ui';
 import type React from 'react';
 
 export interface CalendarHeaderProps {
@@ -18,41 +19,23 @@ function formatYearMonth(ym: string): string {
 export function CalendarHeader(props: CalendarHeaderProps): React.ReactElement {
   return (
     <div className="space-y-3">
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-gray-400">タスク選択</span>
-        <select
-          aria-label="タスク選択"
-          className="rounded border border-gray-500 bg-transparent px-2 py-1"
-          value={props.selectedId ?? ''}
-          onChange={(e) => props.onSelectTask(e.target.value)}
-        >
-          {props.tasks.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <SelectInput
+        aria-label="タスク選択"
+        label="タスク選択"
+        value={props.selectedId ?? ''}
+        onChange={(e) => props.onSelectTask(e.target.value)}
+        options={props.tasks.map((t) => ({ value: t.id, label: t.name }))}
+      />
       <div className="flex items-center justify-between">
-        <button
-          type="button"
-          aria-label="前月"
-          onClick={props.onPrevMonth}
-          className="rounded border border-gray-500 px-3 py-1 text-sm"
-        >
+        <Button type="button" aria-label="前月" onClick={props.onPrevMonth}>
           ←
-        </button>
+        </Button>
         <span data-testid="cal-month-label" className="text-lg font-semibold">
           {formatYearMonth(props.yearMonth)}
         </span>
-        <button
-          type="button"
-          aria-label="次月"
-          onClick={props.onNextMonth}
-          className="rounded border border-gray-500 px-3 py-1 text-sm"
-        >
+        <Button type="button" aria-label="次月" onClick={props.onNextMonth}>
           →
-        </button>
+        </Button>
       </div>
     </div>
   );

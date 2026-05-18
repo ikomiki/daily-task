@@ -11,6 +11,9 @@ test-results/
 playwright-report/
 .claude/scheduled_tasks.lock
 
+# Lighthouse
+lighthouse-*.html
+
 # dependencies
 node_modules
 

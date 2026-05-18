@@ -1,5 +1,6 @@
 import type { Frequency } from '@org/habit-core';
 import type { TimeSlot } from '@org/habit-sync';
+import { AlertText, Button, SelectInput, TextInput } from '@org/ui';
 import { type FormEvent, useState } from 'react';
 import { FrequencyPicker } from './FrequencyPicker.js';
 
@@ -46,34 +47,23 @@ export function TaskForm({
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-4">
       {/* タスク名入力欄 */}
-      <label className="block space-y-1">
-        <span className="text-sm font-medium">タスク名</span>
-        <input
-          aria-label="タスク名"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="block w-full rounded border border-gray-500 bg-transparent px-3 py-2"
-        />
-      </label>
+      <TextInput
+        aria-label="タスク名"
+        label="タスク名"
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
       {/* 時間帯選択 */}
-      <label className="block space-y-1">
-        <span className="text-sm font-medium">時間帯</span>
-        <select
-          aria-label="時間帯"
-          value={timeSlotId}
-          onChange={(e) => setTimeSlotId(e.target.value)}
-          disabled={noSlots}
-          className="block w-full rounded border border-gray-500 bg-transparent px-3 py-2"
-        >
-          {timeSlots.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <SelectInput
+        aria-label="時間帯"
+        label="時間帯"
+        value={timeSlotId}
+        onChange={(e) => setTimeSlotId(e.target.value)}
+        disabled={noSlots}
+        options={timeSlots.map((s) => ({ value: s.id, label: s.name }))}
+      />
 
       {/* 頻度設定 */}
       <fieldset className="space-y-2">
@@ -83,24 +73,16 @@ export function TaskForm({
 
       {/* 時間帯未登録の警告 */}
       {noSlots && (
-        <p role="alert" className="text-sm text-red-400">
+        <AlertText>
           時間帯が登録されていません。先に「設定 → 時間帯」で 1 件以上作成してください。
-        </p>
+        </AlertText>
       )}
       {/* バリデーションエラー */}
-      {validationError !== null && (
-        <p role="alert" className="text-sm text-red-400">
-          {validationError}
-        </p>
-      )}
+      {validationError !== null && <AlertText>{validationError}</AlertText>}
 
-      <button
-        type="submit"
-        disabled={noSlots}
-        className="rounded bg-game-accent px-4 py-2 font-medium text-game-bg disabled:opacity-50"
-      >
+      <Button type="submit" variant="primary" disabled={noSlots}>
         {submitLabel}
-      </button>
+      </Button>
     </form>
   );
 }

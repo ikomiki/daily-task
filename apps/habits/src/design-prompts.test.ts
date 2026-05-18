@@ -1,12 +1,11 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const APP_ROOT = resolve(__dirname, '..');
+const REPO_ROOT = resolve(__dirname, '../../..');
+const DESIGN_PROMPTS_DIR = resolve(REPO_ROOT, 'docs/design-prompts');
 
-// 11 files expected in docs/design-prompts directory
-const EXPECTED_FILES = [
-  'README.md',
+const SCREEN_FILES = [
   'auth-login.md',
   'auth-signup.md',
   'today.md',
@@ -17,13 +16,9 @@ const EXPECTED_FILES = [
   'stash-panel.md',
   'history.md',
   'calendar.md',
-];
+] as const;
 
-// 10 screen Markdown files (excluding README)
-const SCREEN_FILES = EXPECTED_FILES.filter((f) => f !== 'README.md');
-
-// Required H2 sections for screen files
-const REQUIRED_SECTIONS_SCREEN = [
+const REQUIRED_SECTIONS = [
   '## 目的',
   '## 表示要素',
   '## インタラクション',
@@ -31,44 +26,35 @@ const REQUIRED_SECTIONS_SCREEN = [
   '## レスポンシブ',
   '## アクセシビリティ',
   '## 既存スタイル参照',
-];
-
-// Required H2 sections for README
-const REQUIRED_SECTIONS_README = [
-  '## 目的',
-  '## 対象画面',
-  '## 共通スタイル方針',
-  '## 共通章立て',
-  '## 運用',
-];
+] as const;
 
 describe('design-prompts', () => {
-  it('docs/design-prompts ディレクトリに 11 個のファイルが存在する', () => {
-    const designPromptsDir = resolve(APP_ROOT, '../..', 'docs/design-prompts');
-    expect(existsSync(designPromptsDir)).toBe(true);
-
-    const files = EXPECTED_FILES.map((filename) => resolve(designPromptsDir, filename));
-
-    files.forEach((file) => {
-      expect(existsSync(file)).toBe(true);
-    });
+  it('docs/design-prompts/ に 11 ファイル（README + 10 画面）が存在する', () => {
+    const files = readdirSync(DESIGN_PROMPTS_DIR);
+    expect(files).toHaveLength(11);
+    expect(files).toContain('README.md');
+    for (const screen of SCREEN_FILES) {
+      expect(files).toContain(screen);
+    }
   });
 
-  it.each(SCREEN_FILES)('%s が 7 つの必須セクションをすべて含む', (filename) => {
-    const filePath = resolve(APP_ROOT, '../..', 'docs/design-prompts', filename);
-    const content = readFileSync(filePath, 'utf8');
-
-    REQUIRED_SECTIONS_SCREEN.forEach((section) => {
-      expect(content).toContain(section);
-    });
+  it.each(SCREEN_FILES)('%s に 7 必須セクションが含まれる', (file) => {
+    const content = readFileSync(resolve(DESIGN_PROMPTS_DIR, file), 'utf8');
+    for (const section of REQUIRED_SECTIONS) {
+      expect(content, `${file} に "${section}" が必要`).toContain(section);
+    }
   });
 
-  it('README.md が 5 つの必須セクションをすべて含む', () => {
-    const readmePath = resolve(APP_ROOT, '../..', 'docs/design-prompts', 'README.md');
-    const content = readFileSync(readmePath, 'utf8');
-
-    REQUIRED_SECTIONS_README.forEach((section) => {
-      expect(content).toContain(section);
-    });
+  it('README.md に 5 必須セクションが含まれる', () => {
+    const content = readFileSync(resolve(DESIGN_PROMPTS_DIR, 'README.md'), 'utf8');
+    for (const section of [
+      '## 目的',
+      '## 対象画面',
+      '## 共通スタイル方針',
+      '## 共通章立て',
+      '## 運用',
+    ]) {
+      expect(content, `README.md に "${section}" が必要`).toContain(section);
+    }
   });
 });

@@ -52,8 +52,8 @@ export function TaskList({ onEdit }: TaskListProps): React.ReactElement {
         <section className="space-y-2">
           <button
             type="button"
-            onClick={() => setShowArchived((v) => !v)}
             className="text-sm text-gray-400 underline"
+            onClick={() => setShowArchived((v) => !v)}
           >
             {showArchived
               ? `アーカイブ済を隠す (${archived.length})`

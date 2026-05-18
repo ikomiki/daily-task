@@ -1,3 +1,4 @@
+import { Card } from '@org/ui';
 import type React from 'react';
 import type { TaskStashRow } from '../../hooks/useTaskStashList.js';
 import {
@@ -13,7 +14,7 @@ export interface StashRowProps {
 // 1 タスクの集計 1 行を表示。レスポンシブのため、md 未満は折り返す。
 export function StashRow({ row }: StashRowProps): React.ReactElement {
   return (
-    <article className="rounded border border-gray-700 bg-gray-900/40 p-3 space-y-2">
+    <Card className="space-y-2 bg-gray-900/40">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-base font-semibold">{row.task_name}</h3>
         <span className="text-xs text-gray-400">{row.slot_name}</span>
@@ -48,6 +49,6 @@ export function StashRow({ row }: StashRowProps): React.ReactElement {
           <dd>{formatLastCompletedDate(row.last_completed_date)}</dd>
         </div>
       </dl>
-    </article>
+    </Card>
   );
 }

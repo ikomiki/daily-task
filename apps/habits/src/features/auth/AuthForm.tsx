@@ -1,3 +1,4 @@
+import { AlertText, Button, TextInput } from '@org/ui';
 import { type FormEvent, useState } from 'react';
 
 export interface AuthFormProps {
@@ -52,38 +53,24 @@ export function AuthForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-      <label className="block space-y-1">
-        <span className="text-sm font-medium">メールアドレス</span>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          autoComplete="email"
-          className="block w-full rounded border border-gray-500 bg-transparent px-3 py-2"
-        />
-      </label>
-      <label className="block space-y-1">
-        <span className="text-sm font-medium">パスワード</span>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete={passwordAutoComplete}
-          className="block w-full rounded border border-gray-500 bg-transparent px-3 py-2"
-        />
-      </label>
-      {displayError !== null && (
-        <p role="alert" className="text-sm text-red-400">
-          {displayError}
-        </p>
-      )}
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full rounded bg-game-accent px-4 py-2 font-medium text-game-bg disabled:opacity-50"
-      >
+      <TextInput
+        type="email"
+        label="メールアドレス"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        autoComplete="email"
+      />
+      <TextInput
+        type="password"
+        label="パスワード"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        autoComplete={passwordAutoComplete}
+      />
+      {displayError !== null && <AlertText>{displayError}</AlertText>}
+      <Button type="submit" variant="primary" disabled={isSubmitting} className="w-full">
         {submitLabel}
-      </button>
+      </Button>
     </form>
   );
 }

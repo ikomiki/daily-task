@@ -45,4 +45,15 @@ describe('PWA assets', () => {
     const content = readFileSync(resolve(APP_ROOT, 'index.html'), 'utf8');
     expect(content).toMatch(/<link[^>]+rel="icon"[^>]+href="\/favicon\.svg"/);
   });
+
+  it('vite.config.ts の manifest theme_color が --color-game-bg トークンと一致する', () => {
+    const content = readFileSync(resolve(APP_ROOT, 'vite.config.ts'), 'utf8');
+    expect(content).toContain("theme_color: '#0b0d12'");
+    expect(content).toContain("background_color: '#0b0d12'");
+  });
+
+  it('index.html の theme-color meta が --color-game-bg トークンと一致する', () => {
+    const content = readFileSync(resolve(APP_ROOT, 'index.html'), 'utf8');
+    expect(content).toMatch(/name="theme-color"[^>]*content="#0b0d12"/);
+  });
 });

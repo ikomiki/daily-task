@@ -1,6 +1,7 @@
 import { use$ } from '@legendapp/state/react';
 import type { Frequency } from '@org/habit-core';
 import { archiveTask, state$, updateTask } from '@org/habit-sync';
+import { Button, PageContainer, PageHeader } from '@org/ui';
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import { TaskForm } from '../../features/task/TaskForm.js';
 
@@ -18,25 +19,27 @@ export function TaskEditPage(): React.ReactElement {
 
   if (result.task === undefined) {
     return (
-      <section className="mx-auto max-w-2xl p-6 space-y-4">
+      <PageContainer>
         <p className="text-sm text-red-400">タスクが見つかりません。</p>
         <Link to="/tasks" className="text-sm text-game-accent underline">
           ← 一覧へ戻る
         </Link>
-      </section>
+      </PageContainer>
     );
   }
 
   const task = result.task;
 
   return (
-    <section className="mx-auto max-w-2xl p-6 space-y-6">
-      <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-game-accent">タスクの編集</h1>
-        <Link to="/tasks" className="text-sm text-game-accent underline">
-          ← 一覧へ戻る
-        </Link>
-      </header>
+    <PageContainer>
+      <PageHeader
+        title="タスクの編集"
+        nav={
+          <Link to="/tasks" className="text-sm text-game-accent underline">
+            ← 一覧へ戻る
+          </Link>
+        }
+      />
       <TaskForm
         timeSlots={result.slots}
         initial={{
@@ -50,16 +53,15 @@ export function TaskEditPage(): React.ReactElement {
           void navigate({ to: '/tasks' });
         }}
       />
-      <button
-        type="button"
+      <Button
+        variant="destructive"
         onClick={() => {
           archiveTask(id);
           void navigate({ to: '/tasks' });
         }}
-        className="rounded border border-red-500 px-3 py-1 text-sm text-red-400"
       >
         このタスクをアーカイブ
-      </button>
-    </section>
+      </Button>
+    </PageContainer>
   );
 }
