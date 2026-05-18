@@ -6,17 +6,20 @@ export interface AlertTextProps {
   tone?: 'error' | 'warning';
 }
 
+// トーンごとの設定テーブル
+const toneConfig: Record<
+  NonNullable<AlertTextProps['tone']>,
+  { role: string; className: string }
+> = {
+  error: { role: 'alert', className: 'text-sm text-red-300' },
+  warning: { role: 'status', className: 'text-sm text-yellow-300' },
+};
+
 /** エラー・警告メッセージを表示するインラインテキストコンポーネント */
 export function AlertText({ children, tone = 'error' }: AlertTextProps): React.ReactElement {
-  if (tone === 'warning') {
-    return (
-      <p role="status" className="text-sm text-yellow-300">
-        {children}
-      </p>
-    );
-  }
+  const { role, className } = toneConfig[tone];
   return (
-    <p role="alert" className="text-sm text-red-300">
+    <p role={role} className={className}>
       {children}
     </p>
   );

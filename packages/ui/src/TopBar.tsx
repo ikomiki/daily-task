@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { ComponentType, ReactNode } from 'react';
 import type { LinkComponentProps } from './AppNav.js';
 
@@ -18,14 +19,14 @@ export function TopBar({
   homeLabel = 'habits',
   linkComponent: LinkComp,
   rightSlot,
-}: TopBarProps) {
+}: TopBarProps): React.ReactElement {
   return (
     <header className="sticky top-0 z-20 border-b border-border-default backdrop-blur-md bg-[color-mix(in_oklab,var(--color-game-bg)_82%,transparent)]">
       <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-6 py-3">
         <LinkComp
           to={homeHref}
           className="inline-flex items-center gap-2 text-[14px] font-semibold tracking-wide text-game-fg no-underline"
-          aria-label="habits ホーム"
+          aria-label={`${homeLabel} ホーム`}
         >
           <span
             aria-hidden="true"

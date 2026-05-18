@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { ReactNode } from 'react';
 
 export interface BannerProps {
@@ -17,7 +18,7 @@ export function Banner({
   children,
   role = 'status',
   'aria-live': ariaLive = 'polite',
-}: BannerProps) {
+}: BannerProps): React.ReactElement {
   const baseClass =
     tone === 'warning'
       ? 'inline-flex items-center gap-2.5 rounded-md border border-amber-500/60 bg-amber-500/10 px-3 py-2 text-sm text-amber-300'

@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { ReactNode } from 'react';
 import { Card } from './Card.js';
 
@@ -11,7 +12,7 @@ export interface EmptyStateProps {
 }
 
 /** データが空のときに表示するステートコンポーネント */
-export function EmptyState({ icon, title, hint }: EmptyStateProps) {
+export function EmptyState({ icon, title, hint }: EmptyStateProps): React.ReactElement {
   return (
     <Card tone="flat" className="text-center px-4 py-8">
       {icon && (

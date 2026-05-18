@@ -39,3 +39,32 @@
   /* mono — Tailwind v4 既定の font-mono を上書きする（意図的） */
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
+
+/* ページ遷移アニメーション（PageContainer コンポーネント用） */
+@utility page-fade {
+  animation: pageFade 260ms ease-out;
+}
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* パルスアニメーション（Banner コンポーネント用） */
+@utility animate-pulse-dot {
+  animation: pulseDot 1.6s ease-out infinite;
+}
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
