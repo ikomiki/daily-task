@@ -12,7 +12,13 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 
 vi.mock('../../features/stash/StashPanel.js', () => ({
-  StashPanel: () => <div data-testid="stash-panel" />,
+  // StashPanel は PageHeader（スタッシュ見出し）を内包するため、見出しも一緒に出力する
+  StashPanel: () => (
+    <>
+      <h1>スタッシュ</h1>
+      <div data-testid="stash-panel" />
+    </>
+  ),
 }));
 vi.mock('../../lib/supabase.js', () => ({
   getAppSupabase: (): unknown => ({ auth: { signOut: vi.fn() } }),
