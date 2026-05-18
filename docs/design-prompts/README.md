@@ -23,10 +23,10 @@
 | `auth-signup.md` | サインアップ画面 | 新規ユーザー登録 |
 | `today.md` | Today 画面 | 当日タスク一覧（時間帯別）、3 ボタン操作 |
 | `tasks-list.md` | タスク一覧画面 | 全タスク表示、新規追加、編集、アーカイブ、復元 |
-| `task-edit.md` | タスク編集画面 | タスクプロパティ設定、頻度ピッカー |
+| `task-edit.md` | タスク新規作成・編集画面 | タスク新規作成（`/tasks/new`）+ 編集（`/tasks/$id`）— `TaskForm` 共通、FrequencyPicker 含む |
 | `time-slots.md` | 時間帯設定画面 | 時間帯の CRUD |
-| `settings.md` | 設定画面 | 通知権限・ユーザー情報・ログアウト |
-| `stash-panel.md` | スタッシュ（集計）画面 | 全タスク集計表示（完了率など） |
+| `settings.md` | 設定画面 | 通知設定（`/settings/notifications`）+ 将来の設定ハブ（ルート `/settings` は今後追加予定） |
+| `stash-panel.md` | スタッシュ（集計）画面 | 全タスク集計表示（完了率など）（ファイル名は仕様 §10 の命名に従い `stash-panel.md`、ルートは `/stash`） |
 | `history.md` | 履歴画面 | タスク単位の過去ログ、遅延ロード |
 | `calendar.md` | カレンダー画面 | 月別タスク状態編集、日付グリッド |
 
@@ -68,7 +68,7 @@
 ### フォント
 
 - **ファミリ：** `Inter` (Latin) + `Hiragino Sans` (日本語)
-- **トークン：** `--font-display` (Tailwind クラス: `font-display`)
+- **トークン：** `--font-display` (Tailwind v4 では `--font-display` → `font-display` クラスに自動変換)
 - **用途：** UI 全体で統一（本文・見出し・ラベル）
 
 ```html
@@ -162,7 +162,7 @@ color: #d0d0d0;  /* 明るく → OK */
 
 デザイン作成時に参照すべき既存スタイル源：
 
-- **Tailwind v4 設定：** `packages/config-tailwind/` （theme.css ・ Tailwind.config.ts）
+- **Tailwind v4 設定：** `packages/config-tailwind/src/theme.css`
 - **共有コンポーネント（M13 追加予定）：** `packages/ui/` 配下
 - **既存画面の実装：** `apps/habits/src/features/` / `apps/habits/src/routes/` 配下
 - **共有フック・ユーティリティ：** `apps/habits/src/hooks/` / `apps/habits/src/lib/`
