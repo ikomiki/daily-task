@@ -80,4 +80,9 @@ describe('Today', () => {
     render(<Today />);
     expect(screen.getByRole('link', { name: '履歴' })).toBeInTheDocument();
   });
+
+  it('カレンダーリンクが表示される', () => {
+    render(<Today />);
+    expect(screen.getByRole('link', { name: 'カレンダー' })).toBeInTheDocument();
+  });
 });
