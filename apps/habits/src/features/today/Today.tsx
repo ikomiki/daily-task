@@ -24,6 +24,9 @@ export function Today(): React.ReactElement {
           <Link to="/stash" className="rounded border border-gray-500 px-3 py-1 text-sm">
             スタッシュ
           </Link>
+          <Link to="/calendar" className="rounded border border-gray-500 px-3 py-1 text-sm">
+            カレンダー
+          </Link>
           <Link to="/history" className="rounded border border-gray-500 px-3 py-1 text-sm">
             履歴
           </Link>

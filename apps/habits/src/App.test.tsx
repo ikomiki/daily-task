@@ -124,6 +124,15 @@ describe('App ルーティング', () => {
     });
   });
 
+  it('認証済みで /calendar にアクセスすると「カレンダー」ページが表示される', async () => {
+    getCurrentSessionMock.mockResolvedValue({ user: { id: 'u1' }, access_token: 'x' });
+    await navigate('/calendar');
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'カレンダー' })).toBeInTheDocument();
+    });
+  });
+
   it('認証済みで /settings/notifications にアクセスすると「通知設定」ページが表示される', async () => {
     getCurrentSessionMock.mockResolvedValue({ user: { id: 'u1' }, access_token: 'x' });
     await navigate('/settings/notifications');

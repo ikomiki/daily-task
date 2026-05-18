@@ -193,6 +193,19 @@ packages/ui → packages/habit-core （型のみ参照）
 - 取得結果がページサイズ未満なら hasMore=false に切り替わり「これ以上履歴はありません」表示
 - Today 画面のヘッダー nav から `/history` へ遷移可能（アーカイブ済タスクも選択肢に出る）
 
+### カレンダー画面
+
+- `/calendar`: 選択中タスクの月別 7×6 グリッド（日曜始まり）を表示し、過去日を 4 状態循環で編集可能
+- `apps/habits/src/features/calendar/CalendarView.tsx` が CalendarHeader（タスク select + 月遷移）+ CalendarGrid（曜日見出し + 42 セル）を統合
+- `apps/habits/src/hooks/useTaskCalendar.ts` が月切替 / `state$.task_logs`（直近 31 日）+ 月単位ローカルキャッシュ（32 日以前）を統合
+- 月単位 fetch: `apps/habits/src/lib/calendar-fetch-range.ts` の `loadTaskLogsInRange` が `loadTaskHistory` をラップ
+- 状態循環: `apps/habits/src/lib/calendar-status.ts` の `nextCalendarStatus`（empty → complete → fail → skip → empty）
+- 日付グリッドユーティリティ: `packages/habit-core/src/month-grid.ts` の `buildCalendarGrid('YYYY-MM')` が 42 セル配列を返す
+- セルの編集制約: 未来日と `isDueOn=false` の日は disabled。書込後は `refreshTaskStashView()` を呼び集計を更新
+- 31 日 cutoff 外（過去月）への書込は monthCache に同期 merge し、同セッション中の再描画を安定化
+- Today 画面のヘッダー nav から `/calendar` へ遷移可能（並び: タスク管理 / スタッシュ / カレンダー / 履歴 / 設定）
+- 配色トークン（`packages/config-tailwind/src/theme.css`）: `--color-cal-complete` / `cal-fail` / `cal-skip` / `cal-today` / `cal-dim`
+
 ### 通知 v1 / フォアグラウンドスケジューラ（M10 以降）
 
 - `/settings/notifications`: 権限の現在値表示 + 「通知を許可する」ボタン

@@ -13,6 +13,7 @@ import { Today } from './features/today/Today.js';
 import { getCurrentSession } from './lib/auth.js';
 import { getAppSupabase } from './lib/supabase.js';
 import { getTodayDateString } from './lib/today-date.js';
+import { CalendarPage } from './routes/calendar/CalendarPage.js';
 import { HistoryPage } from './routes/history/HistoryPage.js';
 import { SettingsNotificationsPage } from './routes/settings/SettingsNotificationsPage.js';
 import { SettingsTimeSlotsPage } from './routes/settings/SettingsTimeSlotsPage.js';
@@ -98,6 +99,13 @@ const stashRoute = createRoute({
   component: StashPage,
 });
 
+const calendarRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/calendar',
+  beforeLoad: requireAuth,
+  component: CalendarPage,
+});
+
 const historyRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/history',
@@ -126,6 +134,7 @@ const routeTree = rootRoute.addChildren([
   settingsTimeSlotsRoute,
   settingsNotificationsRoute,
   stashRoute,
+  calendarRoute,
   historyRoute,
   authLoginRoute,
   authSignupRoute,
