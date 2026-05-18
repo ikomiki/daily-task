@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "@org/config-tailwind/theme.css";
 
+/* @org/ui のソースファイルに含まれるクラスを Tailwind が確実にスキャンするよう明示 */
+@source "../../../packages/ui/src";
+
 /* Latin subset のみ。日本語は Hiragino Sans / system-ui の OS fallback を使用 */
 @import "@fontsource/inter/latin-400.css";
 @import "@fontsource/inter/latin-500.css";

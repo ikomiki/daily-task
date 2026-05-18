@@ -8,8 +8,9 @@
   --color-cal-skip: #9ca3af;
   --color-cal-today: #facc15;
   --color-cal-dim: #374151;
-  --font-display: "Inter", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
-    "Yu Gothic", "Meiryo", system-ui, sans-serif;
+  --font-display:
+    "Inter", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", system-ui,
+    sans-serif;
 
   /* fg shades */
   --color-game-fg-muted: #a3a8b6;
