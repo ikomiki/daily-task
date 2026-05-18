@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-// legend-state の exponential backoff リトライ（最長 14s）+ 同期チェーン分の余裕を確保
-test.setTimeout(60_000);
-
 test('オフライン中のタスク操作が再接続後に Supabase へ同期される', async ({ page, context }) => {
+  // test.setTimeout は test body 内で呼ぶ必要がある
+  test.setTimeout(60_000);
+
   // 1. 今日のページにアクセス（storageState で認証済み）
   await page.goto('/today');
   await expect(page.getByRole('heading', { name: '今日のタスク' })).toBeVisible();
@@ -16,7 +16,8 @@ test('オフライン中のタスク操作が再接続後に Supabase へ同期�
   //    window の 'offline' イベントが発火し online$.set(false) が呼ばれる
   await context.setOffline(true);
 
-  // 3. オフライン状態でタスクを完了にする（楽観更新: IndexedDB に書き込まれリトライキューに入る）
+  // 3. オフライン状態でタスクを完了にする
+  //    waitForSet: online$ により Supabase 書き込みは online$ が true になるまでキューされる
   await completeButton.click();
   await expect(completeButton).toHaveAttribute('aria-pressed', 'true');
 
@@ -28,13 +29,13 @@ test('オフライン中のタスク操作が再接続後に Supabase へ同期�
   await expect(page.getByText('オフライン')).toBeVisible();
 
   // 5. オンライン復帰前に task_logs への書き込みレスポンスを捕捉する準備をする
-  //    legend-state のリトライが発火したとき waitForResponse が解決する
+  //    waitForSet が online$=true を検知して即座に書き込みを送信する
   const taskLogWritePromise = page.waitForResponse(
     (resp) => resp.url().includes('/rest/v1/task_logs') && resp.request().method() !== 'GET',
-    { timeout: 50_000 },
+    { timeout: 15_000 },
   );
 
-  // 6. オンラインに戻す（legend-state がリトライキューを再送する）
+  // 6. オンラインに戻す（online$=true に切り替わり、キューされた書き込みが即送信される）
   await context.setOffline(false);
 
   // 7. オフラインバッジが消えることを確認（online$ が true に切り替わった）
