@@ -10,8 +10,8 @@ export interface CardProps {
 
 // トーンごとのクラス定義
 const toneClass: Record<NonNullable<CardProps['tone']>, string> = {
-  surface: 'rounded-md border border-border-default bg-surface-1 transition-colors',
-  flat: 'rounded-md border border-dashed border-border-default bg-transparent',
+  surface: 'rounded-md border border-border-default bg-surface-1 px-4 py-3.5 transition-colors',
+  flat: 'rounded-md border border-dashed border-border-default bg-transparent px-4 py-3.5 transition-colors',
 };
 
 /** ボーダー付きカードコンテナ */
