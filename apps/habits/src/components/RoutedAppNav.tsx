@@ -12,7 +12,7 @@ export function RoutedAppNav(): React.ReactElement {
 
   const handleSignOut = async (): Promise<void> => {
     await signOut(getAppSupabase());
-    navigate({ to: '/auth/login' });
+    await navigate({ to: '/auth/login' });
   };
 
   return (

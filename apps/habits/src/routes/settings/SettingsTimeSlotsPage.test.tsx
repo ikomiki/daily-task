@@ -12,6 +12,7 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
     ),
     useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
       select({ location: { pathname: '/settings/time-slots' } }),
+    useNavigate: () => vi.fn(),
   };
 });
 vi.mock('../../lib/supabase.js', () => ({
