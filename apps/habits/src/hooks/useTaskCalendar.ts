@@ -126,7 +126,7 @@ export function useTaskCalendar(taskId: string | null, today: string): UseTaskCa
       const fromRecent = recentLogs[date];
       if (fromRecent !== undefined) {
         status = fromRecent.status;
-      } else if (cached !== undefined && cached.has(date)) {
+      } else if (cached?.has(date)) {
         const lg = cached.get(date);
         if (lg !== undefined) {
           status = lg.status;
