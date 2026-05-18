@@ -228,6 +228,27 @@ packages/ui → packages/habit-core （型のみ参照）
 - `devOptions.enabled = false` — 開発ビルドでは SW を出さない（HMR 阻害回避）
 - スコープ外: Web Push（v1.5）、カスタム SW (injectManifest)、インストールプロンプト UI、スプラッシュ画像、PNG 版 apple-touch-icon（iOS Safari の SVG 互換性向上時に再検討）
 
+### Claude Design プロトタイプ適用（M14 以降）
+
+M14 では Claude Design (claude.ai/design) で生成したハイファイプロトタイプを本番アプリに適用した。**視覚要素のみ移植**し、データフロー・ルーター・Supabase 同期層は触らない。
+
+- **新規トークン** (`packages/config-tailwind/src/theme.css` `@theme {}`)
+  - fg shades: `--color-game-fg-muted` / `--color-game-fg-dim` / `--color-game-accent-soft`
+  - surfaces: `--color-surface-1` (#11141b) / `--color-surface-2` (#161a23) / `--color-surface-3` (#1b202b)
+  - borders: `--color-border-default` (#2a2f3a) / `--color-border-strong` (#3a4252)
+  - status: `--color-status-complete` (#16a34a) / `--color-status-skip` (#ca8a04) / `--color-status-fail` (#dc2626)
+  - radius: `--radius-sm/md/lg/full` (4/6/10/999px)
+  - mono font: `--font-mono` ("JetBrains Mono", ui-monospace, ...)
+  - `@utility page-fade` / `@utility animate-pulse-dot` を `config-tailwind` に移動し library-app 間の CSS 依存を解消
+- **フォント同梱**: `@fontsource/inter` + `@fontsource/jetbrains-mono` (latin subset のみ) を `apps/habits/src/styles.css` で import
+- **`@source` ディレクティブ**: `styles.css` に `@source "../../../packages/ui/src"` を追加し Tailwind v4 が `@org/ui` クラスを確実に生成
+- **新規 `@org/ui` コンポーネント 3 種**: `TopBar` (sticky brand header) / `Banner` (warning/info with pulse dot) / `EmptyState` (flat card)
+- **`@org/ui` 改修**: `Button` variant/size/block / `Card` tone / `PageContainer` max-w / `PageHeader` subtitle+right (nav prop 撤去) / `AppNav` currentPath+isNavItemActive / `TextInput` / `SelectInput` (chevron) / `AlertText`
+- **グローバル TopBar**: `router.tsx` の rootRoute で auth 以外に常時マウント
+- **`RoutedAppNav`** (`apps/habits/src/components/RoutedAppNav.tsx`): `useRouterState` で currentPath 自動注入 + signOut 集約。nav 順: 今日 / タスク / カレンダー / 履歴 / スタッシュ / 設定
+- **全 10 画面の視覚再描画**: Auth / Today / Tasks / Task-edit / Time-slots / Settings / Stash / History / Calendar
+- スコープ外: `PendingSyncBadge` の pendingCount 併記 (別 PR) / Storybook / Lighthouse CI / ライトモード / ネイティブ移行
+
 ### Claude Design プロンプト + UI ブラッシュアップ（M13 以降）
 
 - `docs/design-prompts/` 配下に README + 10 画面の Claude Design プロンプトを配置
