@@ -7,34 +7,63 @@ Vite + React 19 + Tailwind CSS v4 + TanStack Router + legend-state + Supabase �
 ## クイックスタート
 
 ```bash
+# 1. 依存インストール
 pnpm install
+
+# 2. ローカル Supabase 起動（Docker Desktop が必要）
+supabase start
+
+# 3. 環境変数設定（supabase start 出力の API URL / anon key をコピー）
+cp apps/habits/.env.local.example apps/habits/.env.local
+# → VITE_SUPABASE_URL と VITE_SUPABASE_ANON_KEY を転記
+
+# 4. 開発サーバー起動
 pnpm nx serve habits        # http://localhost:5173 で起動
 ```
-
-> ローカル Supabase の起動は M2 マイルストーンで導入される（`supabase start`）。
-> 現時点では認証や状態同期はスタブで動作する。
 
 ## ディレクトリ
 
 ```
 apps/
-  habits/             Web SPA（Vite + React + Tailwind + TanStack Router）
+  habits/             Web SPA（Vite + React + Tailwind + TanStack Router + PWA）
+    src/
+      features/       画面コンポーネント（today, stash, history, notify, task, timeslot, auth）
+      routes/         ページコンポーネント（tasks, settings, stash, history）
+      hooks/          React カスタムフック
+      lib/            ユーティリティ（auth, supabase, formatters, pwa-register）
+    public/           PWA アイコン（favicon, icon-192, icon-512, icon-maskable）
 packages/
   habit-core/         純粋ドメイン（頻度評価 / streak / status 型）
-  habit-sync/         legend-state + Supabase 同期層、IndexedDB 永続化
-  ui/                 React + Tailwind の共有 UI（移行期は空）
+  habit-sync/         legend-state + Supabase 同期層、IndexedDB 永続化、通知プロバイダー
+  ui/                 React + Tailwind の共有 UI（将来拡張用）
   config-biome/       共有 biome.json
   config-tsconfig/    base / lib / app の 3 層 tsconfig
   config-tailwind/    Tailwind v4 の @theme プリセット
   config-vitest/      vitest の node / react プリセット
-supabase/             ローカル Supabase ワークスペース（M2 で追加）
+supabase/
+  migrations/         DB マイグレーション（11 ファイル、profiles〜realtime）
 .claude/              Claude Code の hooks / commands / settings
 .github/workflows/    GitHub Actions CI
-docs/superpowers/     設計書（specs/）と実装プラン（plans/）
+docs/superpowers/     設計書（specs/）と実装プラン（plans/ M1〜M11）
 memory/, rules/       失敗事例ログとルール
 ```
 
 依存方向は `apps/habits → packages/{habit-sync, habit-core, ui} → packages/config-*` の一方向のみ。
+
+## 実装済み画面
+
+| パス | 機能 |
+| ---- | ---- |
+| `/today` | 今日のタスク一覧（完了/スキップ/失敗 の3ボタン切り替え） |
+| `/tasks` | タスク一覧・新規追加・編集・アーカイブ・復元 |
+| `/tasks/new` | タスク新規作成（FrequencyPicker 内包） |
+| `/tasks/$id` | タスク編集 |
+| `/stash` | 全タスクの集計（完了数/連続/完了率/最終完了日） + オフライン可視化 |
+| `/history` | タスク別ログ履歴（直近 31 日 + 遅延ロードで過去分） |
+| `/settings/time-slots` | 時間帯 CRUD |
+| `/settings/notifications` | 通知権限管理 + フォアグラウンドスケジューラー設定 |
+| `/auth/login` | ログイン |
+| `/auth/signup` | サインアップ（Email 確認はローカルで OFF） |
 
 ## 主なコマンド
 
@@ -65,10 +94,11 @@ pnpm exec biome check --write .            # 自動修正
 | ビルド/テスト        | Vite 7 + vitest 3 + @testing-library + jsdom                    |
 | E2E                  | Playwright                                                      |
 | UI                   | React 19 + Tailwind CSS v4（CSS-first）                         |
-| ルーティング         | TanStack Router 1.x                                             |
-| 状態管理 / 同期      | legend-state 3.x + `@legendapp/state/sync-plugins/supabase`     |
-| バックエンド         | Supabase（ローカル Docker）                                     |
+| ルーティング         | TanStack Router 1.x（code-based）                               |
+| 状態管理 / 同期      | legend-state 3.x beta + `@legendapp/state/sync-plugins/supabase` |
+| バックエンド         | Supabase（ローカル Docker、RLS + リアルタイム）                 |
 | バリデーション       | Zod 4                                                           |
+| PWA                  | vite-plugin-pwa 1.x + Workbox（autoUpdate、manifest、SVG アイコン）|
 
 ## 開発方針
 

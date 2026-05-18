@@ -150,7 +150,7 @@ packages/ui → packages/habit-core （型のみ参照）
 
 - `packages/habit-sync` の `state$` が legend-state + syncedSupabase で双方向同期
 - 永続化は IndexedDB (`habits-cache` データベース)。オフライン書き込みは retry queue に滞留 → 復帰時に自動再送
-- `task_logs` は初期ロード時に直近 31 日のみ取得（M9 で履歴遅延ロードを追加予定）
+- `task_logs` は初期ロード時に直近 31 日のみ取得（32 日以前は M9 で実装済みの遅延ロードで取得）
 - `task_stash_view` は read-only（書き込みはトリガー経由）
 - `useTodayTasks(today)` で今日のタスクビューを購読、`getPendingSyncCount(state$)` で pending 件数を取得
 - `online$` で `navigator.onLine` を observable 化
