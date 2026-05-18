@@ -32,7 +32,7 @@
 
 ## 共通スタイル方針
 
-### カラートークン（全 9 種）
+### カラートークン（8 種）+ フォントトークン（1 種）
 
 `packages/config-tailwind/src/theme.css` で定義。Tailwind v4 の CSS-first `@theme` ブロック。
 
@@ -46,6 +46,7 @@
 | `--color-cal-skip` | `#9ca3af` | カレンダー：スキップ日 |
 | `--color-cal-today` | `#facc15` | カレンダー：本日 |
 | `--color-cal-dim` | `#374151` | カレンダー：処理対象外日 |
+| `--font-display` | `"Inter", "Hiragino Sans", sans-serif` | UI 全体フォント |
 
 **クラス名の使い方：**
 
