@@ -1,4 +1,5 @@
 import type { Frequency } from '@org/habit-core';
+import { SelectInput, TextInput } from '@org/ui';
 
 export interface FrequencyPickerProps {
   value: Frequency;
@@ -56,53 +57,39 @@ export function FrequencyPicker({ value, onChange }: FrequencyPickerProps): Reac
   return (
     <div className="space-y-3">
       {/* 頻度タイプ選択 */}
-      <label className="block space-y-1">
-        <span className="text-sm font-medium">頻度の種類</span>
-        <select
-          aria-label="頻度の種類"
-          value={value.type}
-          onChange={(e) => {
-            onChange(defaultForType(e.target.value as Frequency['type']));
-          }}
-          className="block w-full rounded border border-gray-500 bg-transparent px-2 py-1"
-        >
-          {TYPE_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      </label>
+      <SelectInput
+        aria-label="頻度の種類"
+        label="頻度の種類"
+        value={value.type}
+        onChange={(e) => {
+          onChange(defaultForType(e.target.value as Frequency['type']));
+        }}
+        options={TYPE_OPTIONS.map((opt) => ({ value: opt.value, label: opt.label }))}
+      />
 
       {/* every_n_days: n と anchor */}
       {value.type === 'every_n_days' && (
         <div className="space-y-2">
-          <label className="block space-y-1">
-            <span className="text-sm">n（日数）</span>
-            <input
-              aria-label="n（日数）"
-              type="number"
-              min="1"
-              value={value.n}
-              onChange={(e) => {
-                const n = Math.max(1, Number.parseInt(e.target.value, 10) || 1);
-                onChange({ ...value, n });
-              }}
-              className="block w-32 rounded border border-gray-500 bg-transparent px-2 py-1"
-            />
-          </label>
-          <label className="block space-y-1">
-            <span className="text-sm">開始日</span>
-            <input
-              aria-label="開始日"
-              type="date"
-              value={value.anchor}
-              onChange={(e) => {
-                onChange({ ...value, anchor: e.target.value });
-              }}
-              className="block rounded border border-gray-500 bg-transparent px-2 py-1"
-            />
-          </label>
+          <TextInput
+            aria-label="n（日数）"
+            label="n（日数）"
+            type="number"
+            min="1"
+            value={value.n}
+            onChange={(e) => {
+              const n = Math.max(1, Number.parseInt(e.target.value, 10) || 1);
+              onChange({ ...value, n });
+            }}
+          />
+          <TextInput
+            aria-label="開始日"
+            label="開始日"
+            type="date"
+            value={value.anchor}
+            onChange={(e) => {
+              onChange({ ...value, anchor: e.target.value });
+            }}
+          />
         </div>
       )}
 
@@ -171,49 +158,35 @@ export function FrequencyPicker({ value, onChange }: FrequencyPickerProps): Reac
       {/* every_n_weeks: n / 曜日 select / anchor */}
       {value.type === 'every_n_weeks' && (
         <div className="space-y-2">
-          <label className="block space-y-1">
-            <span className="text-sm">n（週数）</span>
-            <input
-              aria-label="n（週数）"
-              type="number"
-              min="1"
-              value={value.n}
-              onChange={(e) => {
-                const n = Math.max(1, Number.parseInt(e.target.value, 10) || 1);
-                onChange({ ...value, n });
-              }}
-              className="block w-32 rounded border border-gray-500 bg-transparent px-2 py-1"
-            />
-          </label>
-          <label className="block space-y-1">
-            <span className="text-sm">曜日</span>
-            <select
-              aria-label="曜日"
-              value={String(value.day_of_week)}
-              onChange={(e) => {
-                onChange({ ...value, day_of_week: Number.parseInt(e.target.value, 10) });
-              }}
-              className="block w-32 rounded border border-gray-500 bg-transparent px-2 py-1"
-            >
-              {WEEKDAY_LABELS.map(({ iso, label }) => (
-                <option key={iso} value={iso}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="block space-y-1">
-            <span className="text-sm">開始日</span>
-            <input
-              aria-label="開始日"
-              type="date"
-              value={value.anchor}
-              onChange={(e) => {
-                onChange({ ...value, anchor: e.target.value });
-              }}
-              className="block rounded border border-gray-500 bg-transparent px-2 py-1"
-            />
-          </label>
+          <TextInput
+            aria-label="n（週数）"
+            label="n（週数）"
+            type="number"
+            min="1"
+            value={value.n}
+            onChange={(e) => {
+              const n = Math.max(1, Number.parseInt(e.target.value, 10) || 1);
+              onChange({ ...value, n });
+            }}
+          />
+          <SelectInput
+            aria-label="曜日"
+            label="曜日"
+            value={String(value.day_of_week)}
+            onChange={(e) => {
+              onChange({ ...value, day_of_week: Number.parseInt(e.target.value, 10) });
+            }}
+            options={WEEKDAY_LABELS.map(({ iso, label }) => ({ value: String(iso), label }))}
+          />
+          <TextInput
+            aria-label="開始日"
+            label="開始日"
+            type="date"
+            value={value.anchor}
+            onChange={(e) => {
+              onChange({ ...value, anchor: e.target.value });
+            }}
+          />
         </div>
       )}
     </div>

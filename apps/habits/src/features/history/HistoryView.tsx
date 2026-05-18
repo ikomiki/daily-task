@@ -1,5 +1,6 @@
 import { use$ } from '@legendapp/state/react';
 import { state$, type Task } from '@org/habit-sync';
+import { Button, SelectInput } from '@org/ui';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useTaskHistory } from '../../hooks/useTaskHistory.js';
@@ -37,23 +38,15 @@ export function HistoryView(): React.ReactElement {
 
   return (
     <div className="space-y-4">
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-gray-400">タスク選択</span>
-        <select
-          aria-label="タスク選択"
-          className="rounded border border-gray-500 bg-transparent px-2 py-1"
-          value={selectedId ?? ''}
-          onChange={(e) => {
-            setSelectedId(e.target.value);
-          }}
-        >
-          {tasks.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <SelectInput
+        aria-label="タスク選択"
+        label="タスク選択"
+        value={selectedId ?? ''}
+        onChange={(e) => {
+          setSelectedId(e.target.value);
+        }}
+        options={tasks.map((t) => ({ value: t.id, label: t.name }))}
+      />
 
       {logs.length === 0 ? (
         <p className="text-sm text-gray-400">このタスクには履歴がありません。</p>
@@ -73,16 +66,15 @@ export function HistoryView(): React.ReactElement {
       )}
 
       {hasMore ? (
-        <button
+        <Button
           type="button"
           disabled={isLoading}
           onClick={() => {
             void loadMore();
           }}
-          className="rounded border border-gray-500 px-3 py-1 text-sm disabled:opacity-50"
         >
           {isLoading ? '読み込み中...' : 'もっと読み込む'}
-        </button>
+        </Button>
       ) : (
         <p className="text-xs text-gray-500">これ以上履歴はありません。</p>
       )}

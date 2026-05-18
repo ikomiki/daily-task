@@ -1,5 +1,6 @@
 import { use$ } from '@legendapp/state/react';
 import { createTask, state$ } from '@org/habit-sync';
+import { PageContainer, PageHeader } from '@org/ui';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { TaskForm } from '../../features/task/TaskForm.js';
 
@@ -11,13 +12,15 @@ export function TaskNewPage(): React.ReactElement {
   });
 
   return (
-    <section className="mx-auto max-w-2xl p-6 space-y-6">
-      <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-game-accent">新規タスク</h1>
-        <Link to="/tasks" className="text-sm text-game-accent underline">
-          ← 一覧へ戻る
-        </Link>
-      </header>
+    <PageContainer>
+      <PageHeader
+        title="新規タスク"
+        nav={
+          <Link to="/tasks" className="text-sm text-game-accent underline">
+            ← 一覧へ戻る
+          </Link>
+        }
+      />
       <TaskForm
         timeSlots={timeSlots}
         submitLabel="作成"
@@ -32,6 +35,6 @@ export function TaskNewPage(): React.ReactElement {
           void navigate({ to: '/tasks' });
         }}
       />
-    </section>
+    </PageContainer>
   );
 }

@@ -1,5 +1,6 @@
 import { use$ } from '@legendapp/state/react';
 import { archiveTask, state$, unarchiveTask } from '@org/habit-sync';
+import { Button } from '@org/ui';
 import { useState } from 'react';
 import { TaskCard } from './TaskCard.js';
 
@@ -50,15 +51,15 @@ export function TaskList({ onEdit }: TaskListProps): React.ReactElement {
 
       {archived.length > 0 && (
         <section className="space-y-2">
-          <button
+          <Button
             type="button"
+            className="text-gray-400 underline"
             onClick={() => setShowArchived((v) => !v)}
-            className="text-sm text-gray-400 underline"
           >
             {showArchived
               ? `アーカイブ済を隠す (${archived.length})`
               : `アーカイブ済を表示 (${archived.length})`}
-          </button>
+          </Button>
           {showArchived && (
             <ul className="space-y-2">
               {archived.map((t) => (

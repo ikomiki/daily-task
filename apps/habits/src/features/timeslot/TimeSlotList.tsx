@@ -1,5 +1,6 @@
 import { use$ } from '@legendapp/state/react';
 import { createTimeSlot, deleteTimeSlot, state$, updateTimeSlot } from '@org/habit-sync';
+import { AlertText, Button, Card } from '@org/ui';
 import { useState } from 'react';
 import { TimeSlotEditor, type TimeSlotEditorValues } from './TimeSlotEditor.js';
 
@@ -53,35 +54,25 @@ export function TimeSlotList(): React.ReactElement {
               />
             </li>
           ) : (
-            <li key={s.id} className="flex items-center gap-3 rounded border border-gray-700 p-3">
-              <div className="flex-1 space-y-1">
-                <div className="text-sm font-medium">{s.name}</div>
-                <div className="text-xs text-gray-400">{trimSeconds(s.notify_at)}</div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setMode({ type: 'edit', id: s.id })}
-                className="rounded border border-gray-500 px-3 py-1 text-sm"
-              >
-                編集
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDelete(s.id)}
-                className="rounded border border-red-500 px-3 py-1 text-sm text-red-400"
-              >
-                削除
-              </button>
+            <li key={s.id}>
+              <Card className="flex items-center gap-3">
+                <div className="flex-1 space-y-1">
+                  <div className="text-sm font-medium">{s.name}</div>
+                  <div className="text-xs text-gray-400">{trimSeconds(s.notify_at)}</div>
+                </div>
+                <Button type="button" onClick={() => setMode({ type: 'edit', id: s.id })}>
+                  編集
+                </Button>
+                <Button type="button" variant="destructive" onClick={() => handleDelete(s.id)}>
+                  削除
+                </Button>
+              </Card>
             </li>
           ),
         )}
       </ul>
 
-      {errorMessage !== null && (
-        <p role="alert" className="text-sm text-red-400">
-          {errorMessage}
-        </p>
-      )}
+      {errorMessage !== null && <AlertText>{errorMessage}</AlertText>}
 
       {mode.type === 'new' ? (
         <TimeSlotEditor
@@ -90,13 +81,9 @@ export function TimeSlotList(): React.ReactElement {
           submitLabel="作成"
         />
       ) : (
-        <button
-          type="button"
-          onClick={() => setMode({ type: 'new' })}
-          className="rounded border border-gray-500 px-3 py-1 text-sm"
-        >
+        <Button type="button" onClick={() => setMode({ type: 'new' })}>
           時間帯を追加
-        </button>
+        </Button>
       )}
     </div>
   );

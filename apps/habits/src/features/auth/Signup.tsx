@@ -1,3 +1,4 @@
+import { PageContainer, PageHeader } from '@org/ui';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { signUp } from '../../lib/auth.js';
@@ -26,8 +27,8 @@ export function Signup(): React.ReactElement {
   const errorProp = errorMessage !== null ? { errorMessage } : {};
 
   return (
-    <section className="mx-auto max-w-md space-y-6 p-6">
-      <h1 className="text-2xl font-bold text-game-accent">新規登録</h1>
+    <PageContainer width="narrow">
+      <PageHeader title="新規登録" />
       <AuthForm
         submitLabel="新規登録"
         onSubmit={(values) => {
@@ -42,6 +43,6 @@ export function Signup(): React.ReactElement {
           既にアカウントをお持ちの方はこちら（ログイン）
         </Link>
       </p>
-    </section>
+    </PageContainer>
   );
 }
