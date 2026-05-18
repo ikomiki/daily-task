@@ -228,6 +228,20 @@ packages/ui → packages/habit-core （型のみ参照）
 - `devOptions.enabled = false` — 開発ビルドでは SW を出さない（HMR 阻害回避）
 - スコープ外: Web Push（v1.5）、カスタム SW (injectManifest)、インストールプロンプト UI、スプラッシュ画像、PNG 版 apple-touch-icon（iOS Safari の SVG 互換性向上時に再検討）
 
+### Claude Design プロンプト + UI ブラッシュアップ（M13 以降）
+
+- `docs/design-prompts/` 配下に README + 10 画面の Claude Design プロンプトを配置
+  - 各画面の共通章立て: 目的 / 表示要素 / インタラクション / 状態 / レスポンシブ / アクセシビリティ / 既存スタイル参照
+  - 整合性は `apps/habits/src/design-prompts.test.ts` のスモークテストで担保
+- `@org/ui` に共通コンポーネント 8 種を導入（M1 時点の空殻からの本格投入）
+  - `Button` / `Card` / `PageContainer` / `PageHeader` / `TextInput` / `SelectInput` / `AlertText` / `AppNav`
+  - `AppNav` は `linkComponent` prop でルーター依存を切り出し、`packages/ui` を router 非依存に保つ
+  - `apps/habits` の全 features / routes を共通コンポーネントへ置き換え済み
+- `theme_color` / `background_color` を `--color-game-bg` (`#0b0d12`) に揃え、manifest と CSS トークンを一元化
+- Lighthouse 検証は手動運用（CI 化なし）: `docs/ops-guide.md` の手順に従い `pnpm nx build habits` + `vite preview` 後に `lighthouse` CLI を実行
+  - 数値目標: Performance ≥ 90 / Accessibility ≥ 95 / Best Practices ≥ 95 / SEO ≥ 90 / PWA Installable PASS
+- スコープ外: Storybook 化、Visual Regression、Lighthouse CI、semantic token 拡張、PNG icon 自動生成パイプライン
+
 ## E2E（Playwright）
 
 ローカル E2E は `.nvmrc` の Node v24.15.0 で動作確認済み。
