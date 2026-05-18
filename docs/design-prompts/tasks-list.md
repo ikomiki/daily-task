@@ -59,3 +59,4 @@
 - `apps/habits/src/features/task/TaskCard.tsx` — カード (`flex items-center gap-3 rounded border border-gray-700 p-3`)、サブテキスト (`text-xs text-gray-400`)、ボタン (`rounded border border-gray-500 px-3 py-1 text-sm`)、アーカイブ済み (`opacity-60`)
 - `apps/habits/src/lib/frequency-format.ts` — `formatFrequency()` によるサマリ文字列
 - `packages/config-tailwind/src/theme.css` — `--color-game-fg`, `--color-game-bg`, `--color-game-accent`
+- M14: TaskCard に `Card` コンポーネント（`bg-surface-1 border-border-default`）。FrequencyPicker に `SelectInput`。

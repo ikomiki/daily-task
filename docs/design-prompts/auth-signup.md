@@ -54,3 +54,4 @@
 - `apps/habits/src/features/auth/Signup.tsx` — コンテナ (`mx-auto max-w-md space-y-6 p-6`)、タイトル (`text-2xl font-bold text-game-accent`)
 - `apps/habits/src/features/auth/AuthForm.tsx` — 入力フィールド (`rounded border border-gray-500 bg-transparent px-3 py-2`)、ボタン (`w-full rounded bg-game-accent px-4 py-2 font-medium text-game-bg disabled:opacity-50`)
 - `packages/config-tailwind/src/theme.css` — `--color-game-accent: #4cc9f0`, `--color-game-bg: #0b0d12`
+- M14: `PageContainer width="narrow"` + ブランドマーク（habits. ロゴ）。

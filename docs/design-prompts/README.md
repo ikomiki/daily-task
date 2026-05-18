@@ -158,6 +158,29 @@ color: #d0d0d0;  /* 明るく → OK */
 <span id="email-help" class="sr-only">登録済みのメールアドレスを入力</span>
 ```
 
+### M14 追加トークン（2026-05-19）
+
+以下のトークンが M14 で追加された。Tailwind v4 が `--color-*` / `--radius-*` / `--font-*` 変数を自動ユーティリティ化する。
+
+| トークン | 値 | Tailwind ユーティリティ例 |
+|---|---|---|
+| `--color-game-fg-muted` | `#a3a8b6` | `text-game-fg-muted` |
+| `--color-game-fg-dim` | `#6b7180` | `text-game-fg-dim` |
+| `--color-game-accent-soft` | `#1f3b46` | `bg-game-accent-soft` |
+| `--color-surface-1` | `#11141b` | `bg-surface-1` |
+| `--color-surface-2` | `#161a23` | `bg-surface-2` |
+| `--color-surface-3` | `#1b202b` | `bg-surface-3` |
+| `--color-border-default` | `#2a2f3a` | `border-border-default` |
+| `--color-border-strong` | `#3a4252` | `border-border-strong` |
+| `--color-status-complete` | `#16a34a` | `bg-status-complete` |
+| `--color-status-skip` | `#ca8a04` | `bg-status-skip` |
+| `--color-status-fail` | `#dc2626` | `bg-status-fail` |
+| `--radius-sm/md/lg/full` | `4/6/10/999px` | `rounded-sm/md/lg/full` |
+| `--font-mono` | JetBrains Mono | `font-mono` |
+
+新規コンポーネント: `TopBar`, `Banner`, `EmptyState` (`@org/ui`)
+`PageHeader` の `nav` prop 廃止 → `subtitle` + `right` prop に移行。
+
 ### 既存スタイル参照
 
 デザイン作成時に参照すべき既存スタイル源：

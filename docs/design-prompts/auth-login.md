@@ -55,3 +55,4 @@
 - `apps/habits/src/features/auth/Login.tsx` — ページコンテナ (`mx-auto max-w-md space-y-6 p-6`)、タイトル (`text-2xl font-bold text-game-accent`)
 - `apps/habits/src/features/auth/AuthForm.tsx` — フォームフィールド (`rounded border border-gray-500 bg-transparent px-3 py-2`)、送信ボタン (`w-full rounded bg-game-accent px-4 py-2 font-medium text-game-bg disabled:opacity-50`)、エラー (`text-sm text-red-400`)
 - `packages/config-tailwind/src/theme.css` — `--color-game-accent: #4cc9f0`, `--color-game-bg: #0b0d12`, `--color-game-fg: #e6e8ef`
+- M14: `PageContainer width="narrow"` + ブランドマーク（habits. ロゴ）。

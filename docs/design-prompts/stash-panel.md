@@ -62,3 +62,4 @@
 - `apps/habits/src/features/stash/PendingSyncBadge.tsx` — バナー (`flex flex-wrap items-center gap-2 rounded border border-amber-500/60 bg-amber-500/10 px-3 py-2 text-sm text-amber-200`)
 - `apps/habits/src/lib/stash-format.ts` — `formatStashCount()`, `formatCompletionRate()`, `formatLastCompletedDate()`
 - `packages/config-tailwind/src/theme.css` — `--color-game-accent`, `--color-game-fg`, `--color-game-bg`
+- M14: StashRow が `bg-surface-2` Card + dl グリッド + streak バッジ + `bg-status-*` 3 色プログレスバー。
