@@ -29,9 +29,9 @@ describe('SettingsTimeSlotsPage', () => {
     state$.time_slots.set({});
   });
 
-  it('「時間帯の設定」見出しを表示する', () => {
+  it('「時間帯設定」見出しを表示する', () => {
     render(<SettingsTimeSlotsPage />);
-    expect(screen.getByRole('heading', { name: '時間帯の設定' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '時間帯設定' })).toBeInTheDocument();
   });
 
   it('グローバルナビゲーションが表示される', () => {

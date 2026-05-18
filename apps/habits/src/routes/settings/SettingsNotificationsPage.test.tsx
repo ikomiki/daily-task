@@ -60,7 +60,8 @@ describe('SettingsNotificationsPage', () => {
   it('permission=denied のとき「拒否」表示で許可ボタンは非表示', () => {
     NotifMock.permission = 'denied';
     render(<SettingsNotificationsPage />);
-    expect(screen.getByText(/拒否/)).toBeInTheDocument();
+    // ステータス表示と説明文の両方に「拒否」が出るため getAllByText を使用
+    expect(screen.getAllByText(/拒否/).length).toBeGreaterThan(0);
     expect(screen.queryByRole('button', { name: '通知を許可する' })).not.toBeInTheDocument();
   });
 
