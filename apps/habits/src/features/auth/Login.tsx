@@ -28,7 +28,15 @@ export function Login(): React.ReactElement {
 
   return (
     <PageContainer width="narrow">
-      <PageHeader title="ログイン" />
+      {/* ブランドマーク（TopBar が auth ページでは非表示のため独自表示） */}
+      <div className="mb-8 flex items-center gap-2 text-[14px] font-semibold tracking-wide text-game-fg">
+        <span className="relative inline-block h-[18px] w-[18px] rounded-[5px] bg-game-accent after:absolute after:inset-1 after:rounded-[2px] after:bg-game-bg" />
+        <span>
+          habits
+          <em className="not-italic text-game-accent">.</em>
+        </span>
+      </div>
+      <PageHeader title="ログイン" subtitle="毎日の小さな積み重ねを、続けやすく。" />
       <AuthForm
         submitLabel="ログイン"
         onSubmit={(values) => {
@@ -37,8 +45,8 @@ export function Login(): React.ReactElement {
         {...errorProp}
         isSubmitting={isSubmitting}
       />
-      <p className="text-sm">
-        <Link to="/auth/signup" className="text-game-accent underline">
+      <p className="text-sm text-game-fg-muted">
+        <Link to="/auth/signup" className="text-game-accent hover:underline">
           アカウントをお持ちでない方はこちら（新規登録）
         </Link>
       </p>

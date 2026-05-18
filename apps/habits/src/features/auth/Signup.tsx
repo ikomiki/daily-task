@@ -28,7 +28,15 @@ export function Signup(): React.ReactElement {
 
   return (
     <PageContainer width="narrow">
-      <PageHeader title="新規登録" />
+      {/* ブランドマーク（TopBar が auth ページでは非表示のため独自表示） */}
+      <div className="mb-8 flex items-center gap-2 text-[14px] font-semibold tracking-wide text-game-fg">
+        <span className="relative inline-block h-[18px] w-[18px] rounded-[5px] bg-game-accent after:absolute after:inset-1 after:rounded-[2px] after:bg-game-bg" />
+        <span>
+          habits
+          <em className="not-italic text-game-accent">.</em>
+        </span>
+      </div>
+      <PageHeader title="新規登録" subtitle="無料でアカウントを作成。すぐに使い始められます。" />
       <AuthForm
         submitLabel="新規登録"
         onSubmit={(values) => {
@@ -38,8 +46,8 @@ export function Signup(): React.ReactElement {
         isSubmitting={isSubmitting}
         passwordAutoComplete="new-password"
       />
-      <p className="text-sm">
-        <Link to="/auth/login" className="text-game-accent underline">
+      <p className="text-sm text-game-fg-muted">
+        <Link to="/auth/login" className="text-game-accent hover:underline">
           既にアカウントをお持ちの方はこちら（ログイン）
         </Link>
       </p>
