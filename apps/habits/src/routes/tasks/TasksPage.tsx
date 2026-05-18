@@ -13,9 +13,9 @@ export function TasksPage(): React.ReactElement {
         right={
           <Link
             to="/tasks/new"
-            className="rounded bg-game-accent px-3 py-1 text-sm font-medium text-game-bg"
+            className="inline-flex items-center gap-1 rounded-md bg-game-accent px-3.5 py-1.5 text-sm font-semibold text-game-bg transition-colors hover:bg-game-accent/90"
           >
-            新規追加
+            <span aria-hidden="true">＋</span> 新規追加
           </Link>
         }
       />

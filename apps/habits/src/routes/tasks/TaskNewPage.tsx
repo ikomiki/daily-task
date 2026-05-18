@@ -27,6 +27,7 @@ export function TaskNewPage(): React.ReactElement {
       <TaskForm
         timeSlots={timeSlots}
         submitLabel="作成"
+        onCancel={() => void navigate({ to: '/tasks' })}
         onSubmit={(values) => {
           const sameSlotMax = Math.max(
             -1,

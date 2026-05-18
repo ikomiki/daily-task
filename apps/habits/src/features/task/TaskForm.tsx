@@ -14,6 +14,7 @@ export interface TaskFormProps {
   timeSlots: TimeSlot[];
   initial?: Partial<TaskFormValues>;
   onSubmit: (values: TaskFormValues) => void;
+  onCancel?: () => void;
   submitLabel: string;
 }
 
@@ -21,6 +22,7 @@ export function TaskForm({
   timeSlots,
   initial,
   onSubmit,
+  onCancel,
   submitLabel,
 }: TaskFormProps): React.ReactElement {
   const [name, setName] = useState(initial?.name ?? '');
@@ -80,9 +82,16 @@ export function TaskForm({
       {/* バリデーションエラー */}
       {validationError !== null && <AlertText>{validationError}</AlertText>}
 
-      <Button type="submit" variant="primary" disabled={noSlots}>
-        {submitLabel}
-      </Button>
+      <div className="flex justify-end gap-2">
+        {onCancel !== undefined && (
+          <Button type="button" onClick={onCancel}>
+            キャンセル
+          </Button>
+        )}
+        <Button type="submit" variant="primary" disabled={noSlots}>
+          {submitLabel}
+        </Button>
+      </div>
     </form>
   );
 }

@@ -51,6 +51,7 @@ export function TaskEditPage(): React.ReactElement {
           frequency: task.frequency as unknown as Frequency,
         }}
         submitLabel="保存"
+        onCancel={() => void navigate({ to: '/tasks' })}
         onSubmit={(values) => {
           updateTask(id, values);
           void navigate({ to: '/tasks' });
