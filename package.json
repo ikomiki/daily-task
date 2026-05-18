@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {},
   "private": true,
+  "packageManager": "pnpm@11.1.2",
   "devDependencies": {
     "@biomejs/biome": "catalog:",
     "@nx/js": "22.7.0",
