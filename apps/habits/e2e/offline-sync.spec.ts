@@ -1,5 +1,8 @@
 import { expect, test } from '@playwright/test';
 
+// legend-state の exponential backoff リトライ（最長 14s）+ 同期チェーン分の余裕を確保
+test.setTimeout(60_000);
+
 test('オフライン中のタスク操作が再接続後に Supabase へ同期される', async ({ page, context }) => {
   // 1. 今日のページにアクセス（storageState で認証済み）
   await page.goto('/today');
@@ -28,7 +31,7 @@ test('オフライン中のタスク操作が再接続後に Supabase へ同期�
   //    legend-state のリトライが発火したとき waitForResponse が解決する
   const taskLogWritePromise = page.waitForResponse(
     (resp) => resp.url().includes('/rest/v1/task_logs') && resp.request().method() !== 'GET',
-    { timeout: 30_000 },
+    { timeout: 50_000 },
   );
 
   // 6. オンラインに戻す（legend-state がリトライキューを再送する）

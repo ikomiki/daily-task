@@ -55,6 +55,9 @@ export function setupSync(
   // Database 型付きクライアントにキャストして syncedSupabase の型推論を通す。
   const typedClient = client as unknown as SupabaseClient<Database>;
 
+  // オフライン書き込みを無限リトライする設定（exponential backoff、最大 30s 間隔）
+  const infiniteRetry = { infinite: true } as const;
+
   // time_slots: 全件同期、Realtime ON
   syncObservable(
     state$.time_slots,
@@ -63,6 +66,7 @@ export function setupSync(
       collection: 'time_slots',
       realtime: rt,
       persist: { name: 'time_slots' },
+      retry: infiniteRetry,
     }),
   );
 
@@ -74,6 +78,7 @@ export function setupSync(
       collection: 'tasks',
       realtime: rt,
       persist: { name: 'tasks' },
+      retry: infiniteRetry,
     }),
   );
 
@@ -88,6 +93,7 @@ export function setupSync(
       filter: (q) => q.gte('date', cutoff),
       persist: { name: 'task_logs' },
       fieldId: 'task_id',
+      retry: infiniteRetry,
       transform: {
         save: (row) => stripPersistInjectedId(row as unknown as Record<string, unknown>) as TaskLog,
       },
