@@ -24,7 +24,7 @@ export function SettingsNotificationsPage(): React.ReactElement {
     <PageContainer>
       <PageHeader
         title="通知設定"
-        nav={
+        right={
           <AppNav
             linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>}
             items={[

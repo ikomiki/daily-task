@@ -19,7 +19,7 @@ export function Today(): React.ReactElement {
     <PageContainer>
       <PageHeader
         title="今日のタスク"
-        nav={
+        right={
           <AppNav
             linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>}
             items={[

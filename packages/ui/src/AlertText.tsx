@@ -6,17 +6,17 @@ export interface AlertTextProps {
   tone?: 'error' | 'warning';
 }
 
-// トーンごとの role と色クラスの定義
-const toneConfig = {
-  error: { role: 'alert' as const, className: 'text-sm text-red-400' },
-  warning: { role: 'status' as const, className: 'text-sm text-yellow-400' },
-};
-
 /** エラー・警告メッセージを表示するインラインテキストコンポーネント */
 export function AlertText({ children, tone = 'error' }: AlertTextProps): React.ReactElement {
-  const { role, className } = toneConfig[tone];
+  if (tone === 'warning') {
+    return (
+      <p role="status" className="text-sm text-yellow-300">
+        {children}
+      </p>
+    );
+  }
   return (
-    <p role={role} className={className}>
+    <p role="alert" className="text-sm text-red-300">
       {children}
     </p>
   );

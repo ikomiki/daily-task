@@ -8,7 +8,7 @@ export function TasksPage(): React.ReactElement {
     <PageContainer>
       <PageHeader
         title="タスク管理"
-        nav={
+        right={
           <div className="flex items-center gap-2">
             <Link to="/today" className="text-sm text-game-accent underline">
               ← 今日のタスク

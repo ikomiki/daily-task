@@ -8,23 +8,31 @@ describe('Card', () => {
     expect(screen.getByText('カード内容')).toBeDefined();
   });
 
-  it('デフォルトのボーダークラスが適用される', () => {
+  it('デフォルト（surface）は border-border-default クラスが適用される', () => {
     const { container } = render(<Card>内容</Card>);
     const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain('border-gray-700');
-    expect(el.className).toContain('rounded');
+    expect(el.className).toContain('border-border-default');
+    expect(el.className).toContain('rounded-md');
   });
 
   it('追加の className がマージされる', () => {
     const { container } = render(<Card className="extra-class">内容</Card>);
     const el = container.firstChild as HTMLElement;
     expect(el.className).toContain('extra-class');
-    expect(el.className).toContain('border-gray-700');
+    expect(el.className).toContain('border-border-default');
   });
 
   it('className が未指定の場合でも正常にレンダリングされる', () => {
     const { container } = render(<Card>内容</Card>);
     const el = container.firstChild as HTMLElement;
-    expect(el.className).toBe('rounded border border-gray-700 p-3');
+    expect(el.className).toContain('rounded-md');
+    expect(el.className).toContain('bg-surface-1');
+  });
+
+  it('tone="flat" は border-dashed クラスが適用される', () => {
+    const { container } = render(<Card tone="flat">内容</Card>);
+    const el = container.firstChild as HTMLElement;
+    expect(el.className).toContain('border-dashed');
+    expect(el.className).toContain('bg-transparent');
   });
 });

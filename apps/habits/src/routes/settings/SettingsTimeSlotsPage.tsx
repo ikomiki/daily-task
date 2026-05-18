@@ -8,7 +8,7 @@ export function SettingsTimeSlotsPage(): React.ReactElement {
     <PageContainer>
       <PageHeader
         title="時間帯の設定"
-        nav={
+        right={
           <AppNav
             linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>}
             items={[

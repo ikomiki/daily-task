@@ -9,7 +9,7 @@ export function HistoryPage(): React.ReactElement {
     <PageContainer>
       <PageHeader
         title="履歴"
-        nav={
+        right={
           <AppNav
             linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>}
             items={[{ to: '/today', label: '今日のタスク' }]}

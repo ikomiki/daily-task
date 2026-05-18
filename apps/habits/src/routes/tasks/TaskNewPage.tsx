@@ -15,7 +15,7 @@ export function TaskNewPage(): React.ReactElement {
     <PageContainer>
       <PageHeader
         title="新規タスク"
-        nav={
+        right={
           <Link to="/tasks" className="text-sm text-game-accent underline">
             ← 一覧へ戻る
           </Link>

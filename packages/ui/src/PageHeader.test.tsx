@@ -9,15 +9,19 @@ describe('PageHeader', () => {
     expect(screen.getByText('テストタイトル')).toBeDefined();
   });
 
-  it('nav スロットが渡された場合にレンダリングする', () => {
-    render(<PageHeader title="タイトル" nav={<span>ナビゲーション</span>} />);
-    expect(screen.getByText('ナビゲーション')).toBeDefined();
+  it('subtitle を渡したとき表示される', () => {
+    render(<PageHeader title="テスト" subtitle="サブタイトル" />);
+    expect(screen.getByText('サブタイトル')).toBeInTheDocument();
   });
 
-  it('nav が未指定の場合はナビゲーション要素を出さない', () => {
+  it('right を渡したとき右スロットにレンダリングされる', () => {
+    render(<PageHeader title="テスト" right={<button type="button">追加</button>} />);
+    expect(screen.getByRole('button', { name: '追加' })).toBeInTheDocument();
+  });
+
+  it('subtitle が未指定の場合は表示しない', () => {
     const { container } = render(<PageHeader title="タイトル" />);
-    // nav スロットなし → 追加要素が存在しない
-    expect(container.querySelectorAll('span').length).toBe(0);
+    expect(container.querySelector('p')).toBeNull();
   });
 
   it('コンテナに flex レイアウトクラスが適用される', () => {

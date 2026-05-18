@@ -34,7 +34,7 @@ export function TaskEditPage(): React.ReactElement {
     <PageContainer>
       <PageHeader
         title="タスクの編集"
-        nav={
+        right={
           <Link to="/tasks" className="text-sm text-game-accent underline">
             ← 一覧へ戻る
           </Link>
