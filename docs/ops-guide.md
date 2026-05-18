@@ -12,6 +12,7 @@
 8. [モニタリング](#8-モニタリング)
 9. [ロールバック手順](#9-ロールバック手順)
 10. [インシデント対応](#10-インシデント対応)
+11. [Lighthouse 手動検証](#11-lighthouse-手動検証)
 
 ---
 
@@ -371,3 +372,136 @@ supabase db remote --uri postgresql://postgres:<password>@db.<project-ref>.supab
 ```
 
 または Supabase ダッシュボード → Database → SQL Editor を使用する。
+
+---
+
+## 11. Lighthouse 手動検証
+
+本番環境への本格デプロイ前に、品質指標（Performance / Accessibility / Best Practices / SEO / PWA）を Lighthouse で計測する。
+手動運用とする理由は、Chrome ヘッドレスが CI 環境で詰まる前例があり、数値ブレが flaky テストになりやすいため。
+
+### 11.1 数値目標
+
+| カテゴリ | 目標スコア | 備考 |
+|---|---|---|
+| Performance | ≥ 90 | preview ビルド経由で測定 |
+| Accessibility | ≥ 95 | aria-pressed / role="alert" / lang="ja" 適用済み |
+| Best Practices | ≥ 95 | CSP 警告は許容、HTTPS は localhost 例外 |
+| SEO | ≥ 90 | description / title / lang / robots 設定済み |
+| PWA Installable | PASS | manifest + SW + icons 3 種で達成 |
+
+### 11.2 実行手順
+
+#### ステップ 1: 本番ビルド
+
+```bash
+pnpm nx build habits
+# 出力先: apps/habits/dist/
+```
+
+#### ステップ 2: Preview サーバー起動（別ターミナル）
+
+```bash
+pnpm exec vite preview --config apps/habits/vite.config.ts --port 4173
+# http://localhost:4173 でサーバーが起動
+```
+
+サーバーが起動したら、ブラウザで `http://localhost:4173/today` にアクセスして動作確認する。
+
+#### ステップ 3: デスクトップ計測
+
+```bash
+pnpm dlx lighthouse http://localhost:4173/today \
+  --view --output html --output-path ./lighthouse-desktop.html \
+  --preset desktop --chrome-flags="--headless"
+```
+
+実行後、ブラウザで `lighthouse-desktop.html` が自動で開く。
+
+#### ステップ 4: モバイル計測
+
+```bash
+pnpm dlx lighthouse http://localhost:4173/today \
+  --view --output html --output-path ./lighthouse-mobile.html \
+  --form-factor mobile --chrome-flags="--headless"
+```
+
+実行後、ブラウザで `lighthouse-mobile.html` が自動で開く。
+
+#### ステップ 5: 結果確認と記録
+
+各レポートから以下の数値を確認し、表 11.1 の目標に達しているか確認する:
+- Performance スコア
+- Accessibility スコア
+- Best Practices スコア
+- SEO スコア
+- PWA Installable の合否
+
+目標未達の場合は、§11.4 の チューニング項目 を参照。
+
+### 11.3 よくあるエラーと対処
+
+| エラー | 原因 | 対処 |
+|--------|------|------|
+| `Chrome not found` | Chrome/Chromium がインストールされていない | `pnpm dlx lighthouse` は Puppeteer 経由で自動ダウンロード。ネット接続を確認して再実行 |
+| `ECONNREFUSED 127.0.0.1:4173` | preview サーバーが起動していない | ステップ 2 でサーバーを起動してから再実行 |
+| `Report saved to file` だが HTML が開かない | `--view` オプションが無視されている環境 | ブラウザで手動で `lighthouse-desktop.html` / `lighthouse-mobile.html` を開く |
+
+### 11.4 失敗時のチューニング項目（優先度順）
+
+#### 1. PWA Installable が FAIL
+
+PNG icon（192×192, 512×512, maskable）が PNG では Lighthouse 最新版で要求される場合がある。
+現在 SVG で対応しているため、PNG 追加が必要な場合は以下のファイルを生成・追加:
+
+```bash
+# apps/habits/public/ に以下を追加
+icon-192.png   # 192×192 (RGB)
+icon-512.png   # 512×512 (RGB)
+icon-maskable.png  # 192×192 (maskable)
+```
+
+その後 `apps/habits/public/index.html` の `<link>` タグで参照を追加。
+
+#### 2. Accessibility が ≥ 95 未満
+
+以下の項目を確認：
+- `lang="ja"` が `<html>` タグに設定されているか（`apps/habits/index.html`）
+- 画像に `alt` 属性が漏れていないか（検索 `<img` で確認）
+- ボタン・チェックボックスに `aria-label` / `aria-pressed` が設定されているか
+- 見出しが h1 から h6 の順序で正しく使用されているか
+
+#### 3. Performance が ≥ 90 未満
+
+| 項目 | 確認内容 | 改善方法 |
+|------|---------|--------|
+| Largest Contentful Paint (LCP) | レポートの「Opportunities」を確認 | フォントの preconnect 追加（`rel="preconnect" href="https://fonts.googleapis.com"`）、Workbox の `globPatterns` で JS/CSS/SVG を確認 |
+| Cumulative Layout Shift (CLS) | 動的ロード時にレイアウトがズレていないか | `width` / `height` を明示、アニメーション時に `will-change` を使用 |
+| First Input Delay (FID) / Interaction to Next Paint (INP) | JavaScript の重い処理 | React.memo / useMemo / useCallback で最適化、大きなリストは仮想化（visx 等）を検討 |
+
+#### 4. SEO が ≥ 90 未満
+
+以下の項目を確認：
+- `<meta name="description" content="...">` が `apps/habits/index.html` に設定されているか
+- `<title>` タグが適切に設定されているか
+- `<html lang="ja">` が設定されているか
+- `<meta name="robots" content="index, follow">` が設定されているか
+
+#### 5. Best Practices が ≥ 95 未満
+
+| 項目 | 原因 | 対処 |
+|------|------|------|
+| CSP (Content Security Policy) 警告 | Lighthouse 基準は厳しめ | CSP 違反がなければそのまま許容 |
+| HTTPS / SSL 警告 | localhost は例外扱い | 本番環境では自動的に PASS |
+| Deprecated API 使用 | コンソールに警告が出ている | 検索 `console.error` / `console.warn` でコード内の該当箇所を除去 |
+
+### 11.5 レポートの取り扱い
+
+`lighthouse-desktop.html` と `lighthouse-mobile.html` は `.gitignore` に登録済みのため、Git で追跡されない。
+ローカルテスト後は削除してもよい:
+
+```bash
+rm -f lighthouse-*.html
+```
+
+本番デプロイ前後に計測結果を記録する場合は、Notion / Wiki 等の外部ツールに保存すること。
