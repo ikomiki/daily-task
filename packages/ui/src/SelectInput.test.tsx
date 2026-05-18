@@ -32,4 +32,9 @@ describe('SelectInput', () => {
     const select = screen.getByRole('combobox') as HTMLSelectElement;
     expect(select.value).toBe('b');
   });
+
+  it('errorMessage が表示される', () => {
+    render(<SelectInput label="カテゴリ" options={OPTIONS} errorMessage="必須項目です" />);
+    expect(screen.getByText('必須項目です')).toBeDefined();
+  });
 });

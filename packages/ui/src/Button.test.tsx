@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { Button } from './Button.js';
 
 describe('Button', () => {
@@ -81,5 +81,17 @@ describe('Button', () => {
     render(<Button type="submit">送信</Button>);
     const btn = screen.getByRole('button') as HTMLButtonElement;
     expect(btn.type).toBe('submit');
+  });
+
+  it('デフォルト（primary, md）は px-4 py-2 を持つ', () => {
+    render(<Button variant="primary">テスト</Button>);
+    expect(screen.getByRole('button')).toHaveClass('px-4', 'py-2');
+  });
+
+  it('onClick ハンドラが呼ばれる', () => {
+    const handleClick = vi.fn();
+    render(<Button onClick={handleClick}>テスト</Button>);
+    fireEvent.click(screen.getByRole('button'));
+    expect(handleClick).toHaveBeenCalledOnce();
   });
 });

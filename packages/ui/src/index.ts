@@ -1,6 +1,6 @@
 export type { AlertTextProps } from './AlertText.js';
 export { AlertText } from './AlertText.js';
-export type { AppNavItem, AppNavProps } from './AppNav.js';
+export type { AppNavItem, AppNavProps, LinkComponentProps } from './AppNav.js';
 export { AppNav } from './AppNav.js';
 export type { ButtonProps } from './Button.js';
 export { Button } from './Button.js';

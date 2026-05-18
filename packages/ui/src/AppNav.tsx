@@ -25,6 +25,8 @@ export interface AppNavProps {
   linkComponent: React.ComponentType<LinkComponentProps>;
   /** サインアウト処理。省略時はログアウトボタンを表示しない */
   onSignOut?: () => void;
+  /** ナビゲーション領域のアクセシビリティラベル */
+  'aria-label'?: string;
 }
 
 /** アプリ全体のグローバルナビゲーション */
@@ -32,9 +34,10 @@ export function AppNav({
   items,
   linkComponent: LinkComponent,
   onSignOut,
+  'aria-label': ariaLabel,
 }: AppNavProps): React.ReactElement {
   return (
-    <nav className="flex flex-wrap items-center gap-2">
+    <nav className="flex flex-wrap items-center gap-2" aria-label={ariaLabel}>
       {items.map((item) => (
         <LinkComponent
           key={item.to}
