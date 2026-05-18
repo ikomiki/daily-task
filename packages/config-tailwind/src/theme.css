@@ -3,5 +3,10 @@
   --color-game-bg: #0b0d12;
   --color-game-fg: #e6e8ef;
   --color-game-accent: #4cc9f0;
+  --color-cal-complete: #4cc9f0;
+  --color-cal-fail: #ef4444;
+  --color-cal-skip: #9ca3af;
+  --color-cal-today: #facc15;
+  --color-cal-dim: #374151;
   --font-display: "Inter", "Hiragino Sans", sans-serif;
 }
