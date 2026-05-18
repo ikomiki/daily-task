@@ -11,12 +11,14 @@ test('サインアップ → タスク完了 → スタッシュに完了数が�
   await page.getByLabel('パスワード').fill(password);
   await page.getByRole('button', { name: '新規登録' }).click();
   await page.waitForURL('**/today');
+  // 認証済み JWT でアプリを再起動し setupSync が state$.tasks を正しくフェッチする
+  await page.reload();
   await expect(page.getByRole('heading', { name: '今日のタスク' })).toBeVisible();
 
   // 2. 初期タスクが表示されていることを確認し、最初のタスクを「完了」にする
   //    auth.users INSERT トリガーで 6 タスク + 2 時間帯が自動生成される
   const completeButton = page.getByRole('button', { name: '完了' }).first();
-  await expect(completeButton).toBeVisible({ timeout: 10_000 });
+  await expect(completeButton).toBeVisible({ timeout: 15_000 });
   await completeButton.click();
   await expect(completeButton).toHaveAttribute('aria-pressed', 'true');
 

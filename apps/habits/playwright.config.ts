@@ -28,6 +28,7 @@ export default defineConfig({
     {
       name: 'unauthenticated',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
       testMatch: ['**/auth.spec.ts', '**/signup-journey.spec.ts'],
     },
   ],

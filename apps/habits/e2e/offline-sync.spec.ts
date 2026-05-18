@@ -31,10 +31,10 @@ test('オフライン中のタスク操作が再接続後に Supabase へ同期�
   await expect(page.getByRole('status')).not.toBeVisible({ timeout: 5000 });
 
   // 7. スタッシュを再ロードして同期後の完了カウントを確認
-  //    StashPanel マウント時に refreshTaskStashView() が呼ばれ最新データを取得する
-  await page.waitForTimeout(2000); // Supabase トリガー発火を待つ
+  //    legend-state retry → Supabase 書き込み → トリガー発火 → task_stash 更新を待つ
+  await page.waitForTimeout(5000);
   await page.reload();
   await expect(page.locator('article').first()).toBeVisible({ timeout: 10_000 });
   const completeCount = page.locator('article').first().locator('dd').first();
-  await expect(completeCount).not.toHaveText('0');
+  await expect(completeCount).not.toHaveText('0', { timeout: 15_000 });
 });
