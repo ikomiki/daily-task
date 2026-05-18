@@ -2,6 +2,8 @@ import { use$ } from '@legendapp/state/react';
 import { createTask, state$ } from '@org/habit-sync';
 import { PageContainer, PageHeader } from '@org/ui';
 import { Link, useNavigate } from '@tanstack/react-router';
+import type React from 'react';
+import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { TaskForm } from '../../features/task/TaskForm.js';
 
 export function TaskNewPage(): React.ReactElement {
@@ -21,6 +23,7 @@ export function TaskNewPage(): React.ReactElement {
           </Link>
         }
       />
+      <RoutedAppNav />
       <TaskForm
         timeSlots={timeSlots}
         submitLabel="作成"

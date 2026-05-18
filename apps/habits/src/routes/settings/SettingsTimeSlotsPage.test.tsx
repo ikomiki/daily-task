@@ -10,8 +10,16 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
     Link: (props: { to: string; children: React.ReactNode }) => (
       <a href={props.to}>{props.children}</a>
     ),
+    useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
+      select({ location: { pathname: '/settings/time-slots' } }),
   };
 });
+vi.mock('../../lib/supabase.js', () => ({
+  getAppSupabase: (): unknown => ({ auth: { signOut: vi.fn() } }),
+}));
+vi.mock('../../lib/auth.js', () => ({
+  signOut: vi.fn(),
+}));
 
 describe('SettingsTimeSlotsPage', () => {
   beforeEach(() => {
@@ -25,9 +33,11 @@ describe('SettingsTimeSlotsPage', () => {
     expect(screen.getByRole('heading', { name: '時間帯の設定' })).toBeInTheDocument();
   });
 
-  it('「今日のタスク」リンクがある', () => {
+  it('グローバルナビゲーションが表示される', () => {
     render(<SettingsTimeSlotsPage />);
-    expect(screen.getByRole('link', { name: /今日のタスク/ })).toBeInTheDocument();
+    // RoutedAppNav により全ナビ項目が表示される
+    expect(screen.getByRole('link', { name: '今日' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'タスク' })).toBeInTheDocument();
   });
 
   it('TimeSlotList の「時間帯を追加」ボタンが見える', () => {
@@ -35,9 +45,9 @@ describe('SettingsTimeSlotsPage', () => {
     expect(screen.getByRole('button', { name: /時間帯を追加/ })).toBeInTheDocument();
   });
 
-  it('通知設定リンクが表示される', () => {
+  it('設定リンクが表示される', () => {
     render(<SettingsTimeSlotsPage />);
-    const link = screen.getByRole('link', { name: '通知設定' });
+    const link = screen.getByRole('link', { name: '設定' });
     expect(link).toHaveAttribute('href', '/settings/notifications');
   });
 });

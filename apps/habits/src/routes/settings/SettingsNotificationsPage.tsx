@@ -1,7 +1,6 @@
-import type { LinkComponentProps } from '@org/ui';
-import { AppNav, Button, PageContainer, PageHeader } from '@org/ui';
-import { Link } from '@tanstack/react-router';
+import { Button, PageContainer, PageHeader } from '@org/ui';
 import type React from 'react';
+import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { useNotificationPermission } from '../../hooks/useNotificationPermission.js';
 
 // permission 値を日本語表示ラベルに変換する
@@ -22,18 +21,8 @@ export function SettingsNotificationsPage(): React.ReactElement {
   const { permission, request } = useNotificationPermission();
   return (
     <PageContainer>
-      <PageHeader
-        title="通知設定"
-        right={
-          <AppNav
-            linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>}
-            items={[
-              { to: '/settings/time-slots', label: '時間帯' },
-              { to: '/today', label: '今日のタスク' },
-            ]}
-          />
-        }
-      />
+      <PageHeader title="通知設定" />
+      <RoutedAppNav />
       <div className="space-y-3">
         <p className="text-sm">
           現在のステータス: <span className="font-mono">{permissionLabel(permission)}</span>

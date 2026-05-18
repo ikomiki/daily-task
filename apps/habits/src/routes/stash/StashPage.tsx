@@ -1,21 +1,13 @@
-import type { LinkComponentProps } from '@org/ui';
-import { AppNav, PageContainer, PageHeader } from '@org/ui';
-import { Link } from '@tanstack/react-router';
+import { PageContainer, PageHeader } from '@org/ui';
 import type React from 'react';
+import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { StashPanel } from '../../features/stash/StashPanel.js';
 
 export function StashPage(): React.ReactElement {
   return (
     <PageContainer>
-      <PageHeader
-        title="スタッシュ"
-        right={
-          <AppNav
-            linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>}
-            items={[{ to: '/today', label: '今日のタスク' }]}
-          />
-        }
-      />
+      <PageHeader title="スタッシュ" />
+      <RoutedAppNav />
       <StashPanel />
     </PageContainer>
   );

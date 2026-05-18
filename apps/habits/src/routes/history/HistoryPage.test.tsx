@@ -5,10 +5,19 @@ vi.mock('@tanstack/react-router', () => ({
   Link: (props: { to: string; children: React.ReactNode }) => (
     <a href={props.to}>{props.children}</a>
   ),
+  useNavigate: () => vi.fn(),
+  useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
+    select({ location: { pathname: '/history' } }),
 }));
 
 vi.mock('../../features/history/HistoryView.js', () => ({
   HistoryView: () => <div data-testid="history-view" />,
+}));
+vi.mock('../../lib/supabase.js', () => ({
+  getAppSupabase: (): unknown => ({ auth: { signOut: vi.fn() } }),
+}));
+vi.mock('../../lib/auth.js', () => ({
+  signOut: vi.fn(),
 }));
 
 import { HistoryPage } from './HistoryPage.js';
@@ -19,9 +28,9 @@ describe('HistoryPage', () => {
     expect(screen.getByRole('heading', { name: '履歴' })).toBeInTheDocument();
   });
 
-  it('今日のタスクへ戻るリンクを表示する', () => {
+  it('今日リンクを表示する', () => {
     render(<HistoryPage />);
-    const link = screen.getByRole('link', { name: '今日のタスク' });
+    const link = screen.getByRole('link', { name: '今日' });
     expect(link).toHaveAttribute('href', '/today');
   });
 

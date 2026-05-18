@@ -1,23 +1,13 @@
-import type { LinkComponentProps } from '@org/ui';
-import { AppNav, PageContainer, PageHeader } from '@org/ui';
-import { Link } from '@tanstack/react-router';
+import { PageContainer, PageHeader } from '@org/ui';
+import type React from 'react';
+import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { TimeSlotList } from '../../features/timeslot/TimeSlotList.js';
 
 export function SettingsTimeSlotsPage(): React.ReactElement {
   return (
     <PageContainer>
-      <PageHeader
-        title="時間帯の設定"
-        right={
-          <AppNav
-            linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>}
-            items={[
-              { to: '/settings/notifications', label: '通知設定' },
-              { to: '/today', label: '今日のタスク' },
-            ]}
-          />
-        }
-      />
+      <PageHeader title="時間帯の設定" />
+      <RoutedAppNav />
       <TimeSlotList />
     </PageContainer>
   );

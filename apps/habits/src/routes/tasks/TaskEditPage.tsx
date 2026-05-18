@@ -3,6 +3,8 @@ import type { Frequency } from '@org/habit-core';
 import { archiveTask, state$, updateTask } from '@org/habit-sync';
 import { Button, PageContainer, PageHeader } from '@org/ui';
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
+import type React from 'react';
+import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { TaskForm } from '../../features/task/TaskForm.js';
 
 export function TaskEditPage(): React.ReactElement {
@@ -40,6 +42,7 @@ export function TaskEditPage(): React.ReactElement {
           </Link>
         }
       />
+      <RoutedAppNav />
       <TaskForm
         timeSlots={result.slots}
         initial={{
