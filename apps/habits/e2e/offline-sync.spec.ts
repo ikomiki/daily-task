@@ -24,17 +24,29 @@ test('オフライン中のタスク操作が再接続後に Supabase へ同期�
   await expect(page.getByRole('status')).toBeVisible();
   await expect(page.getByText('オフライン')).toBeVisible();
 
-  // 5. オンラインに戻す（legend-state がリトライキューを再送する）
+  // 5. オンライン復帰前に task_logs への書き込みレスポンスを捕捉する準備をする
+  //    legend-state のリトライが発火したとき waitForResponse が解決する
+  const taskLogWritePromise = page.waitForResponse(
+    (resp) => resp.url().includes('/rest/v1/task_logs') && resp.request().method() !== 'GET',
+    { timeout: 30_000 },
+  );
+
+  // 6. オンラインに戻す（legend-state がリトライキューを再送する）
   await context.setOffline(false);
 
-  // 6. オフラインバッジが消えることを確認
-  await expect(page.getByRole('status')).not.toBeVisible({ timeout: 5000 });
+  // 7. オフラインバッジが消えることを確認（online$ が true に切り替わった）
+  await expect(page.getByRole('status')).not.toBeVisible({ timeout: 10_000 });
 
-  // 7. スタッシュを再ロードして同期後の完了カウントを確認
-  //    legend-state retry → Supabase 書き込み → トリガー発火 → task_stash 更新を待つ
-  await page.waitForTimeout(5000);
+  // 8. task_logs への書き込みが Supabase に到達するまで待つ
+  await taskLogWritePromise;
+
+  // 9. task_logs_update_stash トリガーの発火と task_stash 更新を待つ
+  await page.waitForTimeout(2000);
+
+  // 10. スタッシュを再ロードして同期後の完了カウントを確認
+  //     refreshTaskStashView() はマウント時に呼ばれるため再ロードで最新データを取得する
   await page.reload();
   await expect(page.locator('article').first()).toBeVisible({ timeout: 10_000 });
   const completeCount = page.locator('article').first().locator('dd').first();
-  await expect(completeCount).not.toHaveText('0', { timeout: 15_000 });
+  await expect(completeCount).not.toHaveText('0', { timeout: 10_000 });
 });
