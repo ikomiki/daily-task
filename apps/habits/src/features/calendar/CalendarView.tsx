@@ -10,7 +10,7 @@ import { CalendarHeader } from './CalendarHeader.js';
 function useAllTasksForCalendar(): Task[] {
   return use$(() => {
     const list = Object.values(state$.tasks.get()) as Task[];
-    return list.slice().sort((a, b) => a.name.localeCompare(b.name));
+    return list.filter((t) => t.archived_at === null).sort((a, b) => a.name.localeCompare(b.name));
   });
 }
 
