@@ -83,7 +83,8 @@ enabled = true
 # Bind realtime via either IPv4 or IPv6. (default: IPv4)
 # ip_version = "IPv6"
 # The maximum length in bytes of HTTP request headers. (default: 4096)
-# max_header_length = 4096
+# Chrome の認証クッキーが大きくなると 431 になるため上限を引き上げる
+max_header_length = 32768
 
 [studio]
 enabled = true
