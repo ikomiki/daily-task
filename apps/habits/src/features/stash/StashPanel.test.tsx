@@ -14,6 +14,11 @@ vi.mock('./PendingSyncBadge.js', () => ({
   PendingSyncBadge: () => <div data-testid="badge" />,
 }));
 
+// refreshTaskStashView はネットワーク呼び出しのためモック
+vi.mock('@org/habit-sync', () => ({
+  refreshTaskStashView: vi.fn().mockResolvedValue(undefined),
+}));
+
 beforeEach(() => {
   mockedRows = [];
 });

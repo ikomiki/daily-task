@@ -19,6 +19,11 @@ export function getSupabaseClient(config: SupabaseConfig): SupabaseClient {
   return client;
 }
 
+// setupSync 済みのシングルトンをそのまま返す（未初期化なら null）。
+export function getCurrentSupabaseClient(): SupabaseClient | null {
+  return client;
+}
+
 // テスト用にシングルトンをリセットする。
 export function resetSupabaseClient(): void {
   client = null;
