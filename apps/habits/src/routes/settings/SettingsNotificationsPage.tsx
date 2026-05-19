@@ -1,5 +1,6 @@
 import { Button, Card, PageContainer, PageHeader } from '@org/ui';
 import type React from 'react';
+import { Link } from '@tanstack/react-router';
 import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { useNotificationPermission } from '../../hooks/useNotificationPermission.js';
 
@@ -15,7 +16,18 @@ export function SettingsNotificationsPage(): React.ReactElement {
   const { permission, request } = useNotificationPermission();
   return (
     <PageContainer>
-      <PageHeader title="通知設定" subtitle="時間帯ごとの通知の挙動を確認します。" />
+      <PageHeader
+        title="通知設定"
+        subtitle="時間帯ごとの通知の挙動を確認します。"
+        right={
+          <Link
+            to="/settings/time-slots"
+            className="inline-flex items-center justify-center rounded-md border border-border-strong bg-transparent px-3.5 py-1.5 text-sm transition-colors hover:bg-surface-2 hover:border-[#5b657a]"
+          >
+            時間帯設定
+          </Link>
+        }
+      />
       <RoutedAppNav />
       <Card>
         <div className="space-y-3">
