@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import { loadTaskHistory, state$, type TaskLog } from '@org/habit-sync';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getAppSupabase } from '../lib/supabase.js';
@@ -17,7 +17,7 @@ const PAGE_SIZE = 31;
 // - 32 日以前: loadMore() で Supabase から PAGE_SIZE 件ずつ追加取得
 // - 取得結果が PAGE_SIZE 未満なら hasMore=false で打ち切り
 export function useTaskHistory(taskId: string | null): UseTaskHistoryResult {
-  const recentLogs = use$<TaskLog[]>(() => {
+  const recentLogs = useValue<TaskLog[]>(() => {
     if (taskId === null) {
       return [];
     }

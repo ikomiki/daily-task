@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import { state$, type Task, type TaskStashView, type TimeSlot } from '@org/habit-sync';
 
 export interface TaskStashRow {
@@ -18,7 +18,7 @@ export interface TaskStashRow {
 // 時間帯 sort_order → タスク sort_order でソートして返す。
 // stash_view に行が無いタスクは全カラム null の行として返す（新規追加直後の状態）。
 export function useTaskStashList(): TaskStashRow[] {
-  return use$(() => {
+  return useValue(() => {
     const tasks = Object.values(state$.tasks.get()) as Task[];
     const slots = Object.values(state$.time_slots.get()) as TimeSlot[];
     const stashes = state$.task_stash_view.get() as Record<string, TaskStashView>;

@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import { buildCalendarGrid, type Frequency, isDueOn, toUtcDays } from '@org/habit-core';
 import {
   clearTaskLogStatus,
@@ -47,14 +47,14 @@ export function useTaskCalendar(taskId: string | null, today: string): UseTaskCa
   const [cache, setCache] = useState<Map<string, Map<string, TaskLog>>>(new Map());
   const [isLoading, setIsLoading] = useState(false);
 
-  const task = use$<Task | undefined>(() => {
+  const task = useValue<Task | undefined>(() => {
     if (taskId === null) {
       return undefined;
     }
     return (state$.tasks.get() as Record<string, Task>)[taskId];
   });
 
-  const recentLogs = use$<Record<string, TaskLog>>(() => {
+  const recentLogs = useValue<Record<string, TaskLog>>(() => {
     if (taskId === null) {
       return {};
     }
