@@ -47,7 +47,7 @@ export function useTaskCalendar(taskId: string | null, today: string): UseTaskCa
   const [cache, setCache] = useState<Map<string, Map<string, TaskLog>>>(new Map());
   const [isLoading, setIsLoading] = useState(false);
 
-  const task = useValue<Task | undefined>(() => {
+  const task = useValue(() => {
     if (taskId === null) {
       return undefined;
     }
