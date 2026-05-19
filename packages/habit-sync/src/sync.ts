@@ -1,4 +1,4 @@
-import type { Observable } from '@legendapp/state';
+import { type Observable, whenReady } from '@legendapp/state';
 import { syncObservable } from '@legendapp/state/sync';
 import { syncedSupabase } from '@legendapp/state/sync-plugins/supabase';
 import { toUtcDays } from '@org/habit-core';
@@ -60,7 +60,15 @@ export function setupSync(
   // waitForSet: online$ により、online$ が true になるまで SET を保留する。
   // WebSocket 再接続タイミングでリトライタイマーがキャンセルされる問題を回避できる。
   // retry: infinite は Supabase 側エラー（レート制限等）への対処として引き続き使用する。
-  const writeOptions = { waitForSet: online$, retry: { infinite: true } } as const;
+  // waitFor: state$.user が入るまで初回 GET と realtime subscribe を保留する。
+  // これがないと未認証 GET → RLS で空配列 → ログイン後も再フェッチされず、
+  // 「IndexedDB 削除後の初回ログイン直後はデータが出ない（リロードで出る）」という挙動になる。
+  const waitForAuth = (): boolean => state$.user.get() !== null;
+  const writeOptions = {
+    waitFor: waitForAuth,
+    waitForSet: online$,
+    retry: { infinite: true },
+  } as const;
 
   // time_slots: 全件同期、Realtime ON
   syncObservable(
@@ -116,6 +124,7 @@ export function setupSync(
       actions: ['read'],
       persist: { name: 'task_stash_view' },
       fieldId: 'task_id',
+      waitFor: waitForAuth,
       transform: {
         save: (row) =>
           stripPersistInjectedId(row as unknown as Record<string, unknown>) as TaskStashView,
@@ -126,32 +135,36 @@ export function setupSync(
   // task_stash テーブルの変更を購読し、対応する task_stash_view の行を再取得する。
   // task_stash は publication 登録済 (migration 10) のため postgres_changes が発火する。
   // task_logs 操作 → トリガー (migration 9) → task_stash UPDATE → ここで View を再フェッチ、の流れ。
+  // 未認証で subscribe するとサーバ側で RLS が効かず以後のイベントが届かない可能性があるため、
+  // syncedSupabase 側と揃えて state$.user が入るまで購読を保留する。
   if (rt && !taskStashSubscribedClients.has(typedClient)) {
     taskStashSubscribedClients.add(typedClient);
-    typedClient
-      .channel('task_stash_view_refresh')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'task_stash' },
-        async (payload) => {
-          const newRow = payload.new as { task_id?: string } | null | undefined;
-          const oldRow = payload.old as { task_id?: string } | null | undefined;
-          const taskId = newRow?.task_id ?? oldRow?.task_id;
-          if (!taskId) {
-            return;
-          }
-          const { data } = await typedClient
-            .from('task_stash_view')
-            .select('*')
-            .eq('task_id', taskId)
-            .maybeSingle();
-          if (data) {
-            state$.task_stash_view[taskId].set(data as TaskStashView);
-          } else {
-            state$.task_stash_view[taskId].delete();
-          }
-        },
-      )
-      .subscribe();
+    void whenReady(waitForAuth, () => {
+      typedClient
+        .channel('task_stash_view_refresh')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'task_stash' },
+          async (payload) => {
+            const newRow = payload.new as { task_id?: string } | null | undefined;
+            const oldRow = payload.old as { task_id?: string } | null | undefined;
+            const taskId = newRow?.task_id ?? oldRow?.task_id;
+            if (!taskId) {
+              return;
+            }
+            const { data } = await typedClient
+              .from('task_stash_view')
+              .select('*')
+              .eq('task_id', taskId)
+              .maybeSingle();
+            if (data) {
+              state$.task_stash_view[taskId].set(data as TaskStashView);
+            } else {
+              state$.task_stash_view[taskId].delete();
+            }
+          },
+        )
+        .subscribe();
+    });
   }
 }

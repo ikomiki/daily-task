@@ -22,12 +22,18 @@ describe('getTaskLogsCutoffDate', () => {
 });
 
 describe('setupSync', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // fake-indexeddb (test-setup.ts で auto import 済み) を使って persist plugin を設定する
     configureSyncPersistence({ databaseName: 'habits-sync-test', tableNames: TABLE_NAMES });
+    // waitFor が state$.user を見て初回 GET / realtime subscribe を保留するため、
+    // 各テストで認証済み相当のユーザを入れておく。
+    const { state$ } = await import('./observables.js');
+    state$.user.set({ id: 'u-test' } as never);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    const { state$ } = await import('./observables.js');
+    state$.user.set(null);
     vi.resetModules();
   });
 
@@ -114,6 +120,32 @@ describe('setupSync', () => {
     expect(channelSpy).toHaveBeenCalledTimes(1);
     expect(onSpy).toHaveBeenCalledTimes(1);
     expect(subscribeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('state$.user が null の間は task_stash の Channel を確立しない（ログイン後に確立する）', async () => {
+    const { state$ } = await import('./observables.js');
+    state$.user.set(null);
+    const subscribeSpy = vi.fn();
+    const onSpy = vi.fn(() => ({ subscribe: subscribeSpy }));
+    const channelSpy = vi.fn(() => ({ on: onSpy }));
+    const fakeClient = {
+      from: vi.fn(() => ({
+        select: vi.fn(() => ({
+          gte: vi.fn(() => Promise.resolve({ data: [], error: null })),
+          eq: vi.fn(() => ({
+            maybeSingle: vi.fn(() => Promise.resolve({ data: null, error: null })),
+          })),
+        })),
+      })),
+      channel: channelSpy,
+    } as unknown as SupabaseClient;
+
+    setupSync(state$, fakeClient, { today: '2026-05-16', realtime: true });
+    expect(channelSpy).not.toHaveBeenCalled();
+
+    state$.user.set({ id: 'u-after-login' } as never);
+    expect(channelSpy).toHaveBeenCalledWith('task_stash_view_refresh');
+    expect(subscribeSpy).toHaveBeenCalled();
   });
 });
 
