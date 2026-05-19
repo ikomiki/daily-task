@@ -17,7 +17,7 @@ const PAGE_SIZE = 31;
 // - 32 日以前: loadMore() で Supabase から PAGE_SIZE 件ずつ追加取得
 // - 取得結果が PAGE_SIZE 未満なら hasMore=false で打ち切り
 export function useTaskHistory(taskId: string | null): UseTaskHistoryResult {
-  const recentLogs = useValue<TaskLog[]>(() => {
+  const recentLogs = useValue(() => {
     if (taskId === null) {
       return [];
     }

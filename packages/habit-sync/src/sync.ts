@@ -6,7 +6,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from './db-types.js';
 import type { SyncStateShape } from './observables.js';
 import { online$ } from './online.js';
-import type { TaskLog, TaskStashView } from './types.js';
+import type { TaskLog, TaskLogInsert, TaskStashView } from './types.js';
 
 // IndexedDB persist plugin（@legendapp/state/persist-plugins/indexeddb）が
 // 保存時に `value.id = key` と元オブジェクトをミューテートする副作用がある。
@@ -95,7 +95,10 @@ export function setupSync(
   );
 
   // task_logs: 直近 31 日のみ初期ロード、Realtime ON
-  // 複合 PK (task_id, date) は fieldId で暫定対応
+  // 複合 PK (task_id, date) のため create/update を upsert に統一する。
+  // デフォルト実装は prevAtPath ベースで INSERT/UPDATE を振り分けるが、ブラウザ再起動・
+  // IndexedDB 復元後にメモリ Map が空になると既存行に INSERT を投げて 23505 になる。
+  // また delete の単一 fieldId 絞り込みは別日の同 task_id 行を誤削除するバグがある。
   syncObservable(
     state$.task_logs,
     syncedSupabase({
@@ -109,6 +112,26 @@ export function setupSync(
       transform: {
         save: (row) => stripPersistInjectedId(row as unknown as Record<string, unknown>) as TaskLog,
       },
+      create: async (input) =>
+        typedClient
+          .from('task_logs')
+          .upsert(input as TaskLogInsert, { onConflict: 'task_id,date' })
+          .select()
+          .single(),
+      update: async (input) =>
+        typedClient
+          .from('task_logs')
+          .upsert(input as TaskLogInsert, { onConflict: 'task_id,date' })
+          .select()
+          .single(),
+      delete: async (input) =>
+        typedClient
+          .from('task_logs')
+          .delete()
+          .eq('task_id', input.task_id as string)
+          .eq('date', input.date as string)
+          .select()
+          .single(),
     }),
   );
 
