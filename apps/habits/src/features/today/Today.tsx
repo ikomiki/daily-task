@@ -1,41 +1,33 @@
-import type { LinkComponentProps } from '@org/ui';
-import { AppNav, PageContainer, PageHeader } from '@org/ui';
-import { Link, useNavigate } from '@tanstack/react-router';
-import { signOut } from '../../lib/auth.js';
-import { getAppSupabase } from '../../lib/supabase.js';
+import { PageContainer, PageHeader } from '@org/ui';
+import React from 'react';
+import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { getTodayDateString } from '../../lib/today-date.js';
 import { TodayView } from './TodayView.js';
 
 export function Today(): React.ReactElement {
-  const navigate = useNavigate();
   const today = getTodayDateString();
+  const [doneCount, setDoneCount] = React.useState(0);
+  const [totalDue, setTotalDue] = React.useState(0);
 
-  const handleSignOut = async (): Promise<void> => {
-    await signOut(getAppSupabase());
-    navigate({ to: '/auth/login' });
-  };
+  const handleCountsChange = React.useCallback((done: number, total: number) => {
+    setDoneCount(done);
+    setTotalDue(total);
+  }, []);
 
   return (
     <PageContainer>
       <PageHeader
         title="今日のタスク"
-        nav={
-          <AppNav
-            linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>}
-            items={[
-              { to: '/tasks', label: 'タスク管理' },
-              { to: '/stash', label: 'スタッシュ' },
-              { to: '/calendar', label: 'カレンダー' },
-              { to: '/history', label: '履歴' },
-              { to: '/settings/time-slots', label: '設定' },
-            ]}
-            onSignOut={() => {
-              void handleSignOut();
-            }}
-          />
+        right={
+          totalDue > 0 ? (
+            <span className="text-sm text-game-fg-muted">
+              {doneCount} / {totalDue} 完了
+            </span>
+          ) : undefined
         }
       />
-      <TodayView today={today} />
+      <RoutedAppNav />
+      <TodayView today={today} onCountsChange={handleCountsChange} />
     </PageContainer>
   );
 }

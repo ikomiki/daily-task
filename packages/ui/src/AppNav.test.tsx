@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import type React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { AppNav } from './AppNav.js';
+import { AppNav, isNavItemActive } from './AppNav.js';
 
 // テスト用モックリンクコンポーネント（href を付与して link ロールを確保）
 const MockLink: React.FC<{ to: string; className?: string; children: React.ReactNode }> = ({
@@ -49,11 +49,28 @@ describe('AppNav', () => {
     expect(onSignOut).toHaveBeenCalledTimes(1);
   });
 
-  it('リンクに border-gray-500 クラスが適用される', () => {
-    render(<AppNav items={NAV_ITEMS} linkComponent={MockLink} />);
+  it('リンクに border-border-strong クラスが適用される', () => {
+    render(<AppNav items={NAV_ITEMS} linkComponent={MockLink} currentPath="/other" />);
     const links = screen.getAllByRole('link');
     for (const link of links) {
-      expect(link.className).toContain('border-gray-500');
+      expect(link.className).toContain('border-border-strong');
     }
   });
+
+  it('currentPath と一致する項目はアクティブクラスが適用される', () => {
+    render(<AppNav items={NAV_ITEMS} linkComponent={MockLink} currentPath="/today" />);
+    const todayLink = screen.getByText('今日').closest('a');
+    expect(todayLink?.className).toContain('border-game-accent');
+  });
+});
+
+describe('isNavItemActive', () => {
+  it('/today と /today は active', () => expect(isNavItemActive('/today', '/today')).toBe(true));
+  it('/tasks と /tasks/new は active', () =>
+    expect(isNavItemActive('/tasks', '/tasks/new')).toBe(true));
+  it('/tasks と /tasksfoo は active でない', () =>
+    expect(isNavItemActive('/tasks', '/tasksfoo')).toBe(false));
+  it('/ と /today は active でない', () => expect(isNavItemActive('/', '/today')).toBe(false));
+  it('/settings と /settings/notifications は active', () =>
+    expect(isNavItemActive('/settings', '/settings/notifications')).toBe(true));
 });

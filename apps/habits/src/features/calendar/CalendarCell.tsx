@@ -18,19 +18,29 @@ const STATUS_LABEL: Record<DisplayTaskStatus, string> = {
   skip: 'スキップ',
 };
 
-function statusClass(s: DisplayTaskStatus, dim: boolean): string {
+function buildCellClass(s: DisplayTaskStatus, dim: boolean, isToday: boolean): string {
+  // ベースクラス
+  const base =
+    'aspect-square inline-flex items-center justify-center rounded-full text-[13px] transition-colors hover:bg-surface-2';
+
+  // dim（月外 or 対象外）
   if (dim) {
-    return 'text-cal-dim';
+    const todayClass = isToday ? ' shadow-[inset_0_0_0_2px_var(--color-cal-today)]' : '';
+    return `${base} text-cal-dim opacity-50 disabled:cursor-default${todayClass}`;
   }
+
+  // 今日リング
+  const todayClass = isToday ? ' shadow-[inset_0_0_0_2px_var(--color-cal-today)]' : '';
+
   switch (s) {
     case 'complete':
-      return 'bg-cal-complete text-white';
+      return `${base} bg-cal-complete text-game-bg font-semibold${todayClass}`;
     case 'fail':
-      return 'text-cal-fail';
+      return `${base} text-cal-fail font-semibold${todayClass}`;
     case 'skip':
-      return 'text-cal-skip';
+      return `${base} text-cal-skip font-semibold${todayClass}`;
     case 'empty':
-      return 'text-game-fg';
+      return `${base} text-game-fg${todayClass}`;
   }
 }
 
@@ -46,7 +56,6 @@ export function CalendarCell({
   const day = Number.parseInt(date.slice(8, 10), 10);
   const disabled = !isDue || isFuture;
   const dim = !isCurrentMonth || !isDue;
-  const todayRing = isToday ? 'ring-2 ring-cal-today' : '';
   return (
     <button
       type="button"
@@ -56,7 +65,7 @@ export function CalendarCell({
       data-date={date}
       data-today={isToday ? '1' : '0'}
       aria-label={`${date} ${STATUS_LABEL[status]}`}
-      className={`flex h-10 w-10 items-center justify-center rounded-full text-sm ${statusClass(status, dim)} ${todayRing} disabled:cursor-not-allowed`}
+      className={buildCellClass(status, dim, isToday)}
     >
       {status === 'fail' ? '×' : status === 'skip' ? '–' : day}
     </button>

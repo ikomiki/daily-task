@@ -5,7 +5,13 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: 'primary' | 'secondary' | 'destructive';
   /** ボタンのサイズ（デフォルト: 'md'） */
   size?: 'sm' | 'md';
+  /** true のとき w-full を適用してブロック表示にする（デフォルト: false） */
+  block?: boolean;
 }
+
+// 共通クラス（全バリアント共通）
+const baseClass =
+  'inline-flex items-center justify-center gap-1.5 rounded-md border transition-colors focus-visible:outline-2 focus-visible:outline-game-accent focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:translate-y-px';
 
 // バリアントとサイズの組み合わせによるクラス定義
 const variantSizeClass: Record<
@@ -13,16 +19,16 @@ const variantSizeClass: Record<
   Record<NonNullable<ButtonProps['size']>, string>
 > = {
   primary: {
-    md: 'rounded bg-game-accent px-4 py-2 font-medium text-game-bg disabled:opacity-50',
-    sm: 'rounded bg-game-accent px-3 py-1 text-sm font-medium text-game-bg disabled:opacity-50',
+    md: 'bg-game-accent text-game-bg border-transparent font-semibold px-3.5 py-1.5 text-sm hover:bg-game-accent/90',
+    sm: 'bg-game-accent text-game-bg border-transparent font-semibold px-2.5 py-1 text-xs hover:bg-game-accent/90',
   },
   secondary: {
-    md: 'rounded border border-gray-500 px-3 py-1 text-sm disabled:opacity-50',
-    sm: 'rounded border border-gray-500 px-3 py-1 text-sm disabled:opacity-50',
+    md: 'border-border-strong bg-transparent text-game-fg px-3.5 py-1.5 text-sm hover:bg-surface-2 hover:border-[#5b657a]',
+    sm: 'border-border-strong bg-transparent text-game-fg px-2.5 py-1 text-xs hover:bg-surface-2 hover:border-[#5b657a]',
   },
   destructive: {
-    md: 'rounded border border-red-500 px-3 py-1 text-sm text-red-400 disabled:opacity-50',
-    sm: 'rounded border border-red-500 px-3 py-1 text-sm text-red-400 disabled:opacity-50',
+    md: 'border-cal-fail/60 bg-transparent text-red-300 px-3.5 py-1.5 text-sm hover:bg-cal-fail/10 hover:border-cal-fail/70',
+    sm: 'border-cal-fail/60 bg-transparent text-red-300 px-2.5 py-1 text-xs hover:bg-cal-fail/10 hover:border-cal-fail/70',
   },
 };
 
@@ -31,11 +37,13 @@ export function Button({
   children,
   variant = 'secondary',
   size = 'md',
+  block = false,
   className,
   ...rest
 }: ButtonProps): React.ReactElement {
-  const base = variantSizeClass[variant][size];
-  const cls = className ? `${base} ${className}` : base;
+  const variantClass = variantSizeClass[variant][size];
+  const blockClass = block ? ' w-full' : '';
+  const cls = `${baseClass} ${variantClass}${blockClass}${className ? ` ${className}` : ''}`;
   return (
     <button type="button" className={cls} {...rest}>
       {children}

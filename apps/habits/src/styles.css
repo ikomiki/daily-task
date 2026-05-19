@@ -1,7 +1,69 @@
 @import "tailwindcss";
 @import "@org/config-tailwind/theme.css";
 
+/* @org/ui のソースファイルに含まれるクラスを Tailwind が確実にスキャンするよう明示 */
+@source "../../../packages/ui/src";
+
+/* Latin subset のみ。日本語は Hiragino Sans / system-ui の OS fallback を使用 */
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
+@import "@fontsource/inter/latin-600.css";
+@import "@fontsource/inter/latin-700.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";
+
+html,
 body {
-  font-family: var(--font-display);
   margin: 0;
+  background: var(--color-game-bg);
+  color: var(--color-game-fg);
+  font-family: var(--font-display);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  min-height: 100vh;
+}
+
+/* ページ遷移アニメーション */
+.page-fade {
+  animation: pageFade 260ms ease-out;
+}
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 行更新フラッシュ */
+.flash {
+  animation: flash 600ms ease-out;
+}
+@keyframes flash {
+  0% {
+    background: color-mix(in oklab, var(--color-game-accent) 14%, transparent);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+/* パルスアニメーション（Banner コンポーネント用）*/
+@keyframes pulse-dot {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+  }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.6s infinite ease-out;
 }

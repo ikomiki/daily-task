@@ -10,13 +10,19 @@ export interface TextInputProps extends React.InputHTMLAttributes<HTMLInputEleme
 
 /** ラベル付きテキストインプット。エラーメッセージをオプションで表示する */
 export function TextInput({ label, errorMessage, ...rest }: TextInputProps): React.ReactElement {
+  const inputClass = [
+    'block w-full rounded-md border border-border-strong bg-transparent px-3 py-2 text-sm',
+    'transition-colors hover:border-[#4d5667] focus:border-game-accent focus:outline-none',
+    'placeholder:text-game-fg-dim',
+    errorMessage ? 'focus:border-cal-fail' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <label className="block space-y-1">
-      <span className="text-sm font-medium">{label}</span>
-      <input
-        className="block w-full rounded border border-gray-500 bg-transparent px-3 py-2"
-        {...rest}
-      />
+      <span className="text-sm text-game-fg-muted">{label}</span>
+      <input className={inputClass} {...rest} />
       {errorMessage && <AlertText>{errorMessage}</AlertText>}
     </label>
   );

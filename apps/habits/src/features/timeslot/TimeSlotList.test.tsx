@@ -56,7 +56,7 @@ describe('TimeSlotList', () => {
 
   it('削除ボタンで参照タスクなしのスロットを削除できる', () => {
     render(<TimeSlotList />);
-    const deleteButtons = screen.getAllByRole('button', { name: '削除' });
+    const deleteButtons = screen.getAllByRole('button', { name: /を削除$/ });
     fireEvent.click(deleteButtons[0]);
     expect(Object.keys(state$.time_slots.get())).toHaveLength(1);
   });
@@ -76,8 +76,9 @@ describe('TimeSlotList', () => {
       },
     });
     render(<TimeSlotList />);
-    const deleteButtons = screen.getAllByRole('button', { name: '削除' });
-    fireEvent.click(deleteButtons[0]);
+    // s1（朝）は参照タスクあり → 削除しようとするとエラーになる
+    const deleteButton = screen.getByRole('button', { name: '朝を削除' });
+    fireEvent.click(deleteButton);
     expect(screen.getByRole('alert')).toHaveTextContent(/タスク/);
     expect(state$.time_slots.get().s1).toBeDefined();
   });

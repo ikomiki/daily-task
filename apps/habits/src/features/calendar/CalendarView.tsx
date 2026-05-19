@@ -37,6 +37,8 @@ export function CalendarView(): React.ReactElement {
     );
   }
 
+  const isAtCurrentMonth = yearMonth === today.slice(0, 7);
+
   return (
     <div className="space-y-4">
       <CalendarHeader
@@ -44,6 +46,7 @@ export function CalendarView(): React.ReactElement {
         selectedId={selectedId}
         onSelectTask={setSelectedId}
         yearMonth={yearMonth}
+        isAtCurrentMonth={isAtCurrentMonth}
         onPrevMonth={goPrevMonth}
         onNextMonth={goNextMonth}
       />

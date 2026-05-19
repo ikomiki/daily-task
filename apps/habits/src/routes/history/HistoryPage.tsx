@@ -1,21 +1,13 @@
-import type { LinkComponentProps } from '@org/ui';
-import { AppNav, PageContainer, PageHeader } from '@org/ui';
-import { Link } from '@tanstack/react-router';
+import { PageContainer, PageHeader } from '@org/ui';
 import type React from 'react';
+import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { HistoryView } from '../../features/history/HistoryView.js';
 
 export function HistoryPage(): React.ReactElement {
   return (
     <PageContainer>
-      <PageHeader
-        title="履歴"
-        nav={
-          <AppNav
-            linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>}
-            items={[{ to: '/today', label: '今日のタスク' }]}
-          />
-        }
-      />
+      <PageHeader title="履歴" />
+      <RoutedAppNav />
       <HistoryView />
     </PageContainer>
   );

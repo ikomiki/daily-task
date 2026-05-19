@@ -5,6 +5,15 @@ vi.mock('@tanstack/react-router', () => ({
   Link: (props: { to: string; children: React.ReactNode }) => (
     <a href={props.to}>{props.children}</a>
   ),
+  useNavigate: () => vi.fn(),
+  useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
+    select({ location: { pathname: '/settings/notifications' } }),
+}));
+vi.mock('../../lib/supabase.js', () => ({
+  getAppSupabase: (): unknown => ({ auth: { signOut: vi.fn() } }),
+}));
+vi.mock('../../lib/auth.js', () => ({
+  signOut: vi.fn(),
 }));
 
 // biome-ignore lint/complexity/noStaticOnlyClass: テスト用 Notification API モック
@@ -51,7 +60,8 @@ describe('SettingsNotificationsPage', () => {
   it('permission=denied のとき「拒否」表示で許可ボタンは非表示', () => {
     NotifMock.permission = 'denied';
     render(<SettingsNotificationsPage />);
-    expect(screen.getByText(/拒否/)).toBeInTheDocument();
+    // ステータス表示と説明文の両方に「拒否」が出るため getAllByText を使用
+    expect(screen.getAllByText(/拒否/).length).toBeGreaterThan(0);
     expect(screen.queryByRole('button', { name: '通知を許可する' })).not.toBeInTheDocument();
   });
 
@@ -74,12 +84,10 @@ describe('SettingsNotificationsPage', () => {
     expect(screen.getByText(/通知非対応/)).toBeInTheDocument();
   });
 
-  it('時間帯設定 / 今日のタスクへ戻るリンクを表示する', () => {
+  it('グローバルナビゲーションが表示される', () => {
     render(<SettingsNotificationsPage />);
-    expect(screen.getByRole('link', { name: '時間帯' })).toHaveAttribute(
-      'href',
-      '/settings/time-slots',
-    );
-    expect(screen.getByRole('link', { name: '今日のタスク' })).toHaveAttribute('href', '/today');
+    // RoutedAppNav により全ナビ項目が表示される
+    expect(screen.getByRole('link', { name: '今日' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'タスク' })).toBeInTheDocument();
   });
 });

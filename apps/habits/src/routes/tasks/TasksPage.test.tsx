@@ -11,8 +11,16 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
       <a href={props.to}>{props.children}</a>
     ),
     useNavigate: () => vi.fn(),
+    useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
+      select({ location: { pathname: '/tasks' } }),
   };
 });
+vi.mock('../../lib/supabase.js', () => ({
+  getAppSupabase: (): unknown => ({ auth: { signOut: vi.fn() } }),
+}));
+vi.mock('../../lib/auth.js', () => ({
+  signOut: vi.fn(),
+}));
 
 describe('TasksPage', () => {
   beforeEach(() => {
@@ -26,8 +34,8 @@ describe('TasksPage', () => {
     expect(screen.getByRole('link', { name: '新規追加' })).toBeInTheDocument();
   });
 
-  it('「今日のタスク」へのリンクがある', () => {
+  it('「今日」へのナビリンクがある', () => {
     render(<TasksPage />);
-    expect(screen.getByRole('link', { name: /今日のタスク/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '今日' })).toBeInTheDocument();
   });
 });

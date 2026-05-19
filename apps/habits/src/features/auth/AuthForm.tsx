@@ -59,6 +59,7 @@ export function AuthForm({
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         autoComplete="email"
+        placeholder="you@example.com"
       />
       <TextInput
         type="password"
@@ -66,9 +67,10 @@ export function AuthForm({
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         autoComplete={passwordAutoComplete}
+        placeholder="6 文字以上"
       />
       {displayError !== null && <AlertText>{displayError}</AlertText>}
-      <Button type="submit" variant="primary" disabled={isSubmitting} className="w-full">
+      <Button type="submit" variant="primary" block disabled={isSubmitting}>
         {submitLabel}
       </Button>
     </form>

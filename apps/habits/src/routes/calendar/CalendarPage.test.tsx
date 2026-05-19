@@ -6,9 +6,18 @@ vi.mock('@tanstack/react-router', () => ({
   Link: (props: { to: string; children: React.ReactNode }) => (
     <a href={props.to}>{props.children}</a>
   ),
+  useNavigate: () => vi.fn(),
+  useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
+    select({ location: { pathname: '/calendar' } }),
 }));
 vi.mock('../../features/calendar/CalendarView.js', () => ({
   CalendarView: () => <div data-testid="calendar-view" />,
+}));
+vi.mock('../../lib/supabase.js', () => ({
+  getAppSupabase: (): unknown => ({ auth: { signOut: vi.fn() } }),
+}));
+vi.mock('../../lib/auth.js', () => ({
+  signOut: vi.fn(),
 }));
 
 import { CalendarPage } from './CalendarPage.js';
@@ -18,9 +27,9 @@ describe('CalendarPage', () => {
     render(<CalendarPage />);
     expect(screen.getByRole('heading', { name: 'カレンダー' })).toBeInTheDocument();
   });
-  it('今日のタスクへ戻るリンク', () => {
+  it('今日リンクがある', () => {
     render(<CalendarPage />);
-    expect(screen.getByRole('link', { name: '今日のタスク' })).toHaveAttribute('href', '/today');
+    expect(screen.getByRole('link', { name: '今日' })).toHaveAttribute('href', '/today');
   });
   it('CalendarView を描画', () => {
     render(<CalendarPage />);

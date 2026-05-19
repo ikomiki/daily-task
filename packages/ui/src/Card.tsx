@@ -4,13 +4,18 @@ export interface CardProps {
   children: React.ReactNode;
   /** 追加の CSS クラス（省略可） */
   className?: string;
+  /** カードの外観トーン。surface はボーダー+背景付き、flat は破線ボーダーのみ（デフォルト: 'surface'） */
+  tone?: 'surface' | 'flat';
 }
 
+// トーンごとのクラス定義
+const toneClass: Record<NonNullable<CardProps['tone']>, string> = {
+  surface: 'rounded-md border border-border-default bg-surface-1 px-4 py-3.5 transition-colors',
+  flat: 'rounded-md border border-dashed border-border-default bg-transparent px-4 py-3.5 transition-colors',
+};
+
 /** ボーダー付きカードコンテナ */
-export function Card({ children, className }: CardProps): React.ReactElement {
-  return (
-    <div className={`rounded border border-gray-700 p-3${className ? ` ${className}` : ''}`}>
-      {children}
-    </div>
-  );
+export function Card({ children, className, tone = 'surface' }: CardProps): React.ReactElement {
+  const base = toneClass[tone];
+  return <div className={`${base}${className ? ` ${className}` : ''}`}>{children}</div>;
 }

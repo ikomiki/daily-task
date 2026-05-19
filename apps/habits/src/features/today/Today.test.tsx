@@ -15,6 +15,8 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
       <a href={props.to}>{props.children}</a>
     ),
     useNavigate: (): typeof navigateMock => navigateMock,
+    useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
+      select({ location: { pathname: '/today' } }),
   };
 });
 
@@ -61,9 +63,9 @@ describe('Today', () => {
     });
   });
 
-  it('タスク管理リンクが表示される', () => {
+  it('タスクリンクが表示される', () => {
     render(<Today />);
-    expect(screen.getByRole('link', { name: 'タスク管理' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'タスク' })).toBeInTheDocument();
   });
 
   it('スタッシュリンクが表示される', () => {

@@ -97,12 +97,12 @@ describe('App ルーティング', () => {
     });
   });
 
-  it('認証済みで /settings/time-slots にアクセスすると「時間帯の設定」が表示される', async () => {
+  it('認証済みで /settings/time-slots にアクセスすると「時間帯設定」が表示される', async () => {
     getCurrentSessionMock.mockResolvedValue({ user: { id: 'u1' }, access_token: 'x' });
     await navigate('/settings/time-slots');
     render(<App />);
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: '時間帯の設定' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: '時間帯設定' })).toBeInTheDocument();
     });
   });
 

@@ -64,3 +64,4 @@
 - `apps/habits/src/features/timeslot/TimeSlotList.tsx` — 行 (`flex items-center gap-3 rounded border border-gray-700 p-3`)、削除ボタン (`rounded border border-red-500 px-3 py-1 text-sm text-red-400`)、エラー (`text-sm text-red-400`)
 - `apps/habits/src/features/timeslot/TimeSlotEditor.tsx` — フォームコンテナ (`space-y-3 rounded border border-gray-600 p-3`)、保存ボタン (`rounded bg-game-accent px-3 py-1 text-sm font-medium text-game-bg`)、入力 (`block w-full rounded border border-gray-500 bg-transparent px-2 py-1`)
 - `packages/config-tailwind/src/theme.css` — `--color-game-accent: #4cc9f0`, `--color-game-bg: #0b0d12`
+- M14: TimeSlotEditor のフォームに `border-border-strong` 枠。TimeSlotList の各行が `Card` コンポーネント。

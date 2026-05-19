@@ -3,6 +3,8 @@ import type { Frequency } from '@org/habit-core';
 import { archiveTask, state$, updateTask } from '@org/habit-sync';
 import { Button, PageContainer, PageHeader } from '@org/ui';
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
+import type React from 'react';
+import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { TaskForm } from '../../features/task/TaskForm.js';
 
 export function TaskEditPage(): React.ReactElement {
@@ -34,12 +36,13 @@ export function TaskEditPage(): React.ReactElement {
     <PageContainer>
       <PageHeader
         title="タスクの編集"
-        nav={
+        right={
           <Link to="/tasks" className="text-sm text-game-accent underline">
             ← 一覧へ戻る
           </Link>
         }
       />
+      <RoutedAppNav />
       <TaskForm
         timeSlots={result.slots}
         initial={{
@@ -48,6 +51,7 @@ export function TaskEditPage(): React.ReactElement {
           frequency: task.frequency as unknown as Frequency,
         }}
         submitLabel="保存"
+        onCancel={() => void navigate({ to: '/tasks' })}
         onSubmit={(values) => {
           updateTask(id, values);
           void navigate({ to: '/tasks' });

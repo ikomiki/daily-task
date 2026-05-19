@@ -1,11 +1,16 @@
 import { WebNotificationProvider } from '@org/habit-sync';
+import type { LinkComponentProps } from '@org/ui';
+import { TopBar } from '@org/ui';
 import {
   createRootRoute,
   createRoute,
   createRouter,
+  Link,
   Outlet,
   redirect,
+  useRouterState,
 } from '@tanstack/react-router';
+import type React from 'react';
 import { Login } from './features/auth/Login.js';
 import { Signup } from './features/auth/Signup.js';
 import { NotificationManager } from './features/notify/NotificationManager.js';
@@ -25,13 +30,23 @@ import { TasksPage } from './routes/tasks/TasksPage.js';
 // モジュールレベルで provider を生成（アプリ全体で 1 インスタンス共有）
 const notificationProvider = new WebNotificationProvider();
 
-const rootRoute = createRootRoute({
-  component: () => (
-    <main className="min-h-screen">
+/** ルートレイアウト。認証画面以外では TopBar を表示する。 */
+function RootComponent(): React.ReactElement {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAuth = pathname.startsWith('/auth');
+  return (
+    <div className="flex min-h-screen flex-col">
       <NotificationManager provider={notificationProvider} today={getTodayDateString()} />
+      {!isAuth && (
+        <TopBar linkComponent={Link as unknown as React.ComponentType<LinkComponentProps>} />
+      )}
       <Outlet />
-    </main>
-  ),
+    </div>
+  );
+}
+
+const rootRoute = createRootRoute({
+  component: RootComponent,
 });
 
 // 認証必須ルート用の共通 beforeLoad

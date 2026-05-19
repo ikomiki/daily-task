@@ -6,10 +6,13 @@ export interface AlertTextProps {
   tone?: 'error' | 'warning';
 }
 
-// トーンごとの role と色クラスの定義
-const toneConfig = {
-  error: { role: 'alert' as const, className: 'text-sm text-red-400' },
-  warning: { role: 'status' as const, className: 'text-sm text-yellow-400' },
+// トーンごとの設定テーブル
+const toneConfig: Record<
+  NonNullable<AlertTextProps['tone']>,
+  { role: string; className: string }
+> = {
+  error: { role: 'alert', className: 'text-sm text-red-300' },
+  warning: { role: 'status', className: 'text-sm text-yellow-300' },
 };
 
 /** エラー・警告メッセージを表示するインラインテキストコンポーネント */

@@ -57,3 +57,4 @@
 - `apps/habits/src/routes/settings/SettingsNotificationsPage.tsx` — コンテナ (`mx-auto max-w-2xl p-6 space-y-6`)、ステータスラベル (`font-mono`)、ボタン (`rounded border border-gray-500 px-3 py-1 text-sm`)、補足 (`text-xs text-gray-500`)
 - `apps/habits/src/hooks/useNotificationPermission.ts` — `permission` / `request` を提供、`'default'` → `'prompt'` に正規化
 - `packages/config-tailwind/src/theme.css` — `--color-game-accent: #4cc9f0` (タイトル)、`--color-game-fg: #e6e8ef`
+- M14: 通知設定が `Card` コンポーネントでラップ。`Banner` でオフライン表示。

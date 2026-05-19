@@ -62,3 +62,4 @@
 - `apps/habits/src/features/task/TaskForm.tsx` — 入力フィールド (`block w-full rounded border border-gray-500 bg-transparent px-3 py-2`)、ボタン (`rounded bg-game-accent px-4 py-2 font-medium text-game-bg disabled:opacity-50`)、アラート (`text-sm text-red-400`)
 - `apps/habits/src/features/task/FrequencyPicker.tsx` — セレクト (`block w-full rounded border border-gray-500 bg-transparent px-2 py-1`)、チェックボックスラベル (`flex items-center gap-1 text-sm`)、数値入力 (`block w-32 rounded border border-gray-500 bg-transparent px-2 py-1`)
 - `packages/config-tailwind/src/theme.css` — `--color-game-accent: #4cc9f0`, `--color-game-bg: #0b0d12`
+- M14: TaskForm の submit エリアに `flex justify-end gap-2`。`AlertText` でバリデーションエラー表示。

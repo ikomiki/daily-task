@@ -73,3 +73,4 @@
 - `apps/habits/src/lib/calendar-status.ts` — `nextCalendarStatus()` 状態循環
 - `packages/habit-core/src/month-grid.ts` — `buildCalendarGrid('YYYY-MM')` で 42 セル配列を生成
 - `packages/config-tailwind/src/theme.css` — `--color-cal-complete: #4cc9f0`, `--color-cal-fail: #ef4444`, `--color-cal-skip: #9ca3af`, `--color-cal-today: #facc15`, `--color-cal-dim: #374151`
+- M14: CalendarCell が `aspect-square rounded-full`。完了は `bg-cal-complete`、今日は `shadow-[inset_0_0_0_2px_var(--color-cal-today)]`。

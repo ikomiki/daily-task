@@ -52,7 +52,7 @@ export function TaskList({ onEdit }: TaskListProps): React.ReactElement {
         <section className="space-y-2">
           <button
             type="button"
-            className="text-sm text-gray-400 underline"
+            className="text-sm text-game-fg-muted underline underline-offset-[3px]"
             onClick={() => setShowArchived((v) => !v)}
           >
             {showArchived

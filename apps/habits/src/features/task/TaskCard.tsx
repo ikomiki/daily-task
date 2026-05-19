@@ -25,23 +25,28 @@ export function TaskCard({
       <Card className={`flex items-center gap-3${isArchived ? ' opacity-60' : ''}`}>
         <div className="flex-1 space-y-1">
           <div className="text-sm font-medium">{task.name}</div>
-          <div className="text-xs text-gray-400">
-            {timeSlotName} ／ {formatFrequency(freq)}
+          <div className="text-xs text-game-fg-muted">
+            {timeSlotName} ・ {formatFrequency(freq)}
           </div>
         </div>
         {isArchived ? (
-          <Button type="button" onClick={() => onUnarchive(task.id)}>
+          <Button size="sm" type="button" onClick={() => onUnarchive(task.id)}>
             復元
           </Button>
         ) : (
-          <>
-            <Button type="button" onClick={() => onEdit(task.id)}>
+          <div className="flex items-center gap-2">
+            <Button size="sm" type="button" onClick={() => onEdit(task.id)}>
               編集
             </Button>
-            <Button type="button" onClick={() => onArchive(task.id)}>
+            <Button
+              size="sm"
+              variant="destructive"
+              type="button"
+              onClick={() => onArchive(task.id)}
+            >
               アーカイブ
             </Button>
-          </>
+          </div>
         )}
       </Card>
     </li>

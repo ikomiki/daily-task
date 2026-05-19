@@ -13,8 +13,16 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
     ),
     useNavigate: () => navigateMock,
     useParams: () => ({ id: 't1' }),
+    useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
+      select({ location: { pathname: '/tasks/t1' } }),
   };
 });
+vi.mock('../../lib/supabase.js', () => ({
+  getAppSupabase: (): unknown => ({ auth: { signOut: vi.fn() } }),
+}));
+vi.mock('../../lib/auth.js', () => ({
+  signOut: vi.fn(),
+}));
 
 const baseTask: Task = {
   id: 't1',

@@ -13,16 +13,26 @@ function formatTime(notifyAt: string): string {
 }
 
 export function TimeSlotGroup({ group, today }: TimeSlotGroupProps): React.ReactElement {
+  // このスロットの完了数を算出する
+  const doneCount = group.tasks.filter((t) => t.status === 'complete').length;
+
   return (
-    <section className="space-y-2">
-      <header className="flex items-baseline gap-3">
-        <h2 className="text-lg font-semibold text-game-accent">{group.slot_name}</h2>
-        <span className="text-sm text-gray-400">{formatTime(group.notify_at)}</span>
-      </header>
+    <section className="rounded-md border border-border-default overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 bg-surface-2 border-b border-border-default">
+        <div className="flex items-center gap-2">
+          <h2 className="text-sm font-semibold">{group.slot_name}</h2>
+          <span className="text-xs text-game-fg-muted font-mono">
+            {formatTime(group.notify_at)}
+          </span>
+        </div>
+        <span className="text-xs text-game-fg-muted tabular-nums">
+          {doneCount} / {group.tasks.length}
+        </span>
+      </div>
       {group.tasks.length === 0 ? (
-        <p className="text-sm text-gray-400">タスクなし</p>
+        <p className="px-4 py-3 text-sm text-gray-400">タスクなし</p>
       ) : (
-        <ul className="divide-y divide-gray-700">
+        <ul>
           {group.tasks.map((item) => (
             <TodayTaskItem key={item.id} item={item} today={today} />
           ))}

@@ -11,37 +11,31 @@ describe('Button', () => {
   it('デフォルトは secondary バリアントが適用される', () => {
     render(<Button>ボタン</Button>);
     const btn = screen.getByRole('button');
-    expect(btn.className).toContain('border-gray-500');
+    expect(btn.className).toContain('border-border-strong');
   });
 
-  it('secondary は size に関わらず px-3 py-1 クラスが適用される', () => {
-    const { rerender } = render(<Button variant="secondary">ボタン</Button>);
+  it('secondary md は px-3.5 py-1.5 クラスが適用される', () => {
+    render(<Button variant="secondary">ボタン</Button>);
     const btn = screen.getByRole('button');
-    expect(btn.className).toContain('px-3');
-    expect(btn.className).toContain('py-1');
+    expect(btn.className).toContain('px-3.5');
+    expect(btn.className).toContain('py-1.5');
+  });
 
-    rerender(
+  it('secondary sm は px-2.5 py-1 クラスが適用される', () => {
+    render(
       <Button variant="secondary" size="sm">
         ボタン
       </Button>,
     );
-    expect(btn.className).toContain('px-3');
+    const btn = screen.getByRole('button');
+    expect(btn.className).toContain('px-2.5');
     expect(btn.className).toContain('py-1');
   });
 
-  it('destructive は size に関わらず px-3 py-1 クラスが適用される', () => {
-    const { rerender } = render(<Button variant="destructive">ボタン</Button>);
+  it('destructive md は border-cal-fail/60 クラスが適用される', () => {
+    render(<Button variant="destructive">削除</Button>);
     const btn = screen.getByRole('button');
-    expect(btn.className).toContain('px-3');
-    expect(btn.className).toContain('py-1');
-
-    rerender(
-      <Button variant="destructive" size="sm">
-        ボタン
-      </Button>,
-    );
-    expect(btn.className).toContain('px-3');
-    expect(btn.className).toContain('py-1');
+    expect(btn.className).toContain('border-cal-fail/60');
   });
 
   it('variant="primary" は bg-game-accent クラスが適用される', () => {
@@ -50,20 +44,20 @@ describe('Button', () => {
     expect(btn.className).toContain('bg-game-accent');
   });
 
-  it('variant="destructive" は border-red-500 クラスが適用される', () => {
+  it('variant="destructive" は text-red-300 クラスが適用される', () => {
     render(<Button variant="destructive">削除</Button>);
     const btn = screen.getByRole('button');
-    expect(btn.className).toContain('border-red-500');
+    expect(btn.className).toContain('text-red-300');
   });
 
-  it('size="sm" のとき primary は px-3 py-1 クラスが適用される', () => {
+  it('size="sm" のとき primary は px-2.5 py-1 クラスが適用される', () => {
     render(
       <Button variant="primary" size="sm">
         小
       </Button>,
     );
     const btn = screen.getByRole('button');
-    expect(btn.className).toContain('px-3');
+    expect(btn.className).toContain('px-2.5');
     expect(btn.className).toContain('py-1');
   });
 
@@ -83,9 +77,9 @@ describe('Button', () => {
     expect(btn.type).toBe('submit');
   });
 
-  it('デフォルト（primary, md）は px-4 py-2 を持つ', () => {
+  it('デフォルト（primary, md）は px-3.5 py-1.5 を持つ', () => {
     render(<Button variant="primary">テスト</Button>);
-    expect(screen.getByRole('button')).toHaveClass('px-4', 'py-2');
+    expect(screen.getByRole('button')).toHaveClass('px-3.5', 'py-1.5');
   });
 
   it('onClick ハンドラが呼ばれる', () => {
@@ -93,5 +87,15 @@ describe('Button', () => {
     render(<Button onClick={handleClick}>テスト</Button>);
     fireEvent.click(screen.getByRole('button'));
     expect(handleClick).toHaveBeenCalledOnce();
+  });
+
+  it('block=true のとき w-full クラスが付与される', () => {
+    render(<Button block>ブロック</Button>);
+    expect(screen.getByRole('button').className).toContain('w-full');
+  });
+
+  it('block が未指定のとき w-full クラスが付与されない', () => {
+    render(<Button>通常</Button>);
+    expect(screen.getByRole('button').className).not.toContain('w-full');
   });
 });

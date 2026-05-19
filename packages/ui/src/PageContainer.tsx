@@ -8,8 +8,8 @@ export interface PageContainerProps {
 
 // 幅バリアントごとのクラス定義
 const widthClass: Record<NonNullable<PageContainerProps['width']>, string> = {
-  normal: 'mx-auto max-w-2xl p-6 space-y-6',
-  narrow: 'mx-auto max-w-md p-6 space-y-6',
+  normal: 'mx-auto w-full max-w-2xl px-6 pb-20 pt-6 space-y-6 page-fade',
+  narrow: 'mx-auto w-full max-w-md px-6 pb-20 pt-6 space-y-6 page-fade',
 };
 
 /** ページコンテンツを中央寄せ・パディング付きでラップする共通コンテナ */

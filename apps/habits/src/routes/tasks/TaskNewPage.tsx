@@ -2,6 +2,8 @@ import { use$ } from '@legendapp/state/react';
 import { createTask, state$ } from '@org/habit-sync';
 import { PageContainer, PageHeader } from '@org/ui';
 import { Link, useNavigate } from '@tanstack/react-router';
+import type React from 'react';
+import { RoutedAppNav } from '../../components/RoutedAppNav.js';
 import { TaskForm } from '../../features/task/TaskForm.js';
 
 export function TaskNewPage(): React.ReactElement {
@@ -15,15 +17,17 @@ export function TaskNewPage(): React.ReactElement {
     <PageContainer>
       <PageHeader
         title="新規タスク"
-        nav={
+        right={
           <Link to="/tasks" className="text-sm text-game-accent underline">
             ← 一覧へ戻る
           </Link>
         }
       />
+      <RoutedAppNav />
       <TaskForm
         timeSlots={timeSlots}
         submitLabel="作成"
+        onCancel={() => void navigate({ to: '/tasks' })}
         onSubmit={(values) => {
           const sameSlotMax = Math.max(
             -1,

@@ -58,3 +58,4 @@
 - `apps/habits/src/features/history/HistoryView.tsx` — タスク選択 (`rounded border border-gray-500 bg-transparent px-2 py-1`)、ログ行 (`flex items-baseline justify-between py-2`)、区切り (`divide-y divide-gray-700`)、ボタン (`rounded border border-gray-500 px-3 py-1 text-sm disabled:opacity-50`)、空状態 (`text-sm text-gray-400`)、末尾テキスト (`text-xs text-gray-500`)
 - `apps/habits/src/lib/history-status.ts` — `formatHistoryStatus()` で `'complete' | 'skip' | 'fail'` → 日本語
 - `packages/config-tailwind/src/theme.css` — `--color-game-fg: #e6e8ef`, `--color-game-accent: #4cc9f0`
+- M14: log エントリが `border-border-default` セパレータ + `font-mono tabular-nums` 日付 + `bg-status-*` ドット。

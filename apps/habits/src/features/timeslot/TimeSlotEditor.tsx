@@ -47,7 +47,7 @@ export function TimeSlotEditor({
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="space-y-3 rounded border border-gray-600 p-3"
+      className="rounded-md border border-border-strong px-3.5 py-3.5 space-y-3"
     >
       <TextInput
         type="text"
@@ -64,12 +64,12 @@ export function TimeSlotEditor({
         onChange={(e) => setNotifyAt(e.target.value)}
       />
       {validationError !== null && <AlertText>{validationError}</AlertText>}
-      <div className="flex gap-2">
-        <Button type="submit" variant="primary" size="sm">
-          {submitLabel}
-        </Button>
-        <Button type="button" onClick={onCancel}>
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="secondary" onClick={onCancel}>
           キャンセル
+        </Button>
+        <Button type="submit" variant="primary">
+          {submitLabel}
         </Button>
       </div>
     </form>

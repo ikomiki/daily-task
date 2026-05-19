@@ -59,3 +59,4 @@
 - `apps/habits/src/features/today/TodayTaskItem.tsx` — タスク行 (`flex items-center justify-between gap-3 py-2`)
 - `apps/habits/src/features/today/StatusButtons.tsx` — ボタンベース (`rounded border px-3 py-1 text-sm`)、アクティブクラス (`bg-green-600 text-white`, `bg-yellow-600 text-white`, `bg-red-600 text-white`)、非アクティブ (`bg-transparent text-game-fg border-gray-500`)
 - `packages/config-tailwind/src/theme.css` — `--color-game-accent`, `--color-game-fg`, `--color-game-bg`
+- M14: StatusButtons が `bg-status-complete/skip/fail` で 3 色塗りつぶし。TimeSlotGroup は `border-border-default` カード + `bg-surface-2` ヘッダー。
