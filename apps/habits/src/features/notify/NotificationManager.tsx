@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import {
   type NotificationProvider,
   type SlotSchedule,
@@ -25,7 +25,7 @@ export function NotificationManager(props: NotificationManagerProps): null {
   // time_slots の id/notify_at/name が変わったら effect を再走させて reschedule する。
   // name は scheduleDaily 時点で SlotSchedule に焼き込まれて onFire の slot に渡るので、
   // 変更を通知 title に反映するには再 schedule が必要（state$ を都度引き直しても良いが現状は焼き込み）。
-  const slotsSignature = use$<string>(() => {
+  const slotsSignature = useValue<string>(() => {
     const slots = (Object.values(state$.time_slots.get()) as TimeSlot[])
       .slice()
       .sort((a, b) => a.sort_order - b.sort_order);

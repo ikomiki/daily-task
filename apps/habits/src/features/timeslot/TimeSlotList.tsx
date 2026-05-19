@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import { createTimeSlot, deleteTimeSlot, state$, updateTimeSlot } from '@org/habit-sync';
 import { AlertText, Button, Card } from '@org/ui';
 import { useState } from 'react';
@@ -15,7 +15,7 @@ export function TimeSlotList(): React.ReactElement {
   const [mode, setMode] = useState<Mode>({ type: 'list' });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const slots = use$(() => {
+  const slots = useValue(() => {
     return Object.values(state$.time_slots.get()).sort((a, b) => a.sort_order - b.sort_order);
   });
 

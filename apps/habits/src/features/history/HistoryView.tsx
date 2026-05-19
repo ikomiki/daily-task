@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import { state$, type Task } from '@org/habit-sync';
 import { Button, SelectInput } from '@org/ui';
 import type React from 'react';
@@ -16,7 +16,7 @@ const STATUS_DOT_COLOR: Record<string, string> = {
 // タスクは active/archived を区別せず、name 昇順で全部選択肢に出す。
 // 履歴閲覧の用途上、アーカイブ済タスクも参照できるのが自然なため。
 function useAllTasksForHistory(): Task[] {
-  return use$(() => {
+  return useValue(() => {
     const list = Object.values(state$.tasks.get()) as Task[];
     return list.slice().sort((a, b) => a.name.localeCompare(b.name));
   });

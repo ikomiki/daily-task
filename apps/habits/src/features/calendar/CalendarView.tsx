@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import { state$, type Task } from '@org/habit-sync';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -8,7 +8,7 @@ import { CalendarGrid } from './CalendarGrid.js';
 import { CalendarHeader } from './CalendarHeader.js';
 
 function useAllTasksForCalendar(): Task[] {
-  return use$(() => {
+  return useValue(() => {
     const list = Object.values(state$.tasks.get()) as Task[];
     return list.filter((t) => t.archived_at === null).sort((a, b) => a.name.localeCompare(b.name));
   });

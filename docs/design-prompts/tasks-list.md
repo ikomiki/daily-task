@@ -29,7 +29,7 @@
 - 「アーカイブ」ボタン: `archiveTask(taskId)` を即座に呼び出し（legend-state 楽観更新）
 - 「復元」ボタン: `unarchiveTask(taskId)` で `archived_at` を null に戻す
 - 「アーカイブ済を表示 (N)」ボタン: `showArchived` トグルで折り畳み/展開
-- 状態は `state$.tasks` をリアクティブ購読（`use$(() => ...)` ）— 操作後 UI が即時反映
+- 状態は `state$.tasks` をリアクティブ購読（`useValue(() => ...)` ）— 操作後 UI が即時反映
 
 ## 状態
 

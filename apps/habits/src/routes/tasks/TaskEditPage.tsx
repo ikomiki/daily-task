@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import type { Frequency } from '@org/habit-core';
 import { archiveTask, state$, updateTask } from '@org/habit-sync';
 import { Button, PageContainer, PageHeader } from '@org/ui';
@@ -11,7 +11,7 @@ export function TaskEditPage(): React.ReactElement {
   const { id } = useParams({ from: '/tasks/$id' });
   const navigate = useNavigate();
 
-  const result = use$(() => {
+  const result = useValue(() => {
     const task = state$.tasks.get()[id];
     const slots = Object.values(state$.time_slots.get()).sort(
       (a, b) => a.sort_order - b.sort_order,

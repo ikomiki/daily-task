@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import { archiveTask, state$, unarchiveTask } from '@org/habit-sync';
 import { useState } from 'react';
 import { TaskCard } from './TaskCard.js';
@@ -10,7 +10,7 @@ export interface TaskListProps {
 export function TaskList({ onEdit }: TaskListProps): React.ReactElement {
   const [showArchived, setShowArchived] = useState(false);
 
-  const { active, archived, slotNameById } = use$(() => {
+  const { active, archived, slotNameById } = useValue(() => {
     const tasks = Object.values(state$.tasks.get());
     const slots = state$.time_slots.get();
     const slotName: Record<string, string> = {};

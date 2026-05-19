@@ -1,4 +1,4 @@
-import { use$ } from '@legendapp/state/react';
+import { useValue } from '@legendapp/state/react';
 import { createTask, state$ } from '@org/habit-sync';
 import { PageContainer, PageHeader } from '@org/ui';
 import { Link, useNavigate } from '@tanstack/react-router';
@@ -8,7 +8,7 @@ import { TaskForm } from '../../features/task/TaskForm.js';
 
 export function TaskNewPage(): React.ReactElement {
   const navigate = useNavigate();
-  const timeSlots = use$(() => {
+  const timeSlots = useValue(() => {
     const slots = Object.values(state$.time_slots.get());
     return [...slots].sort((a, b) => a.sort_order - b.sort_order);
   });
